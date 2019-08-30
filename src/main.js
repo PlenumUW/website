@@ -10,5 +10,10 @@ new Vue({
   store,
   render: function(h) {
     return h(App);
+  },
+  mounted() {
+    // You'll need this for renderAfterDocumentEvent.
+    document.dispatchEvent(new Event("render-event"));
+    console.log("render event");
   }
 }).$mount("#app");

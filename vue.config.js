@@ -26,6 +26,9 @@ module.exports = {
       patterns: ["./src/styles/globals.scss"]
     }
   },
+  configureWebpack: {
+    plugins: BuildUtil.plugins
+  },
   chainWebpack: config => {
     // Create environment variable of the build date
     config.plugin("define").tap(definitions => {
@@ -49,19 +52,20 @@ module.exports = {
       .test(/inline\.(.*)\.svg/)
       .use("vue-svg-loader")
       .loader("vue-svg-loader");
-  },
-  configureWebpack: async config => {
-    if (process.env.BUILD_OPTION === "prerender") {
-      // Set within .env file of prerender mode
-      let plugins;
-
-      try {
-        plugins = await BuildUtil.getProductionPlugins();
-      } catch (err) {
-        throw err;
-      }
-
-      config.plugins.push(...plugins);
-    }
   }
+
+  // configureWebpack: async config => {
+  //   if (process.env.BUILD_OPTION === "prerender") {
+  //     // Set within .env file of prerender mode
+  //     let plugins;
+
+  //     try {
+  //       plugins = await BuildUtil.getProductionPlugins();
+  //     } catch (err) {
+  //       throw err;
+  //     }
+
+  //     (config.plugins || []).concat(...plugins);
+  //   }
+  // }
 };

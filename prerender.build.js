@@ -5,6 +5,7 @@ const PrerenderSPAPlugin = require("prerender-spa-plugin");
 const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
 console.log("renderer", Renderer);
 
+// TODO: Use same routes object as router
 const PAGES = {
   home: {
     route: "/",
@@ -13,6 +14,10 @@ const PAGES = {
   about: {
     route: "/about",
     title: "About Plenum"
+  },
+  test: {
+    route: "/test",
+    title: "test Plenum"
   }
 };
 
@@ -71,6 +76,7 @@ const getPrerenderedRoutes = async () => {
   }
 
   const projectRoutes = projects.map(project => `/project/${project.uid}`);
+
   return staticRoutes.concat(projectRoutes);
 };
 
@@ -93,13 +99,17 @@ const getProductionPlugins = async () => {
       staticDir: resolve("dist"),
       outputDir: resolve("prerendered"),
       routes: routes,
+
       renderer: new Renderer({
-        injectProperty: "__PRERENDER_INJECTED",
+        // injectProperty: "__PRERENDER_INJECTED",
         // We need to inject a value so we're able to
         // detect if the page is currently pre-rendered.
         inject: {
           prerendered: true
         },
+        headless: false,
+        devtools: true,
+
         // Our view component is rendered after the API
         // request has fetched all the necessary data,
         // so we create a snapshot of the page after the
@@ -107,10 +117,7 @@ const getProductionPlugins = async () => {
         //   renderAfterElementExists: "[data-view]",
 
         // https://snipcart.com/blog/vue-js-seo-prerender-example
-        renderAfterDocumentEvent: "app.rendered",
-
-        devtools: true,
-        headless: false
+        renderAfterDocumentEvent: "app.rendered"
 
         // Options
         // TODO: construct titles from project names?
@@ -130,9 +137,11 @@ const getProductionPlugins = async () => {
     })
   );
 
+  console.log(productionPlugins);
+
   return productionPlugins;
 };
 
 module.exports = {
-  getProductionPlugins
+  plugins: getProductionPlugins()
 };

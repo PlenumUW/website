@@ -26,11 +26,24 @@ const routes = [
     meta: {
       hue: 200
     }
+  },
+  {
+    path: "/test",
+    name: "test",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: function() {
+      return import(/* webpackChunkName: "about" */ "./views/Test.vue");
+    },
+    meta: {
+      hue: 100
+    }
   }
 ];
 
 export default new Router({
   mode: "history",
-  base: process.env.BASE_URL,
+  // base: process.env.BASE_URL,
   routes
 });

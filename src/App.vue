@@ -2,11 +2,15 @@
   <div id="app" ref="app" :style="{ 'background-color': bgColor }">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About</router-link> |
+      <router-link to="/test">Test</router-link>
     </div>
     <transition @enter="backgroundTransitionEnter">
       <router-view />
     </transition>
+    <button @click="handleTest" :style="{ background: test ? 'green' : 'red' }">
+      Test
+    </button>
   </div>
 </template>
 
@@ -27,6 +31,9 @@ export default {
      */
     bgColor: function() {
       return colors.getBackgroundColor(this.$route.meta.hue);
+    },
+    test: function() {
+      return this.$store.state.test;
     }
   },
   watch: {
@@ -35,6 +42,9 @@ export default {
     }
   },
   methods: {
+    handleTest() {
+      this.$store.dispatch("toggleTest");
+    },
     /**
      * Tweens the application's background color through perceptually uniform color space.
      * @param {Element} el Transitioning element.

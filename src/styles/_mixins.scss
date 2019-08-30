@@ -1,0 +1,57 @@
+/*
+    Default mixins useful for my SPAs
+    v0.1
+*/
+
+// Returns a z-index value of the requested name found in the z-index list
+@function z($name) {
+  @if index($z-indexes, $name) {
+    @return (length($z-indexes) - index($z-indexes, $name)) + 1;
+  } @else {
+    @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes}';
+    @return null;
+  }
+}
+
+@mixin header {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+}
+
+@mixin full-viewport($top: 0, $bottom: 0, $left: 0, $right: 0) {
+  position: fixed;
+  top: $top;
+  bottom: $bottom;
+  left: $left;
+  right: $right;
+}
+
+@mixin fit-parent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin center-child($dir: row) {
+  @if $dir == column or $dir == row {
+    display: flex;
+    flex-direction: $dir;
+    align-items: center;
+  } @else {
+    @error 'Given direction must either be "row" or "column"';
+  }
+}
+
+/*
+    Animation
+*/
+@mixin transition($time, $type, $property) {
+  transition: $time $type $property;
+  -moz-transition: $time $type $property;
+  -webkit-transition: $time $type $property;
+}
+
+/*
+    Vue Transitions
+*/

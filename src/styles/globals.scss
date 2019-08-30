@@ -1,0 +1,46 @@
+// Global variables to be given access in every component
+
+// Typesettings utilities
+@import "../../node_modules/typesettings/typesettings/settings";
+@import "../../node_modules/typesettings/typesettings/internal";
+@import "../../node_modules/typesettings/typesettings/functions";
+@import "../../node_modules/typesettings/typesettings/mixins";
+
+// Standard mixins
+@import "_mixins";
+// Project mixins at bottom of file
+
+/*
+    Color
+*/
+
+
+    /*
+        High Contrast
+    */
+
+
+    /*
+        Color Schemes
+        TODO: implement for 'prefer-color-schemes' media query of OS preference
+                prolly just invert the colors...
+    */
+
+
+/*
+    Misc
+*/
+
+
+/* 
+    Project Specific Mixins
+*/
+
+
+/*
+    Cursor
+*/
+
+/*
+    Mixins
+*/

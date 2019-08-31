@@ -1,16 +1,12 @@
 <template>
   <div id="app" ref="app" :style="{ 'background-color': bgColor }">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/test">Test</router-link>
+    <div class="lefter">
+      <the-logo class="logo" :width="64"></the-logo>
+      <the-main-menu></the-main-menu>
     </div>
-    <transition @enter="backgroundTransitionEnter">
-      <router-view />
+    <transition @leave="backgroundTransitionLeave">
+      <router-view :key="viewKey" class="router-view"></router-view>
     </transition>
-    <button @click="handleTest" :style="{ background: test ? 'green' : 'red' }">
-      Test
-    </button>
   </div>
 </template>
 
@@ -19,7 +15,11 @@ import sweep from "@/utils/sweep";
 import css from "@/styles/js.scss";
 import colors from "@/utils/colors";
 
+import TheLogo from "@/components/singletons/TheLogo";
+import TheMainMenu from "@/components/singletons/TheMainMenu";
+
 export default {
+  components: { TheLogo, TheMainMenu },
   data: function() {
     return {
       prevBgColor: undefined
@@ -30,10 +30,12 @@ export default {
      * The background color of the application.
      */
     bgColor: function() {
-      return colors.getBackgroundColor(this.$route.meta.hue);
+      const hue = this.$route.meta.hue;
+      const color = hue ? colors.getBackgroundColor(hue) : "rgb(255, 255, 255)";
+      return color;
     },
-    test: function() {
-      return this.$store.state.test;
+    viewKey: function() {
+      return this.$route.name;
     }
   },
   watch: {
@@ -42,26 +44,28 @@ export default {
     }
   },
   methods: {
-    handleTest() {
-      this.$store.dispatch("toggleTest");
-    },
     /**
      * Tweens the application's background color through perceptually uniform color space.
      * @param {Element} el Transitioning element.
      * @param {Function} done Callback to declare that a transition has finished.
      * @param {String} duration Transition duration in milliseconds
      */
-    backgroundTransitionEnter(
+    backgroundTransitionLeave(
       el,
       done,
       duration = parseInt(css.routerTransitionDuration)
     ) {
-      const prevColor = this.prevBgColor || "rgb(255, 255, 255)";
-      const nextColor = this.bgColor || colors.getBackgroundColor(0);
+      const defaultColor = "rgb(255, 255, 255)";
 
+      const prevColor = this.prevBgColor || defaultColor;
+      const nextColor = this.bgColor || defaultColor;
+
+      // TODO: determine direction of sweep w/
+      // direction = [absolute value of (fromHue - toHue)] > 180 ? counter-clockwise(-1) : clockwise(1)
+      // This will prevent strange flashes during transitions
       sweep(this.$refs.app, "backgroundColor", prevColor, nextColor, {
         duration,
-        space: colors.getColorSpace(),
+        space: colors.getColorSpaceName(),
         callback: () => done()
       });
     }
@@ -81,24 +85,56 @@ export default {
 
 #app {
   position: fixed;
-  top: 0;
+  height: 100vh;
   left: 0;
   right: 0;
-  bottom: 0;
+
+  display: flex;
+  flex-direction: row;
+
+  overflow-x: hidden;
+  overflow-y: auto;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+
+.lefter {
+  position: fixed;
+  width: $g-lefter-width;
+  height: 100%;
+
+  z-index: 10; // TODO: use scss z-index mixin
+
+  flex-basis: $g-lefter-width;
+  flex-grow: 0;
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  pointer-events: none;
+}
+
+.logo {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $g-header-height;
+
+  flex-basis: $g-header-height;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.router-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200%;
+
+  padding-left: $g-lefter-width;
 }
 </style>

@@ -51,8 +51,14 @@ $bluu-next-path: "~assets/fonts/BluuNext";
 $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
 
 * {
-    font-family: $font-serif;
+    // font-family: $font-serif;
     color: $text-color;
+}
+
+.paper {
+  background: pink;
+  padding: 20px;
+  width: fit-content;
 }
 
 /*

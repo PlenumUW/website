@@ -12,9 +12,9 @@ function resolve(dir) {
 module.exports = {
   // Add scss variables in _settings.scss to scss global scope
   pluginOptions: {
-    "style-resources-loader": {
-      preProcessor: "scss",
-      patterns: ["./src/styles/globals.scss"]
+    'style-resources-loader': {
+      preProcessor: 'scss',
+      patterns: ['./src/styles/globals.scss']
     }
   },
   chainWebpack: config => {

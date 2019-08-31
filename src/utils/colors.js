@@ -1,17 +1,18 @@
 import space from "color-space";
 // TODO: figure out how to only import the hsluv with the rgb method in the prototype, 'space' is bloated
 import hsluv from "color-space/hsluv";
+// TODO: consider other color spaces, hsluv has bright yellows/greens (IMO)
 
 /**
  * Color configurations
  */
 const bg = {
   s: 20,
-  l: 98
+  l: 97
 };
 const menu = {
-  s: 100,
-  l: 84.5
+  s: 75,
+  l: 89.5
 };
 const papers = {
   s: 100,
@@ -22,7 +23,7 @@ const papers = {
  * Outputs standardized HSLuv colors.
  */
 class ColorFactory {
-  cosntructor(colorSpace, defaultHue = 180) {
+  constructor(colorSpace, defaultHue = 180) {
     this.defaultHue = defaultHue;
     this.colorSpace = colorSpace;
   }
@@ -31,11 +32,15 @@ class ColorFactory {
     return this.colorSpace;
   }
 
+  getColorSpaceName() {
+    return this.colorSpace.alias[0];
+  }
+
   getBackgroundColor(h) {
     return this._getRgbColor(h, bg);
   }
 
-  getMenuColor(h) {
+  getMenuItemColor(h) {
     return this._getRgbColor(h, menu);
   }
 
@@ -44,7 +49,10 @@ class ColorFactory {
   }
 
   _getRgbColor(h, { s, l }) {
-    if (h < hsluv.min[0] || h > hsluv.max[0]) h = this.defaultHue;
+    if (h === undefined || h < hsluv.min[0] || h > hsluv.max[0]) {
+      h = this.defaultHue;
+      throw new Error("Hue value is required.");
+    }
 
     return this.serializeRgb(hsluv.rgb([h, s, l]));
   }
@@ -58,5 +66,5 @@ class ColorFactory {
   }
 }
 
-const colors = new ColorFactory(hsluv.alias[0]);
+const colors = new ColorFactory(hsluv);
 export default colors;

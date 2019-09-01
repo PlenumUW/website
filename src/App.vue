@@ -73,7 +73,7 @@ export default {
   mounted: function() {
     if (this.$route.name === "home") {
       // Transition is naturally called if first visit is on non-home route
-      this.backgroundTransitionEnter({}, () => {}, 300);
+      this.backgroundTransitionLeave({}, () => {}, 300);
     }
   }
 };

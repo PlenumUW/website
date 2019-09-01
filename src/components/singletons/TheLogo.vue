@@ -3,10 +3,13 @@
     <router-link to="/">
       <logo
         class="icon"
-        :class="{ 'icon--straight': hovered }"
-        :width="`${width}px`"
-        :height="`${height}px`"
-        viewBox="0 0 200 200"
+        :class="{
+          'icon--straight': hovered,
+          'icon--focused': focused
+        }"
+        :width="`${width + padding}px`"
+        :height="`${height + padding}px`"
+        :style="{ padding: padding }"
         @mouseover="handleIconHover"
         @mouseout="handleIconHover"
       ></logo>
@@ -30,7 +33,9 @@ export default {
   },
   data: function() {
     return {
-      hovered: false
+      hovered: false,
+      focused: false,
+      padding: 10
     };
   },
   computed: {
@@ -62,6 +67,10 @@ export default {
   &--straight {
     transform: translateX(-50%) rotate(22deg);
     transition: transform 200ms ease-out;
+  }
+
+  &--focused {
+    outline: 3px solid black;
   }
 }
 </style>

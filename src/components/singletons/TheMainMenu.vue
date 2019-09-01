@@ -13,7 +13,10 @@
         :style="{ 'background-color': getMenuItemColor(meta.hue) }"
       >
         <router-link :to="path" class="c-main-menu__item-link">
-          <div class="c-main-menu__item-content">
+          <div
+            class="c-main-menu__item-content"
+            :class="{ 'c-main-menu__item-content--highlighted': false }"
+          >
             <div class="c-main-menu__item-content__name">
               {{ name | capitalize }}
             </div>
@@ -48,9 +51,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$menu-item-width--expanded: 215px;
-$menu-item-width: 45px;
-$menu-item-height: $menu-item-width;
+$outline-width: 3px;
+
+$menu-item-width--expanded--visual: 215px;
+$menu-item-width--visual: 45px;
+
+$menu-item-width--expanded: 215px + $outline-width * 2;
+$menu-item-width: 45px + $outline-width * 2;
+$menu-item-height: $menu-item-width--visual;
+
+$lefter-width: $g-lefter-width;
 
 .c-the-main-nav {
   position: relative;
@@ -68,9 +78,11 @@ $menu-item-height: $menu-item-width;
 .c-main-menu {
   position: relative;
   width: $menu-item-width--expanded;
-  max-width: $menu-item-height;
+  max-width: $menu-item-width;
 
-  left: calc(#{$g-lefter-width} / 2 - #{$menu-item-width} / 2);
+  left: calc(#{$lefter-width} / 2 - #{$menu-item-width} / 2);
+
+  padding: $outline-width;
 
   overflow: hidden;
 
@@ -103,8 +115,12 @@ $menu-item-height: $menu-item-width;
     }
 
     &-content {
-      width: $menu-item-width--expanded;
+      width: $menu-item-width--expanded--visual;
       height: 100%;
+
+      &--highlighted {
+        outline: $outline-width solid black;
+      }
 
       &__name {
         position: relative;

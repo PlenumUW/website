@@ -1,11 +1,19 @@
 <template>
   <div class="page-view">
-    <div class="paper">
+    <div v-for="item in items" class="paper">
       <h1>This is a page</h1>
     </div>
   </div>
 </template>
 <script>
-export default {};
+import _ from "lodash";
+
+export default {
+  data: function() {
+    return {
+      items: _.range(0, 30, 1)
+    };
+  }
+};
 </script>
 <style lang="scss" scoped></style>

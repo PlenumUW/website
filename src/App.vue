@@ -4,7 +4,7 @@
       <the-logo class="logo" :width="64"></the-logo>
       <the-main-menu></the-main-menu>
     </div>
-    <transition @leave="backgroundTransitionLeave">
+    <transition name="view" @leave="backgroundTransitionLeave">
       <router-view :key="viewKey" class="router-view"></router-view>
     </transition>
   </div>
@@ -84,8 +84,8 @@ export default {
 @import "./styles/app.scss";
 
 #app {
-  position: fixed;
-  height: 100vh;
+  position: relative;
+  height: fit-content;
   left: 0;
   right: 0;
 
@@ -129,12 +129,19 @@ export default {
 }
 
 .router-view {
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
-  height: 200%;
+  height: fit-content;
+  min-height: 100vh;
 
   padding-left: $g-lefter-width;
+}
+
+.view-leave,
+.view-leave-active,
+.view-leave-to {
+  position: absolute;
 }
 </style>

@@ -65,7 +65,8 @@ export default {
       // This will prevent strange flashes during transitions
       sweep(this.$refs.app, "backgroundColor", prevColor, nextColor, {
         duration,
-        space: colors.getColorSpaceName(),
+        // TODO: fork sweep.js to build an lchab sweep, hsluv & hsl flash bright yellow b/w orange and green
+        space: "RGB",
         callback: () => done()
       });
     }

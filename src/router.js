@@ -55,19 +55,10 @@ let routes = [
   }
 ];
 
-/**
- * Add equidistant hues along the active color space.
- */
-// TODO: move to color class?
-const colorSpace = colors.getColorSpace();
-const whiteHueBuffer = 20; // Buffer to prevent white colors being selected
-const hueInterval =
-  (colorSpace.max[0] - colorSpace.min[0] - 2 * whiteHueBuffer) / routes.length;
-
-let currentHue = whiteHueBuffer;
-routes = routes.map(route => {
-  route.meta.hue = currentHue;
-  currentHue += hueInterval;
+let hues = colors.getEquidistantHues(routes.length);
+hues = _.shuffle(hues);
+routes = routes.map((route, index) => {
+  route.meta.hue = hues[index];
   return route;
 });
 

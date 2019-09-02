@@ -1,60 +1,118 @@
+import _ from "lodash";
 import space from "color-space";
 // TODO: figure out how to only import the hsluv with the rgb method in the prototype, 'space' is bloated
 import hsluv from "color-space/hsluv";
-// TODO: consider other color spaces, hsluv has bright yellows/greens (IMO)
+import lchab from "color-space/lchab";
 
 /**
  * Color configurations
  */
-const bg = {
-  s: 20,
-  l: 97
-};
-const menu = {
-  s: 75,
-  l: 89.5
-};
-const papers = {
-  s: 100,
-  l: 99
+const schemes = {
+  hsluv: {
+    bg: {
+      saturation: 20,
+      lightness: 97
+    },
+    menu: {
+      saturation: 96.2,
+      lightness: 90
+    },
+    paper: {
+      saturation: 100,
+      lightness: 99
+    }
+  },
+  lchab: {
+    bg: {
+      lightness: 98,
+      chroma: 3
+    },
+    menu: {
+      lightness: 90,
+      chroma: 34
+    },
+    paper: {
+      lightness: 99,
+      chroma: 100
+    }
+  }
 };
 
 /**
- * Outputs standardized HSLuv colors.
+ * Outputs standardized colors from a specified color space.
  */
 class ColorFactory {
-  constructor(colorSpace, defaultHue = 180) {
-    this.defaultHue = defaultHue;
-    this.colorSpace = colorSpace;
+  constructor(colorSpace, schemes) {
+    this._defaultHue = 180;
+    this._colorSpace = colorSpace;
+    this._bg = schemes.bg;
+    this._menu = schemes.menu;
+    this._paper = schemes.paper;
   }
 
-  getColorSpace() {
-    return this.colorSpace;
+  get colorSpace() {
+    return this._colorSpace;
   }
 
-  getColorSpaceName() {
+  get colorSpaceName() {
     return this.colorSpace.alias[0];
   }
 
   getBackgroundColor(h) {
-    return this._getRgbColor(h, bg);
+    return this._getRgbColor(h, this._bg);
   }
 
   getMenuItemColor(h) {
-    return this._getRgbColor(h, menu);
+    let color = this._getRgbColor(h, this._menu);
+    return color;
   }
 
   getPaperColor(h) {
-    return this._getRgbColor(h, papers);
+    return this._getRgbColor(h, this._paper);
   }
 
-  _getRgbColor(h, { s, l }) {
-    if (h === undefined || h < hsluv.min[0] || h > hsluv.max[0]) {
-      h = this.defaultHue;
+  /**
+   * Returns a set of hues of equal distant along the hue channel of the color space.
+   * @param {Number} num The number of hues to return.
+   */
+  getEquidistantHues(num) {
+    const colorSpace = this.colorSpace;
+    const whiteHueBuffer = 20; // For color spaces that produce white along the hues
+    const min = colorSpace.min[this.hueChannelIndex];
+    const max = colorSpace.max[this.hueChannelIndex];
+    const range = max - min;
+    const hueInterval = range / num;
+
+    return _.range(min, max, hueInterval);
+  }
+
+  _getRgbColor(h, scheme) {
+    const hueIndex = this.hueChannelIndex;
+    if (
+      h === undefined ||
+      h < this.colorSpace.min[hueIndex] ||
+      h > this.colorSpace.max[hueIndex]
+    ) {
+      h = this._defaultHue;
       throw new Error("Hue value is required.");
     }
 
-    return this.serializeRgb(hsluv.rgb([h, s, l]));
+    let channelValues = new Array(3);
+    this.colorSpace.channel.forEach((channel, index) => {
+      if (channel === "hue") {
+        channelValues[index] = h;
+      } else if (scheme.hasOwnProperty(channel)) {
+        channelValues[index] = scheme[channel];
+      } else {
+        throw new Error("Scheme channels do not match current color space.");
+      }
+    });
+
+    return this.serializeRgb(this.colorSpace.rgb(channelValues));
+  }
+
+  get hueChannelIndex() {
+    return this.colorSpace.channel.indexOf("hue");
   }
 
   /**
@@ -66,5 +124,5 @@ class ColorFactory {
   }
 }
 
-const colors = new ColorFactory(hsluv);
+const colors = new ColorFactory(lchab, schemes.lchab);
 export default colors;

@@ -30,8 +30,16 @@ export default {
      * The background color of the application.
      */
     bgColor: function() {
-      const hue = this.$route.meta.hue;
-      const color = hue ? colors.getBackgroundColor(hue) : "rgb(255, 255, 255)";
+      const hue =
+        this.$route.meta.hue || this.$route.matched[0]
+          ? this.$route.matched[0].meta.hue
+          : undefined;
+
+      const color =
+        hue !== undefined
+          ? colors.getBackgroundColor(hue)
+          : "rgb(255, 255, 255)";
+
       return color;
     },
     viewKey: function() {

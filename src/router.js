@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 
+import _ from "lodash";
 import colors from "@/utils/colors";
 
 Vue.use(Router);
@@ -51,6 +52,68 @@ let routes = [
     meta: {
       hue: undefined,
       menuItem: true
+    }
+  },
+  {
+    path: "/journals",
+    name: "journals",
+    component: function() {
+      return import("./views/Page.vue");
+    },
+    meta: {
+      hue: undefined,
+      menuItem: true
+    }
+  },
+  {
+    path: "/journal/:journalId",
+    name: "journal",
+    component: function() {
+      return import("./views/Page.vue");
+    },
+    meta: {
+      hue: undefined,
+      menuItem: false
+    },
+    children: [
+      {
+        path: ":articleSlug",
+        name: "article",
+        component: function() {
+          return import("./views/Page.vue");
+        }
+      }
+    ]
+  },
+  {
+    path: "/atlas",
+    name: "atlas",
+    component: function() {
+      return import("./views/Page.vue");
+    },
+    meta: {
+      hue: undefined,
+      menuItem: false
+    },
+    children: [
+      {
+        path: ":projectSlug",
+        name: "project",
+        component: function() {
+          return import("./views/Page.vue");
+        }
+      }
+    ]
+  },
+  {
+    path: "/not-found",
+    name: "not found",
+    component: function() {
+      return import("./views/Page.vue");
+    },
+    meta: {
+      hue: undefined,
+      menuItem: false
     }
   }
 ];

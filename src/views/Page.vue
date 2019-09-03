@@ -9,6 +9,7 @@
 import _ from "lodash";
 
 export default {
+  name: "page",
   data: function() {
     return {
       items: _.range(0, 30, 1)

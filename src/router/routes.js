@@ -1,0 +1,103 @@
+const routes = [
+  {
+    path: "/",
+    name: "home",
+    componentName: "home",
+    meta: {
+      // TODO: should the route have a meta 'hue', or have a meta colors object that includes the specific rgb values of menu, bg, etc...
+      hue: undefined,
+      menuItem: false
+    }
+  },
+  {
+    path: "/about",
+    name: "about",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    componentName: "about",
+    meta: {
+      hue: undefined,
+      menuItem: true
+    }
+  },
+  {
+    path: "/contribute",
+    name: "contribute",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: true
+    }
+  },
+  {
+    path: "/join-us",
+    name: "join us",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: true
+    }
+  },
+  {
+    path: "/journals",
+    name: "journals",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: true
+    }
+  },
+  {
+    path: "/journal/:journalId",
+    name: "journal",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: false
+    },
+    children: [
+      {
+        path: ":articleSlug",
+        name: "article",
+        componentName: "page"
+      }
+    ]
+  },
+  {
+    path: "/atlas",
+    name: "atlas",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: false
+    },
+    children: [
+      {
+        path: ":projectSlug",
+        name: "project",
+        componentName: "page"
+      }
+    ]
+  },
+  {
+    path: "/404",
+    name: "not found",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: false
+    }
+  },
+  {
+    path: "*",
+    name: "not found x",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: false
+    }
+  }
+];
+
+module.exports = { routes };

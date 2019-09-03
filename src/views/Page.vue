@@ -17,4 +17,8 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.paper {
+  width: 100%;
+}
+</style>

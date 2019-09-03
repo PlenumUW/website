@@ -1,12 +1,17 @@
 <template>
   <div id="app" ref="app" :style="{ 'background-color': bgColor }">
-    <div class="lefter">
+    <div class="menu-bar" :style="{ 'background-color': bgColor }">
       <the-logo class="logo" :width="64"></the-logo>
-      <the-main-menu></the-main-menu>
     </div>
-    <transition name="view" @leave="backgroundTransitionLeave">
-      <router-view :key="viewKey" class="router-view"></router-view>
-    </transition>
+
+    <div class="main-content-container">
+      <the-main-menu class="main-menu" :bgColor="bgColor"></the-main-menu>
+      <main>
+        <transition name="view" @leave="backgroundTransitionLeave">
+          <router-view :key="viewKey" class="router-view"></router-view>
+        </transition>
+      </main>
+    </div>
   </div>
 </template>
 
@@ -79,6 +84,17 @@ export default {
       });
     }
   },
+  created: function() {
+    // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
+    this.$router.beforeEach((to, from, next) => {
+      const resetScrollPosition = el => {
+        if (el) el.scrollTop = 0;
+      };
+
+      resetScrollPosition(this.$refs.app);
+      next();
+    });
+  },
   mounted: function() {
     if (this.$route.name === "home") {
       // Transition is naturally called if first visit is on non-home route
@@ -93,25 +109,31 @@ export default {
 @import "./styles/app.scss";
 
 #app {
-  position: relative;
-  height: fit-content;
+  position: fixed;
+  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   overflow-x: hidden;
   overflow-y: auto;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  @include for-size(tablet-landscape-up) {
+    flex-direction: row;
+  }
 }
 
-.lefter {
-  position: fixed;
-  width: $g-lefter-width;
+.menu-bar {
+  position: sticky;
+  width: 100%;
   height: 100%;
+  top: 0;
 
   z-index: 10; // TODO: use scss z-index mixin
 
@@ -120,37 +142,62 @@ export default {
   flex-shrink: 0;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 
   pointer-events: none;
+
+  @include for-size(tablet-landscape-up) {
+    display: inline-block;
+    width: $g-lefter-width;
+
+    flex-direction: column;
+  }
+
+  .logo {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: $g-header-height;
+
+    z-index: 999;
+
+    flex-basis: $g-header-height;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 }
 
-.logo {
-  position: relative;
-  top: 0;
-  left: 0;
+.main-menu {
+  position: fixed;
   width: 100%;
-  height: $g-header-height;
+  height: 100%;
 
-  flex-basis: $g-header-height;
-  flex-grow: 0;
-  flex-shrink: 0;
+  z-index: 11; // TODO: use scss z-index mixin
+
+  @include for-size(tablet-landscape-up) {
+    width: fit-content;
+    height: fit-content;
+    left: 0;
+    top: 265px;
+  }
 }
 
-.router-view {
+.main-content-container {
   position: relative;
+  display: inline-block;
   top: 0;
   left: 0;
   width: 100%;
   height: fit-content;
   min-height: 100vh;
-
-  padding-left: $g-lefter-width;
 }
 
 .view-leave,
 .view-leave-active,
 .view-leave-to {
   position: absolute;
+  left: 0;
+  top: 0;
 }
 </style>

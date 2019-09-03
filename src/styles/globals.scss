@@ -16,6 +16,14 @@
 $g-lefter-width: 124px;
 $g-header-height: 94px;
 
+    /*
+        Responsive Layout
+    */
+    $g-viewport-phone: 600px;
+    $g-viewport-tablet: 900px;
+    $g-viewport-desktop: 1200px;
+    $g-viewport-desktop--big: 1800px;
+
 /*
     Transitions
 */
@@ -55,3 +63,16 @@ $g-transition-router-duration: 500; // in ms
 /*
     Mixins
 */
+@mixin for-size($size) {
+    @if $size == phone-only {
+      @media (max-width: $g-viewport-phone - 1px) { @content; }
+    } @else if $size == tablet-portrait-up {
+      @media (min-width: $g-viewport-phone) { @content; }
+    } @else if $size == tablet-landscape-up {
+      @media (min-width: $g-viewport-tablet) { @content; }
+    } @else if $size == desktop-up {
+      @media (min-width: $g-viewport-desktop) { @content; }
+    } @else if $size == big-desktop-up {
+      @media (min-width: $g-viewport-desktop--big) { @content; }
+    }
+  }

@@ -1,8 +1,16 @@
 <template>
-  <nav class="c-the-main-nav">
+  <nav
+    class="c-the-main-nav"
+    :class="{
+      'c-the-main-nav--open': menuOpen || menuHovered
+    }"
+  >
     <ul
       class="c-main-menu"
-      :class="{ 'c-main-menu--expanded': menuHovered }"
+      :class="{
+        'c-main-menu--hovered': menuHovered,
+        'c-main-menu--expanded': menuHovered || menuOpen
+      }"
       @mouseenter="handleMainMenuHover"
       @mouseleave="handleMainMenuHover"
     >
@@ -12,7 +20,11 @@
         class="c-main-menu__item"
         :style="{ 'background-color': getMenuItemColor(meta.hue) }"
       >
-        <router-link :to="path" class="c-main-menu__item-link">
+        <router-link
+          :to="path"
+          class="c-main-menu__item-link"
+          @click.native="handleMenuItemClick"
+        >
           <div
             class="c-main-menu__item-content"
             :class="{ 'c-main-menu__item-content--highlighted': false }"
@@ -24,15 +36,28 @@
         </router-link>
       </li>
     </ul>
+
+    <div
+      class="c-the-main-nav__background"
+      aria-hidden="true"
+      :style="{ 'background-color': bgColor }"
+    ></div>
   </nav>
 </template>
 <script>
 import colors from "@/utils/colors";
 
 export default {
+  props: {
+    bgColor: {
+      type: String,
+      required: true
+    }
+  },
   data: function() {
     return {
-      menuHovered: false
+      menuHovered: false,
+      menuOpen: false
     };
   },
   computed: {
@@ -41,11 +66,20 @@ export default {
     }
   },
   methods: {
+    handleMenuItemClick(e) {
+      this.resetMenu();
+    },
     handleMainMenuHover(e) {
       this.menuHovered = e.type === "mouseenter";
     },
     getMenuItemColor(hue) {
       return colors.getMenuItemColor(hue);
+    },
+    // TODO: trigger this method when the logo is clicked while the menu is open?
+    resetMenu() {
+      this.menuOpen = false;
+      // TODO: since mobile 'hover' lingers after click, fix in order to close menu after menu item activation
+      //    - currently the menu stays open because it is still being 'hovered'
     }
   }
 };
@@ -62,25 +96,56 @@ $menu-item-height: $menu-item-width--visual;
 
 $lefter-width: $g-lefter-width;
 
+$base-class: ".c-the-main-nav";
+
 .c-the-main-nav {
-  position: relative;
-  height: fit-content;
-  width: 100%;
-
-  top: 265px;
-
   display: flex;
   flex-direction: column;
 
-  pointer-events: all;
+  pointer-events: none;
+
+  transition: 200ms ease-in-out;
+
+  &--open {
+    pointer-events: all;
+
+    #{$base-class}__background {
+      opacity: 1;
+
+      transition: opacity 200ms ease-out;
+    }
+  }
+
+  @include for-size(tablet-landscape-up) {
+    width: unset;
+    max-width: unset;
+
+    pointer-events: all;
+  }
+
+  &__background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+
+    z-index: -1;
+
+    transition: opacity 200ms ease-in;
+
+    @include for-size(tablet-landscape-up) {
+      display: none;
+    }
+  }
 }
 
 .c-main-menu {
   position: relative;
   width: $menu-item-width--expanded;
-  max-width: $menu-item-width;
+  max-width: 0;
 
-  left: calc(#{$lefter-width} / 2 - #{$menu-item-width} / 2);
+  left: -1 * $outline-width;
+  top: -1 * $outline-width;
 
   padding: $outline-width;
 
@@ -93,8 +158,20 @@ $lefter-width: $g-lefter-width;
 
   &--expanded {
     max-width: $menu-item-width--expanded;
+  }
 
-    transition: max-width 200ms ease-in-out;
+  @include for-size(tablet-landscape-up) {
+    max-width: $menu-item-width;
+
+    left: calc(#{$lefter-width} / 2 - #{$menu-item-width} / 2);
+
+    transition-delay: 1000ms;
+
+    &--expanded {
+      max-width: $menu-item-width--expanded;
+
+      transition: max-width 200ms ease-in-out;
+    }
   }
 
   &__item {

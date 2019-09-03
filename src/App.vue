@@ -1,7 +1,18 @@
 <template>
   <div id="app" ref="app" :style="{ 'background-color': bgColor }">
-    <div class="menu-bar" :style="{ 'background-color': bgColor }">
-      <the-logo class="logo" :width="64"></the-logo>
+    <div
+      class="menu-bar"
+      :style="{
+        'background-color': bgColor,
+        background: `linear-gradient(
+    180deg,
+    ${bgColor},
+    ${bgColor} 66%,
+    transparent 100%
+  )`
+      }"
+    >
+      <the-logo class="logo"></the-logo>
     </div>
 
     <div class="main-content-container">
@@ -132,12 +143,12 @@ export default {
 .menu-bar {
   position: sticky;
   width: 100%;
-  height: 100%;
+  height: calc(#{$g-header-height} / 0.8);
   top: 0;
 
   z-index: 10; // TODO: use scss z-index mixin
 
-  flex-basis: $g-lefter-width;
+  flex-basis: calc(#{$g-header-height} / 0.8);
   flex-grow: 0;
   flex-shrink: 0;
 
@@ -149,6 +160,9 @@ export default {
   @include for-size(tablet-landscape-up) {
     display: inline-block;
     width: $g-lefter-width;
+    height: calc(#{$g-header-height--desktop / 0.8});
+
+    flex-basis: unset;
 
     flex-direction: column;
   }
@@ -156,15 +170,21 @@ export default {
   .logo {
     position: relative;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: $g-header-height;
+    $logo-padding: 10px;
+    left: -1 * $logo-padding; // this is starting to get hacky
+    height: 64%;
 
     z-index: 999;
 
-    flex-basis: $g-header-height;
     flex-grow: 0;
     flex-shrink: 0;
+
+    @include for-size(tablet-landscape-up) {
+      height: 64%;
+      left: 0;
+
+      margin-top: 30px;
+    }
   }
 }
 

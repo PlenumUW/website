@@ -80,6 +80,7 @@ export default {
       this.menuOpen = false;
       // TODO: since mobile 'hover' lingers after click, fix in order to close menu after menu item activation
       //    - currently the menu stays open because it is still being 'hovered'
+      this.menuHovered = false;
     }
   }
 };
@@ -99,6 +100,10 @@ $lefter-width: $g-lefter-width;
 $base-class: ".c-the-main-nav";
 
 .c-the-main-nav {
+  width: 100%;
+  height: 100%;
+  left: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -118,7 +123,8 @@ $base-class: ".c-the-main-nav";
 
   @include for-size(tablet-landscape-up) {
     width: unset;
-    max-width: unset;
+    height: unset;
+    left: calc(#{$lefter-width} / 2 - #{$menu-item-width--visual} / 2);
 
     pointer-events: all;
   }
@@ -141,10 +147,10 @@ $base-class: ".c-the-main-nav";
 
 .c-main-menu {
   position: relative;
-  width: $menu-item-width--expanded;
+  width: 90%;
   max-width: 0;
 
-  left: -1 * $outline-width;
+  left: -2 * $outline-width;
   top: -1 * $outline-width;
 
   padding: $outline-width;
@@ -157,18 +163,19 @@ $base-class: ".c-the-main-nav";
   transition: max-width 200ms ease-in-out;
 
   &--expanded {
-    max-width: $menu-item-width--expanded;
+    max-width: 90%;
   }
 
   @include for-size(tablet-landscape-up) {
-    max-width: $menu-item-width;
+    left: -1 * $outline-width;
+    width: $menu-item-width--expanded + $outline-width * 2;
 
-    left: calc(#{$lefter-width} / 2 - #{$menu-item-width} / 2);
+    max-width: $menu-item-width--visual + 3px;
 
     transition-delay: 1000ms;
 
     &--expanded {
-      max-width: $menu-item-width--expanded;
+      max-width: $menu-item-width--expanded + $outline-width * 2;
 
       transition: max-width 200ms ease-in-out;
     }
@@ -183,6 +190,10 @@ $base-class: ".c-the-main-nav";
       margin-bottom: 0;
     }
 
+    @include for-size(tablet-landscape-up) {
+      width: $menu-item-width--expanded;
+    }
+
     &-link {
       width: 100%;
       height: 100%;
@@ -192,7 +203,6 @@ $base-class: ".c-the-main-nav";
     }
 
     &-content {
-      width: $menu-item-width--expanded--visual;
       height: 100%;
 
       &--highlighted {

@@ -2,14 +2,14 @@
   <nav
     class="c-the-main-nav"
     :class="{
-      'c-the-main-nav--open': menuOpen || menuHovered
+      'c-the-main-nav--open': open || menuHovered
     }"
   >
     <ul
       class="c-main-menu"
       :class="{
         'c-main-menu--hovered': menuHovered,
-        'c-main-menu--expanded': menuHovered || menuOpen
+        'c-main-menu--expanded': menuHovered || open
       }"
       @mouseenter="handleMainMenuHover"
       @mouseleave="handleMainMenuHover"
@@ -49,6 +49,10 @@ import colors from "@/utils/colors";
 
 export default {
   props: {
+    open: {
+      type: Boolean,
+      required: true
+    },
     bgColor: {
       type: String,
       required: true
@@ -56,8 +60,7 @@ export default {
   },
   data: function() {
     return {
-      menuHovered: false,
-      menuOpen: false
+      menuHovered: false
     };
   },
   computed: {
@@ -77,10 +80,13 @@ export default {
     },
     // TODO: trigger this method when the logo is clicked while the menu is open?
     resetMenu() {
-      this.menuOpen = false;
+      this.setOpen(false);
       // TODO: since mobile 'hover' lingers after click, fix in order to close menu after menu item activation
       //    - currently the menu stays open because it is still being 'hovered'
       this.menuHovered = false;
+    },
+    setOpen(val) {
+      this.$emit("update:open", val);
     }
   }
 };
@@ -145,12 +151,16 @@ $base-class: ".c-the-main-nav";
   }
 }
 
+$menu-left-position: -2 * $outline-width;
+$menu-width--mobile: calc(
+  100% - 50px + #{$outline-width} - #{$menu-left-position}
+); // 50px equals icon width
 .c-main-menu {
   position: relative;
-  width: 90%;
+  width: $menu-width--mobile;
   max-width: 0;
 
-  left: -2 * $outline-width;
+  left: $menu-left-position;
   top: -1 * $outline-width;
 
   padding: $outline-width;
@@ -163,7 +173,7 @@ $base-class: ".c-the-main-nav";
   transition: max-width 200ms ease-in-out;
 
   &--expanded {
-    max-width: 90%;
+    max-width: $menu-width--mobile;
   }
 
   @include for-size(tablet-landscape-up) {

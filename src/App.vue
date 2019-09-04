@@ -12,11 +12,23 @@
   )`
       }"
     >
-      <the-logo class="logo"></the-logo>
+      <the-logo class="logo" @activate="handleLogoClick"></the-logo>
+      <div class="buttons">
+        <the-hamburger
+          class="hamburger"
+          :open="menuOpen"
+          @open="handleHamburgerOpen"
+          @close="handleHamburgerClose"
+        ></the-hamburger>
+      </div>
     </div>
 
     <div class="main-content-container">
-      <the-main-menu class="main-menu" :bgColor="bgColor"></the-main-menu>
+      <the-main-menu
+        class="main-menu"
+        :open.sync="menuOpen"
+        :bgColor="bgColor"
+      ></the-main-menu>
       <main>
         <transition name="view" @leave="backgroundTransitionLeave">
           <router-view :key="viewKey" class="router-view"></router-view>
@@ -32,13 +44,15 @@ import css from "@/styles/js.scss";
 import colors from "@/utils/colors";
 
 import TheLogo from "@/components/singletons/TheLogo";
+import TheHamburger from "@/components/singletons/TheHamburger";
 import TheMainMenu from "@/components/singletons/TheMainMenu";
 
 export default {
-  components: { TheLogo, TheMainMenu },
+  components: { TheLogo, TheHamburger, TheMainMenu },
   data: function() {
     return {
-      prevBgColor: undefined
+      prevBgColor: undefined,
+      menuOpen: false
     };
   },
   computed: {
@@ -68,6 +82,22 @@ export default {
     }
   },
   methods: {
+    handleHamburgerOpen() {
+      this.setMenuOpen(true);
+    },
+    handleHamburgerClose() {
+      this.setMenuOpen(false);
+    },
+    handleLogoClick() {
+      this.setMenuOpen(false);
+    },
+    /**
+     * @param {Boolean} val New value for menuOpen.
+     */
+    setMenuOpen(val) {
+      if (typeof val !== "boolean") throw new Error("Incorrect value type.");
+      this.menuOpen = val;
+    },
     /**
      * Tweens the application's background color through perceptually uniform color space.
      * @param {Element} el Transitioning element.
@@ -154,6 +184,7 @@ export default {
 
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 
   pointer-events: none;
 
@@ -170,8 +201,6 @@ export default {
   .logo {
     position: relative;
     top: 0;
-    $logo-padding: 10px;
-    left: -1 * $logo-padding; // this is starting to get hacky
     height: 64%;
 
     z-index: 999;
@@ -184,6 +213,19 @@ export default {
       left: 0;
 
       margin-top: 30px;
+    }
+  }
+
+  .buttons {
+    height: 64%;
+
+    .hamburger {
+      z-index: 999;
+
+      flex-grow: 0;
+      flex-shrink: 0;
+
+      pointer-events: all;
     }
   }
 }

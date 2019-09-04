@@ -1,6 +1,6 @@
 <template>
   <div class="the-logo">
-    <router-link to="/" class="the-logo__link">
+    <router-link to="/" class="the-logo__link" @click.native="handleClick">
       <logo
         class="icon"
         :class="{
@@ -46,6 +46,9 @@ export default {
   methods: {
     handleIconHover(e) {
       this.hovered = e.type === "mouseover";
+    },
+    handleClick() {
+      this.$emit("activate");
     }
   }
 };
@@ -72,7 +75,7 @@ $padding: 10px;
 
 .icon {
   position: relative;
-  height: calc(100% + 2 * #{$padding});
+  height: 100%;
   width: auto;
 
   padding: $padding;

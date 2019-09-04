@@ -24,11 +24,6 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  padding-left: 0;
-
-  @include for-size(tablet-landscape-up) {
-    padding-left: 133px;
-  }
 }
 .slice {
 }

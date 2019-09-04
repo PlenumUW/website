@@ -24,12 +24,9 @@
     </div>
 
     <div class="main-content-container">
-      <the-main-menu
-        class="main-menu"
-        :open.sync="menuOpen"
-        :bgColor="bgColor"
-      ></the-main-menu>
-      <main>
+      <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
+
+      <main class="main" :class="{ 'main--hidden': hideMainContent }">
         <transition name="view" @leave="backgroundTransitionLeave">
           <router-view :key="viewKey" class="router-view"></router-view>
         </transition>
@@ -52,7 +49,7 @@ export default {
   data: function() {
     return {
       prevBgColor: undefined,
-      menuOpen: false
+      menuOpen: false // TODO: Find better name, or clarify difference between expanded and open
     };
   },
   computed: {
@@ -74,6 +71,9 @@ export default {
     },
     viewKey: function() {
       return this.$route.name;
+    },
+    hideMainContent: function() {
+      return this.menuOpen;
     }
   },
   watch: {
@@ -230,21 +230,6 @@ export default {
   }
 }
 
-.main-menu {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-
-  z-index: 11; // TODO: use scss z-index mixin
-
-  @include for-size(tablet-landscape-up) {
-    width: fit-content;
-    height: fit-content;
-    left: 0;
-    top: 265px;
-  }
-}
-
 .main-content-container {
   position: relative;
   display: inline-block;
@@ -253,6 +238,34 @@ export default {
   width: 100%;
   height: fit-content;
   min-height: 100vh;
+
+  .main-menu {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+
+    z-index: 11; // TODO: use scss z-index mixin
+
+    @include for-size(tablet-landscape-up) {
+      width: unset;
+      height: unset;
+      top: 265px;
+    }
+  }
+
+  .main {
+    opacity: 1;
+
+    z-index: 10; // TODO: use scss z-index mixin
+
+    transition: opacity 200ms ease-in;
+
+    &--hidden {
+      opacity: 0;
+
+      transition: opacity 200ms ease-out;
+    }
+  }
 }
 
 .view-leave,

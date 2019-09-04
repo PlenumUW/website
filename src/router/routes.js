@@ -79,6 +79,15 @@ const routes = [
     ]
   },
   {
+    path: "/resources",
+    name: "resources",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: true
+    }
+  },
+  {
     path: "/contribute",
     name: "contribute",
     componentName: "page",

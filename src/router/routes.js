@@ -22,8 +22,8 @@ const routes = [
     }
   },
   {
-    path: "/contribute",
-    name: "contribute",
+    path: "/issues",
+    name: "issues",
     componentName: "page",
     meta: {
       hue: undefined,
@@ -31,26 +31,8 @@ const routes = [
     }
   },
   {
-    path: "/join-us",
-    name: "join us",
-    componentName: "page",
-    meta: {
-      hue: undefined,
-      menuItem: true
-    }
-  },
-  {
-    path: "/journals",
-    name: "journals",
-    componentName: "page",
-    meta: {
-      hue: undefined,
-      menuItem: true
-    }
-  },
-  {
-    path: "/journal/:journalId",
-    name: "journal",
+    path: "/issue/:issueId",
+    name: "issue",
     componentName: "page",
     meta: {
       hue: undefined,
@@ -70,7 +52,7 @@ const routes = [
     componentName: "page",
     meta: {
       hue: undefined,
-      menuItem: false
+      menuItem: true
     },
     children: [
       {
@@ -79,6 +61,40 @@ const routes = [
         componentName: "page"
       }
     ]
+  },
+  {
+    path: "/events",
+    name: "events",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: true
+    },
+    children: [
+      {
+        path: ":eventSlug",
+        name: "event",
+        componentName: "page"
+      }
+    ]
+  },
+  {
+    path: "/contribute",
+    name: "contribute",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: true
+    }
+  },
+  {
+    path: "/join-us",
+    name: "join us",
+    componentName: "page",
+    meta: {
+      hue: undefined,
+      menuItem: true
+    }
   },
   {
     path: "/404",

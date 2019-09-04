@@ -1,12 +1,40 @@
 <template>
   <div id="app" ref="app" :style="{ 'background-color': bgColor }">
-    <div class="lefter">
-      <the-logo class="logo" :width="64"></the-logo>
-      <the-main-menu></the-main-menu>
+    <div
+      class="menu-bar"
+      :style="{
+        'background-color': bgColor,
+        background: `linear-gradient(
+    180deg,
+    ${bgColor},
+    ${bgColor} 66%,
+    transparent 100%
+  )`
+      }"
+    >
+      <the-logo class="logo" @activate="handleLogoClick"></the-logo>
+      <div class="buttons">
+        <the-hamburger
+          class="hamburger"
+          :open="menuOpen"
+          @open="handleHamburgerOpen"
+          @close="handleHamburgerClose"
+        ></the-hamburger>
+      </div>
     </div>
-    <transition name="view" @leave="backgroundTransitionLeave">
-      <router-view :key="viewKey" class="router-view"></router-view>
-    </transition>
+
+    <div class="main-content-container">
+      <the-main-menu
+        class="main-menu"
+        :open.sync="menuOpen"
+        :bgColor="bgColor"
+      ></the-main-menu>
+      <main>
+        <transition name="view" @leave="backgroundTransitionLeave">
+          <router-view :key="viewKey" class="router-view"></router-view>
+        </transition>
+      </main>
+    </div>
   </div>
 </template>
 
@@ -16,13 +44,15 @@ import css from "@/styles/js.scss";
 import colors from "@/utils/colors";
 
 import TheLogo from "@/components/singletons/TheLogo";
+import TheHamburger from "@/components/singletons/TheHamburger";
 import TheMainMenu from "@/components/singletons/TheMainMenu";
 
 export default {
-  components: { TheLogo, TheMainMenu },
+  components: { TheLogo, TheHamburger, TheMainMenu },
   data: function() {
     return {
-      prevBgColor: undefined
+      prevBgColor: undefined,
+      menuOpen: false
     };
   },
   computed: {
@@ -52,6 +82,22 @@ export default {
     }
   },
   methods: {
+    handleHamburgerOpen() {
+      this.setMenuOpen(true);
+    },
+    handleHamburgerClose() {
+      this.setMenuOpen(false);
+    },
+    handleLogoClick() {
+      this.setMenuOpen(false);
+    },
+    /**
+     * @param {Boolean} val New value for menuOpen.
+     */
+    setMenuOpen(val) {
+      if (typeof val !== "boolean") throw new Error("Incorrect value type.");
+      this.menuOpen = val;
+    },
     /**
      * Tweens the application's background color through perceptually uniform color space.
      * @param {Element} el Transitioning element.
@@ -79,6 +125,17 @@ export default {
       });
     }
   },
+  created: function() {
+    // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
+    this.$router.beforeEach((to, from, next) => {
+      const resetScrollPosition = el => {
+        if (el) el.scrollTop = 0;
+      };
+
+      resetScrollPosition(this.$refs.app);
+      next();
+    });
+  },
   mounted: function() {
     if (this.$route.name === "home") {
       // Transition is naturally called if first visit is on non-home route
@@ -93,64 +150,116 @@ export default {
 @import "./styles/app.scss";
 
 #app {
-  position: relative;
-  height: fit-content;
+  position: fixed;
+  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   overflow-x: hidden;
   overflow-y: auto;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  @include for-size(tablet-landscape-up) {
+    flex-direction: row;
+  }
 }
 
-.lefter {
-  position: fixed;
-  width: $g-lefter-width;
-  height: 100%;
+.menu-bar {
+  position: sticky;
+  width: 100%;
+  height: calc(#{$g-header-height} / 0.8);
+  top: 0;
 
   z-index: 10; // TODO: use scss z-index mixin
 
-  flex-basis: $g-lefter-width;
+  flex-basis: calc(#{$g-header-height} / 0.8);
   flex-grow: 0;
   flex-shrink: 0;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
 
   pointer-events: none;
+
+  @include for-size(tablet-landscape-up) {
+    display: inline-block;
+    width: $g-lefter-width;
+    height: calc(#{$g-header-height--desktop / 0.8});
+
+    flex-basis: unset;
+
+    flex-direction: column;
+  }
+
+  .logo {
+    position: relative;
+    top: 0;
+    height: 64%;
+
+    z-index: 999;
+
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    @include for-size(tablet-landscape-up) {
+      height: 64%;
+      left: 0;
+
+      margin-top: 30px;
+    }
+  }
+
+  .buttons {
+    height: 64%;
+
+    .hamburger {
+      z-index: 999;
+
+      flex-grow: 0;
+      flex-shrink: 0;
+
+      pointer-events: all;
+    }
+  }
 }
 
-.logo {
-  position: relative;
-  top: 0;
-  left: 0;
+.main-menu {
+  position: fixed;
   width: 100%;
-  height: $g-header-height;
+  height: 100%;
 
-  flex-basis: $g-header-height;
-  flex-grow: 0;
-  flex-shrink: 0;
+  z-index: 11; // TODO: use scss z-index mixin
+
+  @include for-size(tablet-landscape-up) {
+    width: fit-content;
+    height: fit-content;
+    left: 0;
+    top: 265px;
+  }
 }
 
-.router-view {
+.main-content-container {
   position: relative;
+  display: inline-block;
   top: 0;
   left: 0;
   width: 100%;
   height: fit-content;
   min-height: 100vh;
-
-  padding-left: $g-lefter-width;
 }
 
 .view-leave,
 .view-leave-active,
 .view-leave-to {
   position: absolute;
+  left: 0;
+  top: 0;
 }
 </style>

@@ -1,15 +1,13 @@
 <template>
   <div class="the-logo">
-    <router-link to="/">
+    <router-link to="/" class="the-logo__link" @click.native="handleClick">
       <logo
         class="icon"
         :class="{
           'icon--straight': hovered,
           'icon--focused': focused
         }"
-        :width="`${width + padding}px`"
-        :height="`${height + padding}px`"
-        :style="{ padding: padding }"
+        :style="{ width: width ? `${width}px` : null }"
         @mouseover="handleIconHover"
         @mouseout="handleIconHover"
       ></logo>
@@ -19,7 +17,9 @@
 
 <script>
 import Logo from "@/assets/svg/inline.logo.svg";
-// :viewBox="`0 0 ${width} ${height}`"
+// :width="`${width + padding}px`"
+// :height="`${height + padding}px`"
+// :style="{ padding: padding }"
 export default {
   components: { Logo },
   props: {
@@ -27,7 +27,7 @@ export default {
       type: Number,
       required: false,
       default: function() {
-        return 50;
+        return undefined;
       }
     }
   },
@@ -46,26 +46,51 @@ export default {
   methods: {
     handleIconHover(e) {
       this.hovered = e.type === "mouseover";
+    },
+    handleClick() {
+      this.$emit("activate");
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+$padding: 10px;
+
+.the-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__link {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 .icon {
-  position: absolute;
-  left: 50%;
+  position: relative;
+  height: 100%;
+  width: auto;
+
+  padding: $padding;
+
   bottom: 0;
 
   margin: auto;
-  transform: translateX(-50%) rotate(0);
+  transform: rotate(0);
 
   pointer-events: all;
 
   transition: transform 200ms ease-in;
 
   &--straight {
-    transform: translateX(-50%) rotate(22deg);
+    transform: rotate(22deg);
     transition: transform 200ms ease-out;
   }
 

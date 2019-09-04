@@ -1,8 +1,16 @@
 <template>
-  <nav class="c-the-main-nav">
+  <nav
+    class="c-the-main-nav"
+    :class="{
+      'c-the-main-nav--open': open || menuHovered
+    }"
+  >
     <ul
       class="c-main-menu"
-      :class="{ 'c-main-menu--expanded': menuHovered }"
+      :class="{
+        'c-main-menu--hovered': menuHovered,
+        'c-main-menu--expanded': menuHovered || open
+      }"
       @mouseenter="handleMainMenuHover"
       @mouseleave="handleMainMenuHover"
     >
@@ -12,7 +20,11 @@
         class="c-main-menu__item"
         :style="{ 'background-color': getMenuItemColor(meta.hue) }"
       >
-        <router-link :to="path" class="c-main-menu__item-link">
+        <router-link
+          :to="path"
+          class="c-main-menu__item-link"
+          @click.native="handleMenuItemClick"
+        >
           <div
             class="c-main-menu__item-content"
             :class="{ 'c-main-menu__item-content--highlighted': false }"
@@ -24,12 +36,28 @@
         </router-link>
       </li>
     </ul>
+
+    <div
+      class="c-the-main-nav__background"
+      aria-hidden="true"
+      :style="{ 'background-color': bgColor }"
+    ></div>
   </nav>
 </template>
 <script>
 import colors from "@/utils/colors";
 
 export default {
+  props: {
+    open: {
+      type: Boolean,
+      required: true
+    },
+    bgColor: {
+      type: String,
+      required: true
+    }
+  },
   data: function() {
     return {
       menuHovered: false
@@ -41,11 +69,24 @@ export default {
     }
   },
   methods: {
+    handleMenuItemClick(e) {
+      this.resetMenu();
+    },
     handleMainMenuHover(e) {
       this.menuHovered = e.type === "mouseenter";
     },
     getMenuItemColor(hue) {
       return colors.getMenuItemColor(hue);
+    },
+    // TODO: trigger this method when the logo is clicked while the menu is open?
+    resetMenu() {
+      this.setOpen(false);
+      // TODO: since mobile 'hover' lingers after click, fix in order to close menu after menu item activation
+      //    - currently the menu stays open because it is still being 'hovered'
+      this.menuHovered = false;
+    },
+    setOpen(val) {
+      this.$emit("update:open", val);
     }
   }
 };
@@ -62,25 +103,65 @@ $menu-item-height: $menu-item-width--visual;
 
 $lefter-width: $g-lefter-width;
 
-.c-the-main-nav {
-  position: relative;
-  height: fit-content;
-  width: 100%;
+$base-class: ".c-the-main-nav";
 
-  top: 265px;
+.c-the-main-nav {
+  width: 100%;
+  height: 100%;
+  left: 0;
 
   display: flex;
   flex-direction: column;
 
-  pointer-events: all;
+  pointer-events: none;
+
+  transition: 200ms ease-in-out;
+
+  &--open {
+    pointer-events: all;
+
+    #{$base-class}__background {
+      opacity: 1;
+
+      transition: opacity 200ms ease-out;
+    }
+  }
+
+  @include for-size(tablet-landscape-up) {
+    width: unset;
+    height: unset;
+    left: calc(#{$lefter-width} / 2 - #{$menu-item-width--visual} / 2);
+
+    pointer-events: all;
+  }
+
+  &__background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+
+    z-index: -1;
+
+    transition: opacity 200ms ease-in;
+
+    @include for-size(tablet-landscape-up) {
+      display: none;
+    }
+  }
 }
 
+$menu-left-position: -2 * $outline-width;
+$menu-width--mobile: calc(
+  100% - 50px + #{$outline-width} - #{$menu-left-position}
+); // 50px equals icon width
 .c-main-menu {
   position: relative;
-  width: $menu-item-width--expanded;
-  max-width: $menu-item-width;
+  width: $menu-width--mobile;
+  max-width: 0;
 
-  left: calc(#{$lefter-width} / 2 - #{$menu-item-width} / 2);
+  left: $menu-left-position;
+  top: -1 * $outline-width;
 
   padding: $outline-width;
 
@@ -92,9 +173,22 @@ $lefter-width: $g-lefter-width;
   transition: max-width 200ms ease-in-out;
 
   &--expanded {
-    max-width: $menu-item-width--expanded;
+    max-width: $menu-width--mobile;
+  }
 
-    transition: max-width 200ms ease-in-out;
+  @include for-size(tablet-landscape-up) {
+    left: -1 * $outline-width;
+    width: $menu-item-width--expanded + $outline-width * 2;
+
+    max-width: $menu-item-width--visual + 3px;
+
+    transition-delay: 1000ms;
+
+    &--expanded {
+      max-width: $menu-item-width--expanded + $outline-width * 2;
+
+      transition: max-width 200ms ease-in-out;
+    }
   }
 
   &__item {
@@ -106,6 +200,10 @@ $lefter-width: $g-lefter-width;
       margin-bottom: 0;
     }
 
+    @include for-size(tablet-landscape-up) {
+      width: $menu-item-width--expanded;
+    }
+
     &-link {
       width: 100%;
       height: 100%;
@@ -115,7 +213,6 @@ $lefter-width: $g-lefter-width;
     }
 
     &-content {
-      width: $menu-item-width--expanded--visual;
       height: 100%;
 
       &--highlighted {

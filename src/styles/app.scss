@@ -56,14 +56,16 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
 }
 
 .paper {
-  background: pink;
+  background: transparent;
   padding: 20px;
   width: fit-content;
+  border: 2px solid black;
 }
 
 /*
     Project Mixins
 */
+
 
 /*
     Global Transitions

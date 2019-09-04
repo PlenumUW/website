@@ -1,6 +1,9 @@
 <template>
   <div class="home">
-    <issue-slice class="slice"></issue-slice>
+    <issue-slice class="slice" :bgColor="bgColor"></issue-slice>
+    <issue-slice class="slice" :bgColor="bgColor"></issue-slice>
+    <issue-slice class="slice" :bgColor="bgColor"></issue-slice>
+    <issue-slice class="slice" :bgColor="bgColor"></issue-slice>
   </div>
 </template>
 
@@ -9,14 +12,23 @@ import IssueSlice from "@/components/slices/home/IssueSlice";
 
 export default {
   name: "home",
-  components: { IssueSlice }
+  components: { IssueSlice },
+  props: {
+    bgColor: {
+      type: String,
+      required: true
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .home {
-  padding-left: 133px;
-  background: rgba(255, 192, 203, 0.466);
+  padding-left: 0;
+
+  @include for-size(tablet-landscape-up) {
+    padding-left: 133px;
+  }
 }
 .slice {
 }

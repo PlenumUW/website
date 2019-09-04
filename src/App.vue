@@ -28,7 +28,11 @@
 
       <main class="main" :class="{ 'main--hidden': hideMainContent }">
         <transition name="view" @leave="backgroundTransitionLeave">
-          <router-view :key="viewKey" class="router-view"></router-view>
+          <router-view
+            :key="viewKey"
+            class="router-view"
+            :bgColor="bgColor"
+          ></router-view>
         </transition>
       </main>
     </div>
@@ -56,6 +60,7 @@ export default {
     /**
      * The background color of the application.
      */
+    // TODO: Put bgColor in global store
     bgColor: function() {
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
@@ -173,12 +178,11 @@ export default {
 .menu-bar {
   position: sticky;
   width: 100%;
-  height: calc(#{$g-header-height} / 0.8);
   top: 0;
 
   z-index: 10; // TODO: use scss z-index mixin
 
-  flex-basis: calc(#{$g-header-height} / 0.8);
+  // flex-basis: calc(#{$g-header-height} / 0.8);
   flex-grow: 0;
   flex-shrink: 0;
 
@@ -187,15 +191,18 @@ export default {
   justify-content: space-between;
 
   pointer-events: none;
+  @include header-height();
+  @include header-height($property: flex-basis);
 
   @include for-size(tablet-landscape-up) {
     display: inline-block;
     width: $g-lefter-width;
-    height: calc(#{$g-header-height--desktop / 0.8});
 
     flex-basis: unset;
 
     flex-direction: column;
+
+    @include header-height(desktop);
   }
 
   .logo {

@@ -36,12 +36,6 @@
         </router-link>
       </li>
     </ul>
-
-    <div
-      class="c-the-main-nav__background"
-      aria-hidden="true"
-      :style="{ 'background-color': bgColor }"
-    ></div>
   </nav>
 </template>
 <script>
@@ -51,10 +45,6 @@ export default {
   props: {
     open: {
       type: Boolean,
-      required: true
-    },
-    bgColor: {
-      type: String,
       required: true
     }
   },
@@ -133,21 +123,6 @@ $base-class: ".c-the-main-nav";
     left: calc(#{$lefter-width} / 2 - #{$menu-item-width--visual} / 2);
 
     pointer-events: all;
-  }
-
-  &__background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-
-    z-index: -1;
-
-    transition: opacity 200ms ease-in;
-
-    @include for-size(tablet-landscape-up) {
-      display: none;
-    }
   }
 }
 

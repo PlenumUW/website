@@ -105,9 +105,13 @@ export default {
   }
 
   &__description {
+    height: fit-content;
     flex-basis: 50%;
 
     text-align: justify;
+
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
 
     @include for-size(tablet-landscape-down) {
       width: 80%;

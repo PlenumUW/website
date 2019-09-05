@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <atlas-slice class="home-slice slice" :bgColor="bgColor"></atlas-slice>
     <issue-slice class="home-slice slice" :bgColor="bgColor"></issue-slice>
     <footer class="home-paper-wrapper">
       <site-footer></site-footer>
@@ -10,10 +11,11 @@
 <script>
 import SiteFooter from "@/components/SiteFooter";
 import IssueSlice from "@/components/slices/home/IssueSlice";
+import AtlasSlice from "@/components/slices/home/AtlasSlice";
 
 export default {
   name: "home",
-  components: { IssueSlice, SiteFooter },
+  components: { IssueSlice, SiteFooter, AtlasSlice },
   props: {
     bgColor: {
       type: String,

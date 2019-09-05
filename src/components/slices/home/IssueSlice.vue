@@ -1,18 +1,20 @@
 <template>
   <section class="c-issue-slice">
     <home-slice-header :color="bgColor">
-      <a href="#">Plenum 2018</a>
+      <router-link to="/issue/issue-title">Plenum 2018</router-link>
     </home-slice-header>
 
     <div class="c-issue-slice__content-container home-paper-wrapper">
       <div class="c-issue-slice__content-container__content home-paper">
         <img
           class="c-issue-slice__cover-image"
-          src="http://placehold.jp/250x325.png?text=Issue-Cover-Image"
+          src="http://placehold.jp/80/bfbfbf/ffffff/1400x1800.png?text=Issue Cover Image"
         />
 
         <div class="c-issue-slice__toc">
-          <img src="http://placehold.jp/300x200.png?text=Table-of-Contents" />
+          <img
+            src="http://placehold.jp/80/ffffff/b0b0b0/1400x600.png?text=Table of Contents"
+          />
         </div>
       </div>
     </div>

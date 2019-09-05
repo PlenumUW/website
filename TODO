@@ -1,0 +1,5 @@
+Focus:
+    ☐ Build focus directive (and component for extension?)
+    ☐ Anywhere padding was used for outline buffer
+        ☐ REMOVE
+        ☐ Add outline-offset / focus mixin

@@ -18,7 +18,9 @@
     <div class="site-footer__links">
       <a href="https://www.washington.edu/online/privacy">Terms of Use</a>
       <a href="https://www.washington.edu/online/terms">Privacy</a>
-      <a href="https://geography.washington.edu/">UW LOGO</a>
+      <a href="https://geography.washington.edu/">
+        <uw-logo class="uw-logo"></uw-logo>
+      </a>
     </div>
   </div>
 </template>
@@ -26,10 +28,11 @@
 <script>
 // TODO: build foot description from prismic?
 import Logo from "@/assets/svg/inline.logo.svg";
+import UwLogo from "@/assets/svg/inline.uw-logo.svg";
 
 export default {
   name: "SiteFooter",
-  components: { Logo }
+  components: { Logo, UwLogo }
 };
 </script>
 
@@ -121,14 +124,28 @@ export default {
   &__links {
     width: fit-content;
     align-self: flex-end;
+    margin-top: 10px;
 
     @include font-size(1.25em);
     a {
       margin-right: 20px;
+
+      &:focus {
+        text-decoration: none;
+        @include focus();
+      }
     }
 
     a:last-child {
       margin-right: 0;
+    }
+
+    .uw-logo {
+      height: 35px;
+
+      &:hover {
+        fill: rgb(145, 123, 76); // UW Metallic Gold
+      }
     }
   }
 

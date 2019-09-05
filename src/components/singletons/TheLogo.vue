@@ -4,8 +4,7 @@
       <logo
         class="icon"
         :class="{
-          'icon--straight': hovered,
-          'icon--focused': focused
+          'icon--straight': hovered
         }"
         :style="{ width: width ? `${width}px` : null }"
         @mouseover="handleIconHover"
@@ -68,6 +67,10 @@ $padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    &:focus {
+      @include focus();
+    }
   }
 }
 
@@ -90,10 +93,6 @@ $padding: 10px;
   &--straight {
     transform: rotate(22deg);
     transition: transform 200ms ease-out;
-  }
-
-  &--focused {
-    outline: $g-focus-outline;
   }
 }
 </style>

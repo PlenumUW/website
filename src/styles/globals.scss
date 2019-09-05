@@ -148,3 +148,10 @@ $g-focus-outline: 3px solid black;
         @error "Invalid argument for $dp: {" + $dp + "}, look at the method definition for possible values";
     }
 }
+
+@mixin focus($offset: 10px) {
+    outline: $g-focus-outline;
+    outline-offset: $offset;
+
+    text-decoration: none;
+}

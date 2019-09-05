@@ -1,15 +1,15 @@
 <template>
   <div id="app" ref="app" :style="{ 'background-color': bgColor }">
-    <div
+    <header
       class="menu-bar"
       :style="{
         'background-color': bgColor,
         background: `linear-gradient(
-    180deg,
-    ${bgColor},
-    ${bgColor} 66%,
-    transparent 100%
-  )`
+          180deg,
+          ${bgColor},
+          ${bgColor} 66%,
+          transparent 100%
+        )`
       }"
     >
       <the-logo class="logo" @activate="handleLogoClick"></the-logo>
@@ -21,7 +21,7 @@
           @close="handleHamburgerClose"
         ></the-hamburger>
       </div>
-    </div>
+    </header>
 
     <div class="main-content-container">
       <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
@@ -261,9 +261,10 @@ export default {
   }
 
   .main {
-    opacity: 1;
-
     z-index: 10; // TODO: use scss z-index mixin
+
+    padding-bottom: 35px;
+    opacity: 1;
 
     transition: opacity 200ms ease-in;
 

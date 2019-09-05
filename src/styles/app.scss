@@ -62,6 +62,41 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
   border: 2px solid black;
 }
 
+/**
+    Headings
+**/
+@mixin heading($scale) {
+  @if $scale == 1 {
+    @include font-size(6rem);
+  } @else if $scale == 2 {
+    @include font-size(5rem);
+  } @else if $scale == 3 {
+    @include font-size(4rem);
+  } @else if $scale == 4 {
+    @include font-size(3rem);
+  } @else if $scale == 5 {
+    @include font-size(2rem);
+  } @else if $scale == 6 {
+    @include font-size(1rem);
+  }
+}
+
+@mixin headings() {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: $font-titling;
+  }
+
+  @for $i from 1 through 6 {
+    $header: h#{$i};
+    #{$header} {
+      @include heading($i);
+    }
+  }
+}
+
+@include headings();
+
+
 /*
     Project Mixins
 */
@@ -70,18 +105,3 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
 /*
     Global Transitions
 */
-
-/*
-    Plugins/ Extension Overrides
-*/
-// .mq-layout {
-//     position: inherit;
-//     height: inherit;
-//     width: inherit;
-
-//     pointer-events: none;
-
-//     * {
-//       pointer-events: all;
-//     }
-//   }

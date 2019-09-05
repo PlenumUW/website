@@ -17,9 +17,7 @@
 
 <script>
 import Logo from "@/assets/svg/inline.logo.svg";
-// :width="`${width + padding}px`"
-// :height="`${height + padding}px`"
-// :style="{ padding: padding }"
+
 export default {
   components: { Logo },
   props: {
@@ -95,7 +93,7 @@ $padding: 10px;
   }
 
   &--focused {
-    outline: 3px solid black;
+    outline: $g-focus-outline;
   }
 }
 </style>

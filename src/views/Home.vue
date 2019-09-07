@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <atlas-slice class="home-slice slice" :bgColor="bgColor"></atlas-slice>
     <issue-slice class="home-slice slice" :bgColor="bgColor"></issue-slice>
+    <atlas-slice class="home-slice slice" :bgColor="bgColor"></atlas-slice>
     <footer class="home-paper-wrapper">
       <site-footer></site-footer>
     </footer>
@@ -26,17 +26,9 @@ export default {
 </script>
 
 <style lang="scss">
-.home-paper-wrapper {
-  padding-right: 20px;
-  padding-left: 0;
-
-  @include for-size(tablet-landscape-up) {
-    padding-left: 133px;
-    padding-right: 70px;
-  }
-
-  .home-paper {
-    @include box-shadow(12);
+footer {
+  @include for-size(tablet-landscape-down) {
+    padding: 0 !important;
   }
 }
 

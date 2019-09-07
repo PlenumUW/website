@@ -1,64 +1,81 @@
 <template>
-  <section class="c-issue-slice">
-    <home-slice-header :color="bgColor">
+  <home-slice class="c-issue-slice" :color="bgColor">
+    <template #title>
       <router-link to="/issue/issue-title">Plenum 2018</router-link>
-    </home-slice-header>
+    </template>
 
-    <div class="c-issue-slice__content-container home-paper-wrapper">
-      <div class="c-issue-slice__content-container__content home-paper">
-        <img
-          class="c-issue-slice__cover-image"
-          src="http://placehold.jp/80/bfbfbf/ffffff/1400x1800.png?text=Issue Cover Image"
-        />
+    <template #content>
+      <img
+        class="c-issue-slice__cover-image"
+        src="http://placehold.jp/80/bfbfbf/ffffff/1400x1800.png?text=Issue Cover Image"
+      />
 
-        <div class="c-issue-slice__toc">
-          <img
-            src="http://placehold.jp/80/ffffff/b0b0b0/1400x600.png?text=Table of Contents"
-          />
+      <section class="c-issue-slice__toc">
+        <h1 class="c-issue-slice__category-title">Peer-reviewed</h1>
+
+        <div class="c-issue-slice__sub-category__container">
+          <h2 class="c-issue-slice__sub-category__title">Essay</h2>
+
+          <div v-for="i in essays" :key="i" class="toc-entry">
+            <div class="toc-entry__image">
+              <img
+                src="http://placehold.jp/40/adadad/ffffff/400x200.png?text=Project Image"
+              />
+            </div>
+
+            <div class="toc-entry__text">
+              <div class="toc-entry__text__title">Essay Title</div>
+              <div class="toc-entry__text__author">Firstname Lastname</div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+
+        <div class="c-issue-slice__sub-category__container">
+          <h2 class="c-issue-slice__sub-category__title">GIS</h2>
+
+          <div v-for="i in gis" :key="i" class="toc-entry">
+            <div class="toc-entry__image">
+              <img
+                src="http://placehold.jp/40/adadad/ffffff/400x200.png?text=Project Image"
+              />
+            </div>
+
+            <div class="toc-entry__text">
+              <div class="toc-entry__text__title">Project Title</div>
+              <div class="toc-entry__text__author">Firstname Lastname</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </template>
+  </home-slice>
 </template>
 <script>
-import HomeSliceHeader from "./HomeSliceHeader.vue";
+import _ from "lodash";
+import HomeSlice from "./HomeSlice.vue";
 
 export default {
   name: "IssueSlice",
   components: {
-    HomeSliceHeader
+    HomeSlice
   },
   props: {
     bgColor: {
       type: String,
       required: true
     }
+  },
+  data: function() {
+    return {
+      essays: _.range(0, 3, 1),
+      gis: _.range(0, 2, 1)
+    };
   }
 };
 </script>
 <style lang="scss" scoped>
 .c-issue-slice {
   position: relative;
-
-  > *:last-child {
-    padding-bottom: 20%;
-
-    @include for-size(tablet-landscape-up) {
-      padding-bottom: 50px; // To prevent the visibility of the sticky gradient moving offscreen
-    }
-  }
-
-  &__content-container {
-    top: -2em; // To have title cut across top of image
-
-    position: relative;
-
-    z-index: -1;
-
-    @include for-size(tablet-landscape-up) {
-      top: -6em; // To have title cut across top of image
-    }
-  }
 
   &__cover-image {
     width: 100%;

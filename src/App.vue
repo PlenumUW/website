@@ -41,8 +41,10 @@
 
 <script>
 import sweep from "@/utils/sweep";
-import css from "@/styles/js.scss";
 import colors from "@/utils/colors";
+import { fitText } from "@/utils/fittext.js";
+
+import css from "@/styles/js.scss";
 
 import TheLogo from "@/components/singletons/TheLogo";
 import TheHamburger from "@/components/singletons/TheHamburger";
@@ -131,6 +133,8 @@ export default {
     }
   },
   created: function() {
+    fitText();
+
     // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
     this.$router.beforeEach((to, from, next) => {
       const resetScrollPosition = el => {

@@ -1,0 +1,59 @@
+<template>
+  <section class="c-home-slice">
+    <home-slice-header :color="color">
+      <slot name="title"></slot>
+    </home-slice-header>
+
+    <div class="c-home-slice__paper-wrapper">
+      <div class="c-home-slice__paper-wrapper__paper">
+        <slot name="content"></slot>
+      </div>
+    </div>
+
+    <home-slice-header
+      class="c-home-slice__bottom-padding"
+      :color="color"
+      :aria-hidden="true"
+      role="presentation"
+    >
+      <slot name="title"></slot>
+    </home-slice-header>
+  </section>
+</template>
+<script>
+import HomeSliceHeader from "./HomeSliceHeader";
+export default {
+  name: "HomeSlice",
+  components: { HomeSliceHeader },
+  props: {
+    color: {
+      type: String,
+      required: true
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.c-home-slice {
+  &__paper-wrapper {
+    position: relative;
+    z-index: -1;
+    padding-right: 20px;
+    padding-left: 0;
+
+    @include for-size(tablet-landscape-up) {
+      padding-left: 133px;
+      padding-right: 70px;
+    }
+
+    &__paper {
+      @include box-shadow(12);
+    }
+  }
+
+  &__bottom-padding {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+</style>

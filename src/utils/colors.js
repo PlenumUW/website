@@ -1,7 +1,6 @@
 import _ from "lodash";
 import space from "color-space";
 // TODO: figure out how to only import the hsluv with the rgb method in the prototype, 'space' is bloated
-import hsluv from "color-space/hsluv";
 import lchab from "color-space/lchab";
 
 /**

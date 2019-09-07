@@ -1,16 +1,11 @@
 <template>
-  <header
-    class="c-home-slice__header"
-    :style="{
-      background: `linear-gradient(
-            180deg,
-            ${color},
-            ${color} 40%,
-            transparent 60%
-        )`
-    }"
-  >
-    <h1 class="c-home-slice__header__title">
+  <header class="c-home-slice-header">
+    <div
+      class="c-home-slice-header__gradient"
+      :style="{ color: color, 'background-color': color }"
+      aria-hidden="true"
+    ></div>
+    <h1 ref="fit-text" class="c-home-slice-header__title">
       <slot></slot>
     </h1>
   </header>
@@ -24,22 +19,43 @@ export default {
       type: String,
       required: true
     }
+  },
+  mounted: function() {
+    window.fitText(this.$refs["fit-text"], 0.9);
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.c-home-slice__header {
+$header-height: $g-header-height;
+$header-height--desktop: $g-header-height--desktop;
+
+.c-home-slice-header {
   position: sticky;
 
-  @include header-height($property: top);
-
-  @include for-size(tablet-landscape-down) {
-    background: 0 !important;
-  }
+  @include header-height(
+    $property: top
+  ); // Clearance for header in mobile/tablet
 
   @include for-size(tablet-landscape-up) {
     top: 0;
+  }
+
+  &__gradient {
+    display: none;
+
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: $header-height;
+    z-index: -1;
+
+    @include for-size(tablet-landscape-up) {
+      display: block;
+      height: $header-height--desktop;
+
+      box-shadow: 0 13px 25px 9px;
+    }
   }
 
   &__title {
@@ -47,22 +63,7 @@ export default {
 
     text-align: right;
     line-height: 1em;
-
-    @include font-size(8rem);
-
-    @include for-size(tablet-landscape-up) {
-      max-width: 90%;
-
-      @include font-size(10rem);
-    }
-
-    @include for-size(desktop-up) {
-      @include font-size(14rem);
-    }
-
-    @include for-size(big-desktop-up) {
-      @include font-size(17rem);
-    }
+    white-space: nowrap;
 
     > a {
       text-decoration: none;

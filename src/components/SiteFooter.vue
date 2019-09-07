@@ -44,6 +44,7 @@ export default {
   height: fit-content;
 
   position: relative;
+  align-items: center;
 
   border-top: 5px solid black;
 
@@ -53,11 +54,10 @@ export default {
     display: block;
     flex-direction: row;
     max-width: 1200px;
-    margin: auto;
+    margin: 5%;
 
     justify-content: space-between;
 
-    padding: 5%;
     padding-right: 0;
 
     > *:first-child {
@@ -67,7 +67,7 @@ export default {
     @include for-size(tablet-landscape-up) {
       display: flex;
 
-      padding: 45px 5% 45px 2%;
+      // padding: 45px 5% 45px 2%;
 
       > *:first-child {
         margin-right: 30px;

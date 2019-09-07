@@ -2,6 +2,9 @@ import _ from "lodash";
 import space from "color-space";
 // TODO: figure out how to only import the hsluv with the rgb method in the prototype, 'space' is bloated
 import lchab from "color-space/lchab";
+import rgb from "color-space/rgb";
+
+console.log(lchab);
 
 /**
  * Color configurations
@@ -32,7 +35,7 @@ const schemes = {
     },
     paper: {
       lightness: 99,
-      chroma: 100
+      chroma: 2
     }
   }
 };
@@ -57,17 +60,57 @@ class ColorFactory {
     return this.colorSpace.alias[0];
   }
 
+  get hueMin() {
+    return this.colorSpace.min[this.hueChannelIndex];
+  }
+
+  get hueMax() {
+    return this.colorSpace.max[this.hueChannelIndex];
+  }
+
+  get hueRange() {
+    return this.hueMax - this.hueMin;
+  }
+
   getBackgroundColor(h) {
-    return this._getRgbColor(h, this._bg);
+    return this._getRgbColorFromScheme(h, this._bg);
   }
 
   getMenuItemColor(h) {
-    let color = this._getRgbColor(h, this._menu);
+    let color = this._getRgbColorFromScheme(h, this._menu);
     return color;
   }
 
   getPaperColor(h) {
-    return this._getRgbColor(h, this._paper);
+    console.log(h);
+    return this._getRgbColorFromScheme(h, this._paper);
+  }
+
+  getOppositeHueByRgbString(rgbString) {
+    const rgbVals = this.getRgbValuesFromString(rgbString);
+
+    const colorSpaceVals = rgb[this._colorSpace.name](rgbVals);
+    const colorSpaceHue = colorSpaceVals[this.hueChannelIndex];
+
+    return Math.abs(colorSpaceHue - this.hueRange / 2);
+  }
+
+  getRgbValuesFromString(rgbString) {
+    return rgbString
+      .slice(rgbString.indexOf("(") + 1, rgbString.indexOf(")"))
+      .split(",");
+  }
+
+  getOppositeColor(rgbString) {
+    const rgbVals = this.getRgbValuesFromString(rgbString);
+
+    const colorSpaceVals = rgb[this._colorSpace.name](rgbVals);
+    const oppositeColorSpaceHue = this.getOppositeHueByRgbString(rgbString);
+
+    let oppositeColorSpaceVals = colorSpaceVals;
+    oppositeColorSpaceVals[this.hueChannelIndex] = oppositeColorSpaceHue;
+
+    return this.serializeRgb(this.getRgbValues(oppositeColorSpaceVals));
   }
 
   /**
@@ -85,7 +128,7 @@ class ColorFactory {
     return _.range(min, max, hueInterval);
   }
 
-  _getRgbColor(h, scheme) {
+  _getRgbColorFromScheme(h, scheme) {
     const hueIndex = this.hueChannelIndex;
     if (
       h === undefined ||
@@ -107,11 +150,15 @@ class ColorFactory {
       }
     });
 
-    return this.serializeRgb(this.colorSpace.rgb(channelValues));
+    return this.serializeRgb(this.getRgbValues(channelValues));
   }
 
   get hueChannelIndex() {
     return this.colorSpace.channel.indexOf("hue");
+  }
+
+  getRgbValues(colorSpaceValues) {
+    return this.colorSpace.rgb(colorSpaceValues);
   }
 
   /**

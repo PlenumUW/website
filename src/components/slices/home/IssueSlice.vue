@@ -86,8 +86,6 @@ export default {
 
   &__toc {
     width: 100%;
-
-    background-color: white;
   }
 }
 </style>

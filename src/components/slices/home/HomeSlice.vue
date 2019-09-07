@@ -5,7 +5,10 @@
     </home-slice-header>
 
     <div class="c-home-slice__paper-wrapper">
-      <div class="c-home-slice__paper-wrapper__paper">
+      <div
+        class="c-home-slice__paper-wrapper__paper"
+        :style="{ 'background-color': paperColor }"
+      >
         <slot name="content"></slot>
       </div>
     </div>
@@ -21,7 +24,10 @@
   </section>
 </template>
 <script>
+import colors from "@/utils/colors";
+
 import HomeSliceHeader from "./HomeSliceHeader";
+
 export default {
   name: "HomeSlice",
   components: { HomeSliceHeader },
@@ -29,6 +35,11 @@ export default {
     color: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    paperColor: function() {
+      return colors.getPaperColor(colors.getOppositeHueByRgbString(this.color));
     }
   }
 };

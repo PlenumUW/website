@@ -4,8 +4,6 @@ import space from "color-space";
 import lchab from "color-space/lchab";
 import rgb from "color-space/rgb";
 
-console.log(lchab);
-
 /**
  * Color configurations
  */
@@ -82,7 +80,6 @@ class ColorFactory {
   }
 
   getPaperColor(h) {
-    console.log(h);
     return this._getRgbColorFromScheme(h, this._paper);
   }
 

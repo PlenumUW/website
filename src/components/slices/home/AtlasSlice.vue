@@ -7,8 +7,8 @@
     <template #content>
       <div class="c-atlas-slice__previews">
         <div
-          v-for="project in currentProjects"
-          :key="project.title"
+          v-for="(project, projectIndex) in currentProjects"
+          :key="`${project.title}-${projectIndex}`"
           class="c-atlas-slice__project"
         >
           <router-link :to="project.slug">

@@ -36,12 +36,6 @@
         </router-link>
       </li>
     </ul>
-
-    <div
-      class="c-the-main-nav__background"
-      aria-hidden="true"
-      :style="{ 'background-color': bgColor }"
-    ></div>
   </nav>
 </template>
 <script>

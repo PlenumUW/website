@@ -159,7 +159,8 @@ $menu-width--mobile: calc(
 
     transition-delay: 1000ms;
 
-    &--expanded {
+    &--expanded,
+    &:focus-within {
       max-width: $menu-item-width--expanded + $outline-width * 2;
 
       transition: max-width 200ms ease-in-out;
@@ -185,6 +186,11 @@ $menu-width--mobile: calc(
       white-space: nowrap;
 
       text-decoration: none;
+
+      &:focus {
+        display: block;
+        outline: $g-focus-outline;
+      }
     }
 
     &-content {

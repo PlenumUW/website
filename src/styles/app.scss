@@ -69,7 +69,7 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
  */
 
 /* suppress focus ring on form controls for mouse users */
-[data-whatintent='mouse'] *:focus {
+[data-whatintent='mouse'] *:focus, [data-whatintent='touch'] *:focus  {
   outline: none !important;
 }
 

@@ -1,6 +1,6 @@
 <template>
   <section class="c-home-slice">
-    <home-slice-header :color="color">
+    <home-slice-header class="c-home-slice__header" :color="color">
       <slot name="title"></slot>
     </home-slice-header>
 
@@ -46,9 +46,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .c-home-slice {
+  font-family: $font-sans;
+  @include headings($font-sans);
+
+  &__header {
+    z-index: 1;
+  }
+
   &__paper-wrapper {
     position: relative;
-    z-index: -1;
+    z-index: 0;
     padding-right: 20px;
     padding-left: 0;
 

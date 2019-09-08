@@ -63,6 +63,7 @@ export default {
      * The background color of the application.
      */
     // TODO: Put bgColor in global store
+    // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
     bgColor: function() {
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
@@ -186,7 +187,6 @@ export default {
 
   z-index: 10; // TODO: use scss z-index mixin
 
-  // flex-basis: calc(#{$g-header-height} / 0.8);
   flex-grow: 0;
   flex-shrink: 0;
 
@@ -197,6 +197,10 @@ export default {
   pointer-events: none;
   @include header-height();
   @include header-height($property: flex-basis);
+
+  @include for-size(tablet-portrait-up) {
+    @include header-height(tablet, flex-basis);
+  }
 
   @include for-size(tablet-landscape-up) {
     display: inline-block;

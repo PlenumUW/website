@@ -31,12 +31,4 @@ footer {
     padding: 0 !important;
   }
 }
-
-.site-footer {
-}
-
-.home-slice {
-}
-.slice {
-}
 </style>

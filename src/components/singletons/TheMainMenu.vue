@@ -30,7 +30,7 @@
             :class="{ 'c-main-menu__item-content--highlighted': false }"
           >
             <div class="c-main-menu__item-content__name">
-              {{ name | capitalize }}
+              {{ name }}
             </div>
           </div>
         </router-link>
@@ -148,7 +148,7 @@ $menu-width--mobile: calc(
 
   overflow: hidden;
 
-  font-family: Poppins;
+  font-family: $font-sans;
   font-size: 30px;
 
   transition: max-width 200ms ease-in-out;
@@ -209,7 +209,9 @@ $menu-width--mobile: calc(
         margin-left: auto;
         padding-right: 5px;
 
+        font-weight: 600;
         line-height: $menu-item-height;
+        text-transform: capitalize;
       }
     }
   }

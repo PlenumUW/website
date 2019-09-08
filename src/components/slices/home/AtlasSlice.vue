@@ -6,22 +6,22 @@
 
     <template #content>
       <div class="c-atlas-slice__previews">
-        <div class="c-atlas-slice__project">
-          <img
-            class="c-atlas-slice__project__image"
-            src="http://placehold.jp/50/bfbfbf/ffffff/600x800.png?text=Atlas Project Image"
-          />
-          <p class="c-atlas-slice__project__title">Project Title</p>
-          <p class="c-atlas-slice__project__author">Firstname Lastname</p>
-        </div>
-
-        <div class="c-atlas-slice__project">
-          <img
-            class="c-atlas-slice__project__image"
-            src="http://placehold.jp/50/bfbfbf/ffffff/600x800.png?text=Atlas Project Image"
-          />
-          <p class="c-atlas-slice__project__title">Project Title</p>
-          <p class="c-atlas-slice__project__author">Firstname Lastname</p>
+        <div
+          v-for="project in currentProjects"
+          :key="project.title"
+          class="c-atlas-slice__project"
+        >
+          <router-link :to="project.slug">
+            <img class="c-atlas-slice__project__image" :src="project.imgSrc" />
+            <p class="c-atlas-slice__project__title">{{ project.title }}</p>
+            <p
+              v-for="(author, authorIndex) in project.authors"
+              :key="`${project.title}-author-${authorIndex}`"
+              class="c-atlas-slice__project__author"
+            >
+              {{ author }}
+            </p>
+          </router-link>
         </div>
       </div>
 
@@ -32,6 +32,7 @@
   </home-slice>
 </template>
 <script>
+import _ from "lodash";
 import HomeSlice from "./HomeSlice.vue";
 
 export default {
@@ -43,6 +44,24 @@ export default {
     bgColor: {
       type: String,
       required: true
+    }
+  },
+  data: function() {
+    return {
+      projects: _.fill(new Array(3), {
+        title: "Project Title",
+        authors: ["Firstname Lastname"],
+        slug: "/atlas/project/title",
+        imgSrc:
+          "http://placehold.jp/50/bfbfbf/ffffff/600x800.png?text=Atlas Project Image"
+      }),
+      projectPairIndex: 0
+    };
+  },
+  computed: {
+    currentProjects: function() {
+      let index = this.projectPairIndex;
+      return [this.projects[index], this.projects[index + 1]];
     }
   }
 };
@@ -68,24 +87,17 @@ $background: white;
   }
 
   &__previews {
-    display: flex;
-    flex-direction: row;
-
-    padding: 10px 15px;
+    display: block;
+    padding: 30px;
 
     > * {
       margin-right: 0;
     }
 
-    // TODO: this responsive mgmt is too much. find simpler approach using inherit layout qualities
-    @include for-size(tablet-portrait-up) {
-      padding: 25px 30px;
-    }
-    @include for-size(tablet-landscape-down) {
-      display: block;
-      padding: 25px 30px;
-    }
     @include for-size(tablet-landscape-up) {
+      display: flex;
+      flex-direction: row;
+
       > * {
         margin-right: 20px;
 
@@ -102,6 +114,26 @@ $background: white;
   &__project {
     flex-basis: 50%;
 
+    margin-bottom: 25px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    &:hover {
+      .c-atlas-slice__project__title {
+        text-decoration: underline;
+      }
+    }
+
+    @include for-size(tablet-landscape-up) {
+      margin-bottom: 0;
+    }
+
+    > a {
+      text-decoration: none;
+    }
+
     &__image {
       width: 100%;
       height: auto;
@@ -110,7 +142,6 @@ $background: white;
     &__title,
     &__author {
       text-align: center;
-      font-family: $font-serif;
     }
 
     &__title {

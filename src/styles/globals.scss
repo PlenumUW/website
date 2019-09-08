@@ -12,7 +12,7 @@
 /*
 Settings for Typesettings
 */
-$font-sans: 'Poppins', sans-serif;
+$font-sans: 'Montserrat', sans-serif;
 $font-serif: 'Spectral', serif;
 $font-titling: 'Bluu Titling', serif;
 $font-titling--subtitle: 'Bluu', serif;
@@ -35,14 +35,18 @@ $load-typesetted: true; // True is the default value
 */
 $g-lefter-width: 124px;
 $g-header-height: 62px; // 62px
-$g-header-height--desktop: 100px;
+$g-header-height--tablet: 82px; // 62px
+$g-header-height--desktop: 102px;
 @mixin header-height($media: hand-held, $property: height) {
     // $gradient-ratio: 0.8;
 
     @if $media == hand-held {
         // #{$property}: calc(#{$g-header-height / #{$gradient-ratio}});
         #{$property}: $g-header-height;
-    } @else if $media == desktop {
+    } @else if $media == tablet {
+      #{$property}: $g-header-height--tablet;
+      // #{$property}: calc(#{$g-header-height--desktop / #{$gradient-ratio}});
+  } @else if $media == desktop {
         #{$property}: $g-header-height--desktop;
         // #{$property}: calc(#{$g-header-height--desktop / #{$gradient-ratio}});
     }
@@ -157,3 +161,35 @@ $g-focus-outline: 3px solid black;
 
     text-decoration: none;
 }
+
+/**
+    Headings
+**/
+@mixin heading($scale) {
+    @if $scale == 1 {
+      @include font-size(6rem);
+    } @else if $scale == 2 {
+      @include font-size(5rem);
+    } @else if $scale == 3 {
+      @include font-size(4rem);
+    } @else if $scale == 4 {
+      @include font-size(3rem);
+    } @else if $scale == 5 {
+      @include font-size(2rem);
+    } @else if $scale == 6 {
+      @include font-size(1rem);
+    }
+  }
+  
+  @mixin headings($font-family: $font-titling) {
+    h1, h2, h3, h4, h5, h6 {
+      font-family: $font-family;
+    }
+  
+    @for $i from 1 through 6 {
+      $header: h#{$i};
+      #{$header} {
+        @include heading($i);
+      }
+    }
+  }

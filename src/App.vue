@@ -44,6 +44,8 @@ import sweep from "@/utils/sweep";
 import colors from "@/utils/colors";
 import { fitText } from "@/utils/fittext.js";
 
+import whatInput from "what-input";
+
 import css from "@/styles/js.scss";
 
 import TheLogo from "@/components/singletons/TheLogo";

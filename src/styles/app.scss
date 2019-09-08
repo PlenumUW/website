@@ -51,7 +51,6 @@ $bluu-next-path: "~assets/fonts/BluuNext";
 $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
 
 * {
-    // font-family: $font-serif;
     color: $text-color;
 }
 
@@ -64,6 +63,15 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
 }
 
 @include headings();
+
+/*
+ * only suppress the focus ring once what-input has successfully started
+ */
+
+/* suppress focus ring on form controls for mouse users */
+[data-whatintent='mouse'] *:focus {
+  outline: none !important;
+}
 
 
 /*

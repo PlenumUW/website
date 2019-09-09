@@ -1,10 +1,6 @@
 <template>
   <header class="c-home-slice-header">
-    <div
-      class="c-home-slice-header__gradient"
-      :style="{ color: color, 'background-color': color }"
-      aria-hidden="true"
-    ></div>
+    <header-gradient :color="color"></header-gradient>
     <h1 ref="fit-text" class="c-home-slice-header__title">
       <slot></slot>
     </h1>
@@ -12,8 +8,11 @@
 </template>
 
 <script>
+import HeaderGradient from "@/components/HeaderGradient";
+
 export default {
   name: "HomeSliceHeader",
+  components: { HeaderGradient },
   props: {
     color: {
       type: String,
@@ -36,23 +35,6 @@ $header-shadow-height: $g-header-shadow-height;
   position: sticky;
 
   @include header-offset();
-
-  &__gradient {
-    display: none;
-
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: $header-height;
-    z-index: -1;
-
-    @include for-size(tablet-landscape-up) {
-      display: block;
-      height: $header-height--desktop;
-
-      box-shadow: 0 13px 25px 9px;
-    }
-  }
 
   &__title {
     margin-left: auto;

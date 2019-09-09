@@ -11,7 +11,7 @@
           :key="`${project.title}-${projectIndex}`"
           class="c-atlas-slice__project"
         >
-          <router-link :to="project.slug">
+          <router-link :to="project.slug" class="c-atlas-slice__project__link">
             <img class="c-atlas-slice__project__image" :src="project.imgSrc" />
             <p class="c-atlas-slice__project__title">{{ project.title }}</p>
             <p
@@ -130,8 +130,12 @@ $background: white;
       margin-bottom: 0;
     }
 
-    > a {
+    &__link {
       text-decoration: none;
+
+      &:focus {
+        @include focus();
+      }
     }
 
     &__image {

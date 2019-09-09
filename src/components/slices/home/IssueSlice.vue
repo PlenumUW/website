@@ -9,7 +9,7 @@
 
       <section class="toc">
         <header class="toc__header">
-          <a href="#"
+          <a :href="issueDownloadLink"
             ><img
               src="http://placehold.jp/10/bfbfbf/000000/50x50.png?text=Download Icon"
           /></a>
@@ -143,6 +143,9 @@ export default {
     },
     issueSlug: function() {
       return "/issue/issue-title";
+    },
+    issueDownloadLink: function() {
+      return "#";
     }
   }
 };
@@ -183,6 +186,10 @@ export default {
 
       @include for-size(tablet-landscape-down) {
         display: none;
+      }
+
+      a:focus {
+        @include focus();
       }
 
       &__title {
@@ -247,7 +254,12 @@ export default {
         }
 
         &-item-link {
+          display: inline-block; // Only to shrink outline to content width
           text-decoration: none;
+
+          &:focus {
+            @include focus();
+          }
         }
       }
     }

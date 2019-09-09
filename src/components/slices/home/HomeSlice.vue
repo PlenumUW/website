@@ -19,7 +19,7 @@
       :aria-hidden="true"
       role="presentation"
     >
-      <slot name="title"></slot>
+      _
     </home-slice-header>
   </section>
 </template>

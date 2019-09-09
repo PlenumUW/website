@@ -281,6 +281,8 @@ export default {
     &--hidden {
       opacity: 0;
 
+      pointer-events: none;
+
       transition: opacity 200ms ease-out;
     }
   }

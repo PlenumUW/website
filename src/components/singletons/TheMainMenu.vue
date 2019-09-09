@@ -1,14 +1,8 @@
 <template>
-  <nav
-    class="c-the-main-nav"
-    :class="{
-      'c-the-main-nav--open': open || menuHovered
-    }"
-  >
+  <nav class="c-the-main-nav">
     <ul
       class="c-main-menu"
       :class="{
-        'c-main-menu--hovered': menuHovered,
         'c-main-menu--expanded': menuHovered || open
       }"
       @mouseenter="handleMainMenuHover"
@@ -25,10 +19,7 @@
           class="c-main-menu__item-link"
           @click.native="handleMenuItemClick"
         >
-          <div
-            class="c-main-menu__item-content"
-            :class="{ 'c-main-menu__item-content--highlighted': false }"
-          >
+          <div class="c-main-menu__item-content">
             <div class="c-main-menu__item-content__name">
               {{ name }}
             </div>
@@ -59,7 +50,7 @@ export default {
     }
   },
   methods: {
-    handleMenuItemClick(e) {
+    handleMenuItemClick() {
       this.resetMenu();
     },
     handleMainMenuHover(e) {
@@ -68,12 +59,10 @@ export default {
     getMenuItemColor(hue) {
       return colors.getMenuItemColor(hue);
     },
-    // TODO: trigger this method when the logo is clicked while the menu is open?
     resetMenu() {
+      document.activeElement.blur(); // Link activation retains focus, which would keep menu open otherwise
+      this.menuHovered = false; // Ensures the menu closes on mobile/ tablet
       this.setOpen(false);
-      // TODO: since mobile 'hover' lingers after click, fix in order to close menu after menu item activation
-      //    - currently the menu stays open because it is still being 'hovered'
-      this.menuHovered = false;
     },
     setOpen(val) {
       this.$emit("update:open", val);
@@ -107,22 +96,10 @@ $base-class: ".c-the-main-nav";
 
   transition: 200ms ease-in-out;
 
-  &--open {
-    pointer-events: all;
-
-    #{$base-class}__background {
-      opacity: 1;
-
-      transition: opacity 200ms ease-out;
-    }
-  }
-
   @include for-size(tablet-landscape-up) {
     width: unset;
     height: unset;
     left: calc(#{$lefter-width} / 2 - #{$menu-item-width--visual} / 2);
-
-    pointer-events: all;
   }
 }
 
@@ -131,19 +108,20 @@ $menu-width--mobile: calc(
   100% - 50px + #{$outline-width} - #{$menu-left-position}
 ); // 50px equals icon width
 .c-main-menu {
-  position: relative;
   width: $menu-width--mobile;
   max-width: 0;
 
   left: $menu-left-position;
   top: -1 * $outline-width;
 
+  position: relative;
   padding: $outline-width;
-
   overflow: hidden;
 
   font-family: $font-sans;
   font-size: 30px;
+
+  pointer-events: all;
 
   transition: max-width 200ms ease-in-out;
 
@@ -181,6 +159,7 @@ $menu-width--mobile: calc(
     }
 
     &-link {
+      display: block;
       width: 100%;
       height: 100%;
       white-space: nowrap;
@@ -188,17 +167,12 @@ $menu-width--mobile: calc(
       text-decoration: none;
 
       &:focus {
-        display: block;
-        outline: $g-focus-outline;
+        @include focus(0);
       }
     }
 
     &-content {
       height: 100%;
-
-      &--highlighted {
-        outline: $outline-width solid black;
-      }
 
       &__name {
         position: relative;

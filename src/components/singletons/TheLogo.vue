@@ -2,13 +2,8 @@
   <div class="the-logo">
     <router-link to="/" class="the-logo__link" @click.native="handleClick">
       <logo
-        class="icon"
-        :class="{
-          'icon--straight': hovered
-        }"
+        class="the-logo__link__icon"
         :style="{ width: width ? `${width}px` : null }"
-        @mouseover="handleIconHover"
-        @mouseout="handleIconHover"
       ></logo>
     </router-link>
   </div>
@@ -30,7 +25,6 @@ export default {
   },
   data: function() {
     return {
-      hovered: false,
       focused: false,
       padding: 10
     };
@@ -41,9 +35,6 @@ export default {
     }
   },
   methods: {
-    handleIconHover(e) {
-      this.hovered = e.type === "mouseover";
-    },
     handleClick() {
       this.$emit("activate");
     }
@@ -53,6 +44,10 @@ export default {
 
 <style lang="scss" scoped>
 $padding: 10px;
+@mixin rotateIcon() {
+  transform: rotate(22deg);
+  transition: transform 200ms ease-out;
+}
 
 .the-logo {
   display: flex;
@@ -61,38 +56,26 @@ $padding: 10px;
 
   &__link {
     position: relative;
-    width: 100%;
     height: 100%;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    transform: rotate(0);
+
+    transition: transform 200ms ease-in;
 
     &:focus {
-      @include focus();
+      @include focus(0);
     }
-  }
-}
 
-.icon {
-  position: relative;
-  height: 100%;
-  width: auto;
+    &:hover {
+      @include rotateIcon();
+    }
 
-  padding: $padding;
+    &__icon {
+      height: 100%;
+      pointer-events: all;
 
-  bottom: 0;
-
-  margin: auto;
-  transform: rotate(0);
-
-  pointer-events: all;
-
-  transition: transform 200ms ease-in;
-
-  &--straight {
-    transform: rotate(22deg);
-    transition: transform 200ms ease-out;
+      padding: $padding;
+    }
   }
 }
 </style>

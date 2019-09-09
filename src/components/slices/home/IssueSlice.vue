@@ -172,20 +172,39 @@ export default {
     position: relative;
     width: 100%;
     height: fit-content;
-    padding: $toc_padding;
+    padding: 10px;
+
+    @include for-size(tablet-portrait-up) {
+      padding: $toc_padding;
+    }
 
     &__header {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
       align-items: flex-start;
+      justify-content: flex-end;
 
-      position: sticky;
-      top: calc(100vh - var(--header-height) - #{$toc_padding});
+      margin-bottom: 20px;
+
+      top: 0;
+
       width: 100%;
 
-      @include for-size(tablet-landscape-down) {
+      @include for-size(tablet-landscape-up) {
+        position: sticky;
+        top: calc(100vh - var(--header-height) - #{$toc_padding});
+        margin-bottom: 0;
+
+        justify-content: space-between;
+      }
+
+      a {
         display: none;
+        height: 100%;
+
+        @include for-size(tablet-landscape-up) {
+          display: unset;
+        }
       }
 
       a:focus {
@@ -196,7 +215,11 @@ export default {
         font-family: $font-titling;
         line-height: 1em;
 
-        @include font-size(3em);
+        @include font-size(2em);
+
+        @include for-size(tablet-portrait-up) {
+          @include font-size(3em);
+        }
       }
     }
 
@@ -206,7 +229,10 @@ export default {
       justify-content: space-between;
 
       position: relative;
-      padding-left: 150px; // TODO: at least width of download icon
+
+      @include for-size(tablet-landscape-up) {
+        padding-left: 150px; // TODO: at least width of download icon
+      }
 
       &__image-preview {
         width: 500px;
@@ -228,7 +254,11 @@ export default {
     }
 
     &__category {
-      margin-bottom: 42px;
+      margin-bottom: 25px;
+
+      @include for-size(tablet-portrait-up) {
+        margin-bottom: 42px;
+      }
 
       &:last-of-type {
         margin-bottom: 0;
@@ -239,14 +269,25 @@ export default {
 
         text-transform: capitalize;
 
-        @include font-size(2em);
+        @include font-size(1.5em);
+
+        @include for-size(tablet-portrait-up) {
+          @include font-size(2em);
+        }
       }
 
       &__menu {
-        margin-left: 47px;
+        margin-left: 10px;
+        @include for-size(tablet-portrait-up) {
+          margin-left: 47px;
+        }
 
         &-item-wrapper {
-          margin-bottom: 36px;
+          margin-bottom: 15px;
+
+          @include for-size(tablet-portrait-up) {
+            margin-bottom: 36px;
+          }
 
           &:last-of-type {
             margin-bottom: 0;
@@ -269,11 +310,18 @@ export default {
     display: grid;
 
     grid-template-rows: min-content min-content;
-    grid-template-columns: 30px auto;
-    grid-column-gap: 35px;
+    grid-template-columns: 20px auto;
+    grid-column-gap: 20px;
     grid-row-gap: 0px;
 
-    @include font-size(1.5em);
+    @include font-size(1em);
+
+    @include for-size(tablet-portrait-up) {
+      grid-template-columns: 30px auto;
+      grid-column-gap: 35px;
+
+      @include font-size(1.5em);
+    }
 
     &:hover {
       .menu-item__title {

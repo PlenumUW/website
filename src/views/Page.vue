@@ -1,6 +1,10 @@
 <template>
   <div class="c-page">
-    <section class="c-page__section">
+    <section
+      v-for="(section, index) in [1, 2]"
+      :key="`${index}-${uid}`"
+      class="c-page__section"
+    >
       <header class="c-page__section__header">
         <header-gradient
           class="c-page__section__gradient"
@@ -12,37 +16,41 @@
 
       <div class="c-page__section__content">
         <paper class="c-page__section__paper" :color="color">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Pellentesque quis lacus aliquet, mollis lacus et, sollicitudin
-            turpis. Vestibulum dapibus tincidunt urna, et varius justo tincidunt
-            vel. Sed sodales ut sem id efficitur. Vestibulum quis ligula quis
-            nunc ultrices suscipit. Aenean vestibulum purus placerat, dictum
-            orci et, scelerisque ante. Quisque imperdiet dolor scelerisque
-            luctus bibendum. Curabitur sed sapien sit amet metus viverra
-            efficitur. Nullam ac sagittis ipsum. Suspendisse lorem neque, mollis
-            nec ullamcorper vitae, consectetur a orci. Ut interdum malesuada
-            commodo. Sed et sollicitudin turpis. Proin a egestas massa,
-            vulputate egestas diam. Nulla risus dolor, vulputate vitae turpis
-            in, blandit semper nulla. Quisque ultrices eget libero et tempor.
-            Nulla mi diam, laoreet in est eget, interdum bibendum massa.
-            Praesent convallis blandit lectus quis iaculis.
-          </p>
-          <p>
-            Aliquam fringilla diam vitae erat porta, vitae congue justo
-            hendrerit. Vivamus cursus tristique arcu, vehicula pulvinar justo
-            porttitor ac. Donec nec est et ligula tempor interdum ut at nunc.
-            Maecenas posuere libero et tellus dignissim bibendum. Donec non
-            metus lectus. Donec vel diam aliquet, pulvinar nisi varius, vehicula
-            velit. Pellentesque euismod elit eu sapien auctor volutpat. Integer
-            faucibus quis lectus ut iaculis. Fusce imperdiet et nisi at
-            interdum. Fusce condimentum neque eget tortor pellentesque, at
-            tempor metus sodales. Quisque enim magna, commodo sit amet velit
-            eget, interdum ultricies orci. Donec dignissim, enim ac bibendum
-            imperdiet, elit orci faucibus augue, eget dignissim est est at nunc.
-            Nulla faucibus felis a sodales porttitor. Vestibulum nec purus eget
-            libero porta lobortis id et ante.
-          </p>
+          <section>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Pellentesque quis lacus aliquet, mollis lacus et, sollicitudin
+              turpis. Vestibulum dapibus tincidunt urna, et varius justo
+              tincidunt vel. Sed sodales ut sem id efficitur. Vestibulum quis
+              ligula quis nunc ultrices suscipit. Aenean vestibulum purus
+              placerat, dictum orci et, scelerisque ante. Quisque imperdiet
+              dolor scelerisque luctus bibendum. Curabitur sed sapien sit amet
+              metus viverra efficitur. Nullam ac sagittis ipsum. Suspendisse
+              lorem neque, mollis nec ullamcorper vitae, consectetur a orci. Ut
+              interdum malesuada commodo. Sed et sollicitudin turpis. Proin a
+              egestas massa, vulputate egestas diam. Nulla risus dolor,
+              vulputate vitae turpis in, blandit semper nulla. Quisque ultrices
+              eget libero et tempor. Nulla mi diam, laoreet in est eget,
+              interdum bibendum massa. Praesent convallis blandit lectus quis
+              iaculis.
+            </p>
+            <p>
+              Aliquam fringilla diam vitae erat porta, vitae congue justo
+              hendrerit. Vivamus cursus tristique arcu, vehicula pulvinar justo
+              porttitor ac. Donec nec est et ligula tempor interdum ut at nunc.
+              Maecenas posuere libero et tellus dignissim bibendum. Donec non
+              metus lectus. Donec vel diam aliquet, pulvinar nisi varius,
+              vehicula velit. Pellentesque euismod elit eu sapien auctor
+              volutpat. Integer faucibus quis lectus ut iaculis. Fusce imperdiet
+              et nisi at interdum. Fusce condimentum neque eget tortor
+              pellentesque, at tempor metus sodales. Quisque enim magna, commodo
+              sit amet velit eget, interdum ultricies orci. Donec dignissim,
+              enim ac bibendum imperdiet, elit orci faucibus augue, eget
+              dignissim est est at nunc. Nulla faucibus felis a sodales
+              porttitor. Vestibulum nec purus eget libero porta lobortis id et
+              ante.
+            </p>
+          </section>
 
           <section>
             <h2>
@@ -129,7 +137,13 @@ export default {
     padding-right: 20px;
 
     @include for-size(tablet-landscape-up) {
+      margin-bottom: 50px;
+
       padding-left: 100px;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
     }
 
     &__header {
@@ -143,30 +157,60 @@ export default {
       ); // TODO: change all header mixins to this responsive one
     }
 
+    $paper-padding: 20px;
     &__title {
+      margin-bottom: 15px;
+
       position: relative;
-      margin-bottom: 65px;
+      padding-left: $paper-padding;
 
       text-align: left;
 
       @include font-size(3em);
 
       @include for-size(tablet-landscape-up) {
+        margin-bottom: 65px;
+
         @include font-size(5em);
       }
     }
 
     &__paper {
-      margin-bottom: 75px;
-
-      padding: 70px 80px;
-
+      padding: $paper-padding;
       @include for-size(tablet-portrait-up) {
+        margin-bottom: 75px;
+
         margin-left: 100px;
+
+        padding: 70px 80px;
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    &__content {
+      section {
+        margin-bottom: 60px;
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
       }
 
-      &:last-of-type {
-        margin-bottom: 0;
+      h2 {
+        margin-bottom: 20px;
+
+        @include font-size(2.2em);
+      }
+
+      p {
+        margin-bottom: 30px;
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
       }
     }
   }

@@ -3,7 +3,11 @@ import App from "./App.vue";
 import router from "./router/router";
 import store from "./store";
 
+import Paper from "@/components/Paper";
+
 Vue.config.productionTip = false;
+
+Vue.component("Paper", Paper);
 
 new Vue({
   router,

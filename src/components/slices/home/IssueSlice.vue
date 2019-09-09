@@ -269,6 +269,8 @@ export default {
 
         text-transform: capitalize;
 
+        font-family: $font-sans;
+
         @include font-size(1.5em);
 
         @include for-size(tablet-portrait-up) {

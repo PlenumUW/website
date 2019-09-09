@@ -54,14 +54,6 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
     color: $text-color;
 }
 
-.paper {
-  background: transparent;
-  padding: 20px;
-  width: fit-content;
- 
-  border: 2px solid black;
-}
-
 @include headings();
 
 /*

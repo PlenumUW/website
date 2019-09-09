@@ -1,13 +1,16 @@
 <template>
   <div class="about-view">
-    <div class="paper">
+    <paper>
       <h1>This is an about page</h1>
-    </div>
+    </paper>
   </div>
 </template>
 
 <script>
+import View from "@/components/bases/View";
+
 export default {
-  name: "about"
+  name: "about",
+  extends: View
 };
 </script>

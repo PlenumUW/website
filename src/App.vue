@@ -14,7 +14,7 @@
           <router-view
             :key="viewKey"
             class="router-view"
-            :bgColor="bgColor"
+            :color="bgColor"
           ></router-view>
         </transition>
       </main>

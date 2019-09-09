@@ -67,8 +67,6 @@ export default {
     @include for-size(tablet-landscape-up) {
       display: flex;
 
-      // padding: 45px 5% 45px 2%;
-
       > *:first-child {
         margin-right: 30px;
       }
@@ -129,6 +127,7 @@ export default {
     width: fit-content;
     align-self: flex-end;
     margin-top: 10px;
+    margin-right: 5%;
 
     @include font-size(1.25em);
     a {

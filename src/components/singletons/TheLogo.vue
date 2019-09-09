@@ -50,13 +50,15 @@ $padding: 10px;
 }
 
 .the-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
+  height: 100%;
 
   &__link {
-    position: relative;
+    display: block;
+    width: fit-content;
     height: 100%;
+
+    position: relative;
 
     transform: rotate(0);
 
@@ -72,9 +74,10 @@ $padding: 10px;
 
     &__icon {
       height: 100%;
-      pointer-events: all;
 
       padding: $padding;
+
+      pointer-events: all;
     }
   }
 }

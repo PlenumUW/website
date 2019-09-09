@@ -1,27 +1,10 @@
 <template>
   <div id="app" ref="app" :style="{ 'background-color': bgColor }">
-    <header
-      class="menu-bar"
-      :style="{
-        'background-color': bgColor,
-        background: `linear-gradient(
-          180deg,
-          ${bgColor},
-          ${bgColor} 66%,
-          transparent 100%
-        )`
-      }"
-    >
-      <the-logo class="logo" @activate="handleLogoClick"></the-logo>
-      <div class="buttons">
-        <the-hamburger
-          class="hamburger"
-          :open="menuOpen"
-          @open="handleHamburgerOpen"
-          @close="handleHamburgerClose"
-        ></the-hamburger>
-      </div>
-    </header>
+    <the-site-header
+      :color="bgColor"
+      :hamburgerOpen.sync="menuOpen"
+      @logoClick="handleLogoClick"
+    ></the-site-header>
 
     <div class="main-content-container">
       <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
@@ -44,16 +27,16 @@ import sweep from "@/utils/sweep";
 import colors from "@/utils/colors";
 import { fitText } from "@/utils/fittext.js";
 
+// eslint-disable-next-line no-unused-vars
 import whatInput from "what-input";
 
 import css from "@/styles/js.scss";
 
-import TheLogo from "@/components/singletons/TheLogo";
-import TheHamburger from "@/components/singletons/TheHamburger";
 import TheMainMenu from "@/components/singletons/TheMainMenu";
+import TheSiteHeader from "@/components/singletons/TheSiteHeader";
 
 export default {
-  components: { TheLogo, TheHamburger, TheMainMenu },
+  components: { TheSiteHeader, TheMainMenu },
   data: function() {
     return {
       prevBgColor: undefined,
@@ -92,12 +75,6 @@ export default {
     }
   },
   methods: {
-    handleHamburgerOpen() {
-      this.setMenuOpen(true);
-    },
-    handleHamburgerClose() {
-      this.setMenuOpen(false);
-    },
     handleLogoClick() {
       this.setMenuOpen(false);
     },
@@ -179,71 +156,6 @@ export default {
 
   @include for-size(tablet-landscape-up) {
     flex-direction: row;
-  }
-}
-
-.menu-bar {
-  position: sticky;
-  width: 100%;
-  top: 0;
-
-  z-index: 10; // TODO: use scss z-index mixin
-
-  flex-grow: 0;
-  flex-shrink: 0;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  pointer-events: none;
-  @include header-height();
-  @include header-height($property: flex-basis);
-
-  @include for-size(tablet-portrait-up) {
-    @include header-height(tablet, flex-basis);
-  }
-
-  @include for-size(tablet-landscape-up) {
-    display: inline-block;
-    width: $g-lefter-width;
-
-    flex-basis: unset;
-
-    flex-direction: column;
-
-    @include header-height(desktop);
-  }
-
-  .logo {
-    position: relative;
-    top: 0;
-    height: 64%;
-
-    z-index: 999;
-
-    flex-grow: 0;
-    flex-shrink: 0;
-
-    @include for-size(tablet-landscape-up) {
-      height: 64%;
-      left: 0;
-
-      margin-top: 30px;
-    }
-  }
-
-  .buttons {
-    height: 64%;
-
-    .hamburger {
-      z-index: 999;
-
-      flex-grow: 0;
-      flex-shrink: 0;
-
-      pointer-events: all;
-    }
   }
 }
 

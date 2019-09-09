@@ -28,18 +28,14 @@ export default {
 
 <style lang="scss" scoped>
 $header-height: $g-header-height;
+$header-height--tablet: $g-header-height--tablet;
 $header-height--desktop: $g-header-height--desktop;
+$header-shadow-height: $g-header-shadow-height;
 
 .c-home-slice-header {
   position: sticky;
 
-  @include header-height(
-    $property: top
-  ); // Clearance for header in mobile/tablet
-
-  @include for-size(tablet-landscape-up) {
-    top: 0;
-  }
+  @include header-offset();
 
   &__gradient {
     display: none;

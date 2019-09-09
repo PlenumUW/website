@@ -208,6 +208,9 @@ export default {
       p {
         margin-bottom: 30px;
 
+        font-family: $font-serif;
+        @include font-size(1.3em);
+
         &:last-of-type {
           margin-bottom: 0;
         }

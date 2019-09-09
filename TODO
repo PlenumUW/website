@@ -4,3 +4,6 @@ Focus:
         ☐ Add focus outline to menu button
         ☐ Move focus into menu on menu open
         ☐ Move focus to menu button if menu closed, but move to body if closed because of link activation
+
+Footer:
+    ☐ Center footer content to home paper?

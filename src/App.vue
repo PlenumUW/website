@@ -18,6 +18,7 @@
           ></router-view>
         </transition>
       </main>
+      <site-footer></site-footer>
     </div>
   </div>
 </template>
@@ -34,9 +35,10 @@ import css from "@/styles/js.scss";
 
 import TheMainMenu from "@/components/singletons/TheMainMenu";
 import TheSiteHeader from "@/components/singletons/TheSiteHeader";
+import SiteFooter from "@/components/singletons/TheSiteFooter";
 
 export default {
-  components: { TheSiteHeader, TheMainMenu },
+  components: { TheSiteHeader, TheMainMenu, SiteFooter },
   data: function() {
     return {
       prevBgColor: undefined,

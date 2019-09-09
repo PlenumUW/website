@@ -37,11 +37,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$lefter-width: $g-lefter-width;
+
 .site-footer {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: fit-content;
+  margin-top: 60px;
+  margin-bottom: 20px;
 
   position: relative;
   align-items: center;
@@ -49,6 +53,16 @@ export default {
   border-top: 5px solid black;
 
   font-family: $font-titling--subtitle;
+
+  @include for-size(tablet-landscape-up) {
+    left: -124px;
+    width: 100vw;
+    margin-top: 50px;
+    margin-bottom: 20px;
+
+    position: absolute;
+    padding-left: 124px;
+  }
 
   &__info-container {
     display: block;
@@ -130,6 +144,9 @@ export default {
     margin-right: 5%;
 
     @include font-size(1.25em);
+    @include for-size(tablet-landscape-up) {
+      margin-right: 40px;
+    }
     a {
       margin-right: 20px;
 

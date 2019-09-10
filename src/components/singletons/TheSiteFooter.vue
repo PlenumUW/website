@@ -1,5 +1,6 @@
 <template>
-  <div class="site-footer">
+  <paper class="site-footer" :color="color" :shadow="6">
+    <!-- <div class="site-footer"> -->
     <div class="site-footer__info-container">
       <div class="site-footer__header">
         <logo class="logo"></logo>
@@ -22,17 +23,24 @@
         <uw-logo class="uw-logo"></uw-logo>
       </a>
     </div>
-  </div>
+    <!-- </div> -->
+  </paper>
 </template>
 
 <script>
-// TODO: build foot description from prismic?
+// TODO: use a prismic document for footer text?
 import Logo from "@/assets/svg/inline.logo.svg";
 import UwLogo from "@/assets/svg/inline.uw-logo.svg";
 
 export default {
   name: "SiteFooter",
-  components: { Logo, UwLogo }
+  components: { Logo, UwLogo },
+  props: {
+    color: {
+      type: String,
+      required: true
+    }
+  }
 };
 </script>
 
@@ -45,12 +53,10 @@ $lefter-width: $g-lefter-width;
   width: 100%;
   height: fit-content;
   margin-top: 60px;
-  margin-bottom: 20px;
 
   position: relative;
   align-items: center;
-
-  border-top: 5px solid black;
+  padding-bottom: 20px;
 
   font-family: $font-titling--subtitle;
 
@@ -58,7 +64,7 @@ $lefter-width: $g-lefter-width;
     left: -124px;
     width: 100vw;
     margin-top: 50px;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
 
     position: absolute;
     padding-left: 124px;
@@ -74,10 +80,6 @@ $lefter-width: $g-lefter-width;
 
     padding-right: 0;
 
-    > *:first-child {
-      margin-bottom: 3%;
-    }
-
     @include for-size(tablet-landscape-up) {
       display: flex;
 
@@ -89,11 +91,13 @@ $lefter-width: $g-lefter-width;
 
   &__header {
     display: grid;
-    height: 100px;
+    height: min-content;
+    margin-bottom: 30px;
 
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(2, min-content);
     grid-template-columns: min-content 1fr;
     grid-auto-columns: auto minmax(0, 1fr);
+    grid-auto-rows: auto min-content;
 
     .title {
       grid-column: 2;
@@ -113,6 +117,10 @@ $lefter-width: $g-lefter-width;
 
       white-space: nowrap;
       @include font-size(1rem);
+
+      @include for-size(phone-only) {
+        white-space: normal;
+      }
     }
   }
 
@@ -127,13 +135,12 @@ $lefter-width: $g-lefter-width;
 
     @include for-size(tablet-landscape-down) {
       width: 80%;
-      min-width: 300px;
-
+      // min-width: 300px;
       margin-left: auto;
     }
 
     @include for-size(phone-only) {
-      width: 100%;
+      margin: auto;
     }
   }
 

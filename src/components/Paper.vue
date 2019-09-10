@@ -24,6 +24,10 @@ export default {
     shadow: {
       type: Number,
       required: false,
+      validator: function(val) {
+        const dps = [0, 1, 2, 3, 4, 6, 8, 9, 12, 16, 24];
+        return dps.find(dp => dp === val);
+      },
       default: function() {
         return 12;
       }

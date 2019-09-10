@@ -18,7 +18,7 @@
           ></router-view>
         </transition>
       </main>
-      <site-footer></site-footer>
+      <site-footer :color="bgColor"></site-footer>
     </div>
   </div>
 </template>
@@ -185,6 +185,7 @@ export default {
   }
 
   .main {
+    min-height: 100vh;
     z-index: 10; // TODO: use scss z-index mixin
 
     padding-bottom: 35px;

@@ -1,6 +1,6 @@
 <template>
   <div class="about-view">
-    <paper>
+    <paper :color="color">
       <h1>This is an about page</h1>
     </paper>
   </div>

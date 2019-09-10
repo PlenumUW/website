@@ -18,7 +18,14 @@ export default {
       type: String,
       required: false,
       default: function() {
-        return "rgb(0,0,0)";
+        return undefined;
+      }
+    },
+    presetColor: {
+      type: String,
+      required: false,
+      default: function() {
+        return "yellow";
       }
     },
     shadow: {
@@ -35,10 +42,28 @@ export default {
   },
   computed: {
     paperColor: function() {
-      return colors.getPaperColor(colors.getOppositeHueByRgbString(this.color));
+      return this.complementaryColor || this.presetRgbString;
     },
     shadowClass: function() {
       return ["shadow-" + this.shadow];
+    },
+    complementaryColor: function() {
+      return this.color
+        ? colors.getPaperColor(colors.getOppositeHueByRgbString(this.color))
+        : undefined;
+    },
+    presetRgbString: function() {
+      let color;
+
+      switch (this.presetColor) {
+        case "yellow":
+          color = [247, 247, 233];
+          break;
+        default:
+          color = [0, 0, 0];
+      }
+
+      return "rgb(" + color.join(",") + ")";
     }
   }
 };

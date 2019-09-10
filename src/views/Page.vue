@@ -191,6 +191,8 @@ export default {
     }
 
     &__content {
+      padding-bottom: 30px; // Helps hide the box-shadow when the paper scrolls under the gradient header // TODO: figure out how to bind this with paper box-shadows
+
       section {
         margin-bottom: 60px;
 

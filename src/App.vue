@@ -1,5 +1,11 @@
 <template>
-  <div id="app" ref="app" :style="{ 'background-color': bgColor }">
+  <div
+    id="app"
+    ref="app"
+    class="app"
+    :style="{ 'background-color': bgColor }"
+    :class="{ 'app--no-scroll': hideMainContent }"
+  >
     <the-site-header
       :color="bgColor"
       :hamburgerOpen.sync="menuOpen"
@@ -18,7 +24,10 @@
           ></router-view>
         </transition>
       </main>
-      <site-footer :color="bgColor"></site-footer>
+      <site-footer
+        :color="bgColor"
+        :class="{ 'site-footer--hidden': hideMainContent }"
+      ></site-footer>
     </div>
   </div>
 </template>
@@ -140,7 +149,7 @@ export default {
 @import "~backpack.css";
 @import "./styles/app.scss";
 
-#app {
+.app {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -158,6 +167,20 @@ export default {
 
   @include for-size(tablet-landscape-up) {
     flex-direction: row;
+  }
+
+  &--no-scroll {
+    overflow: hidden;
+  }
+}
+
+@mixin hidden() {
+  &--hidden {
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: opacity 200ms ease-out;
   }
 }
 
@@ -193,14 +216,16 @@ export default {
 
     transition: opacity 200ms ease-in;
 
-    &--hidden {
-      opacity: 0;
-
-      pointer-events: none;
-
-      transition: opacity 200ms ease-out;
-    }
+    @include hidden();
   }
+}
+
+.site-footer {
+  opacity: 1;
+
+  transition: opacity 200ms ease-in;
+
+  @include hidden();
 }
 
 .view-leave,

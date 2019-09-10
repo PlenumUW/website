@@ -9,10 +9,7 @@
       </div>
 
       <div class="site-footer__description">
-        Plenum is an online journal of geographic works produced by
-        undergraduate students at the University of Washington. The journal is
-        managed by and for students with support by graduate students, the
-        Department of Geography, staff, and professors.
+        {{ description }}
       </div>
     </div>
 
@@ -39,6 +36,11 @@ export default {
     color: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    description: function() {
+      return "Plenum is an online journal of geographic works produced by undergraduate students at the University of Washington. The journal is managed by and for students with support by graduate students, the Department of Geography, staff, and professors.";
     }
   }
 };
@@ -82,6 +84,9 @@ $lefter-width: $g-lefter-width;
 
     @include for-size(tablet-landscape-up) {
       display: flex;
+      margin: 25px;
+      margin-right: 37px;
+      margin-bottom: 0;
 
       > *:first-child {
         margin-right: 30px;
@@ -140,6 +145,7 @@ $lefter-width: $g-lefter-width;
     }
 
     @include for-size(phone-only) {
+      width: 100%;
       margin: auto;
     }
   }

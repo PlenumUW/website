@@ -36,6 +36,7 @@
 import sweep from "@/utils/sweep";
 import colors from "@/utils/colors";
 import { fitText } from "@/utils/fittext.js";
+import API from "@/utils/API.js";
 
 // eslint-disable-next-line no-unused-vars
 import whatInput from "what-input";
@@ -134,6 +135,16 @@ export default {
   },
   created: function() {
     fitText();
+    // API.init()
+    //   .then(res => {
+    //     console.log(res);
+    //     return API.fetchEssays();
+    //   })
+    //   .then(response => {
+    //     console.log(response);
+    //     return API.fetchPages();
+    //   })
+    //   .then(res => console.log(res));
 
     // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
     this.$router.beforeEach((to, from, next) => {

@@ -31,20 +31,22 @@ const routes = [
     }
   },
   {
-    path: "/issue/:issueId",
+    path: "/issue/:issueSlug",
     name: "issue",
-    componentName: "page",
+    componentName: "issue",
     meta: {
       hue: undefined,
       menuItem: false
-    },
-    children: [
-      {
-        path: ":articleSlug",
-        name: "article",
-        componentName: "page"
-      }
-    ]
+    }
+  },
+  {
+    path: "/issue/:issueSlug/:articleSlug",
+    name: "article",
+    componentName: "article",
+    meta: {
+      hue: undefined,
+      menuItem: false
+    }
   },
   {
     path: "/atlas",

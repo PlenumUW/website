@@ -3,11 +3,18 @@ import App from "./App.vue";
 import router from "./router/router";
 import store from "./store";
 
+import VueMeta from "vue-meta";
+
 import Paper from "@/components/Paper";
 
 Vue.config.productionTip = false;
 
 Vue.component("Paper", Paper);
+
+Vue.use(VueMeta, {
+  keyName: "meta",
+  refreshOnceOnNavigation: true
+});
 
 new Vue({
   router,

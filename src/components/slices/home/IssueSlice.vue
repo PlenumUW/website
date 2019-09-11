@@ -139,7 +139,7 @@ export default {
       return "http://placehold.jp/80/bfbfbf/ffffff/1400x1800.png?text=Issue Cover Image";
     },
     title: function() {
-      return "Plenum 2018";
+      return "Current Issue";
     },
     issueSlug: function() {
       return "/issue/issue-title";

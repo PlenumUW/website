@@ -7,8 +7,10 @@ import colors from "@/utils/colors";
 import Home from "./../views/Home.vue";
 import About from "./../views/About.vue";
 import Page from "./../views/Page.vue";
+import Issue from "./../views/Issue.vue";
+import Article from "./../views/Article.vue";
 
-const views = [Home, About, Page];
+const views = [Home, About, Page, Issue, Article];
 
 import { routes } from "./routes";
 
@@ -17,7 +19,9 @@ Vue.use(Router);
 let hues = colors.getEquidistantHues(routes.length);
 hues = _.shuffle(hues);
 const updatedRoutes = routes.map((route, index) => {
-  let routeView = views.find(view => view.name === route.componentName);
+  let routeView = views.find(
+    view => view.name.toLowerCase() === route.componentName
+  );
 
   if (!routeView) {
     throw new Error(

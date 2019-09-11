@@ -140,7 +140,7 @@ export default {
       return "https://payload.cargocollective.com/1/2/91108/13121143/11_MC_DCG_501.jpg";
     },
     title: function() {
-      return "Plenum 2018";
+      return "Current Issue";
     },
     issueSlug: function() {
       return "/issue/issue-title";

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import View from "@/components/bases/View";
+import View from "./View";
 
 export default {
   name: "about",

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import View from "@/components/bases/View";
+import View from "./View";
 
 import IssueSlice from "@/components/slices/home/IssueSlice";
 import AtlasSlice from "@/components/slices/home/AtlasSlice";

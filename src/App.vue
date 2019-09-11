@@ -78,6 +78,15 @@ export default {
     },
     hideMainContent: function() {
       return this.menuOpen;
+    },
+    metaTitle: function() {
+      return "Plenum Journal";
+    },
+    metaImgSrc: function() {
+      return window.location.origin + require("@/assets/raster/meta-image.png");
+    },
+    metaDescription: function() {
+      return "Plenum is an online journal of geographic works produced by undergraduate students at the University of Washington.";
     }
   },
   watch: {
@@ -141,6 +150,31 @@ export default {
       // Transition is naturally called if first visit is on non-home route
       this.backgroundTransitionLeave({}, () => {}, 300);
     }
+  },
+  meta() {
+    const metaTitle = this.metaTitle;
+    const baseUrl = window.location.origin;
+    const metaImgSrc = this.metaImgSrc;
+    const metaDescription = this.metaDescription;
+
+    return {
+      title: "Plenum Journal",
+      meta: [
+        { property: "og:title", content: metaTitle, vmid: "title" },
+        { property: "og:type", content: "website", vmid: "type" },
+        { property: "og:url", content: baseUrl, vmid: "url" },
+        {
+          property: "og:image",
+          content: metaImgSrc,
+          vmid: "image"
+        },
+        {
+          property: "og:description",
+          content: metaDescription,
+          vmid: "description"
+        }
+      ]
+    };
   }
 };
 </script>

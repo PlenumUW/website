@@ -104,7 +104,7 @@
 <script>
 import _ from "lodash";
 
-import View from "@/components/bases/View";
+import View from "./View";
 
 import HeaderGradient from "@/components/HeaderGradient";
 

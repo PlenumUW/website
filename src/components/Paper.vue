@@ -32,8 +32,12 @@ export default {
       type: Number,
       required: false,
       validator: function(val) {
-        const dps = [0, 1, 2, 3, 4, 6, 8, 9, 12, 16, 24];
-        return dps.find(dp => dp === val);
+        const shadowLevels = 24;
+        const testVal = val / shadowLevels;
+        const isInRange = testVal >= 0 && testVal <= shadowLevels;
+        const isInteger = Math.floor(val) === val;
+
+        return isInRange && isInteger;
       },
       default: function() {
         return 12;
@@ -70,37 +74,22 @@ export default {
 </script>
 
 <style lang="scss">
-.shadow-0 {
-  @include box-shadow(0);
-}
-.shadow-1 {
-  @include box-shadow(1);
-}
-.shadow-2 {
-  @include box-shadow(2);
-}
-.shadow-3 {
-  @include box-shadow(3);
-}
-.shadow-4 {
-  @include box-shadow(4);
-}
-.shadow-6 {
-  @include box-shadow(6);
-}
-.shadow-8 {
-  @include box-shadow(8);
-}
-.shadow-9 {
-  @include box-shadow(9);
-}
-.shadow-12 {
-  @include box-shadow(12);
-}
-.shadow-16 {
-  @include box-shadow(16);
-}
-.shadow-24 {
-  @include box-shadow(24);
+@for $i from 0 through 24 {
+  $hoverLevel: $i - 6;
+  @if $hoverLevel < 0 {
+    $hoverLevel: 2;
+  }
+  @if $hoverLevel > $i {
+    $hoverLevel: 0;
+  }
+
+  .shadow-#{$i} {
+    @include mdElevation($i);
+    @include mdElevationTransition(4);
+
+    &:hover {
+      @include mdElevation($hoverLevel);
+    }
+  }
 }
 </style>

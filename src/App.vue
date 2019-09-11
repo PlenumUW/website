@@ -160,7 +160,9 @@ export default {
   flex-direction: column;
 
   overflow-x: hidden;
-  overflow-y: auto;
+  // overflow-y: auto;
+  overflow-y: scroll; // Scroll required for momentum scrolling in iOS
+  -webkit-overflow-scrolling: touch; // Required for momentum scrolling in iOS
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

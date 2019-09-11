@@ -53,10 +53,6 @@ export default {
       padding-left: 133px;
       padding-right: 70px;
     }
-
-    &__paper {
-      @include box-shadow(12);
-    }
   }
 
   &__bottom-padding {

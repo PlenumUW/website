@@ -136,7 +136,8 @@ export default {
   },
   computed: {
     imgSrc: function() {
-      return "http://placehold.jp/80/bfbfbf/ffffff/1400x1800.png?text=Issue Cover Image";
+      // return "http://placehold.jp/80/bfbfbf/ffffff/1400x1800.png?text=Issue Cover Image";
+      return "https://payload.cargocollective.com/1/2/91108/13121143/11_MC_DCG_501.jpg";
     },
     title: function() {
       return "Plenum 2018";
@@ -243,8 +244,6 @@ export default {
 
         position: sticky;
         top: 0;
-
-        @include box-shadow(4);
 
         img {
           width: 100%;

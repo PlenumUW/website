@@ -130,6 +130,12 @@ export default {
     const parentSlug = slugs[0];
 
     this.rawData = await this.$api.fetchPageBySlug(parentSlug);
+
+    // TODO: bind this action to all requests where it's a single document per route
+    if (!this.rawData) {
+      this.$router.replace("/404");
+    }
+
     this.metadata = {
       title: this.title
     };

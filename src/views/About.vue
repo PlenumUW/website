@@ -23,6 +23,11 @@ export default {
     const parentSlug = slugs[0];
 
     this.rawData = await this.$api.fetchPageBySlug(parentSlug);
+
+    if (!this.rawData) {
+      this.$router.replace("/404");
+    }
+
     this.metadata = {
       title: this.title
     };

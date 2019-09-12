@@ -7,10 +7,11 @@ import colors from "@/utils/colors";
 import Home from "./../views/Home.vue";
 import About from "./../views/About.vue";
 import Page from "./../views/Page.vue";
+import Issues from "./../views/Issues.vue";
 import Issue from "./../views/Issue.vue";
 import Article from "./../views/Article.vue";
 
-const views = [Home, About, Page, Issue, Article];
+const views = [Home, About, Page, Issues, Issue, Article];
 
 import { routes } from "./routes";
 

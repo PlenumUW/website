@@ -34,28 +34,51 @@ class Api {
    * @returns {Promise} Returns all essays.
    */
   async fetchEssays() {
-    const essays = (await this.getDocumentsByType("essay")).results;
-    return essays;
+    return (await this.getDocumentsByType("essay")).results;
   }
 
   /**
-   * @returns {Promise} Returns all essays.
+   * @returns {Array} Returns all documents of type 'Page'.
    */
   async fetchAllPages() {
     return (await this.getDocumentsByType("page")).results;
   }
 
-  /**
-   * @returns {Promise} Returns all essays.
-   */
-  async fetchPageBySlug(slug) {
-    // TODO: add error handling
-    return (await this.api.query(this.predicates.at("my.page.uid", slug)))
-      .results[0].data;
+  async getIssues() {
+    return (await this.getDocumentsByType("issue")).results;
   }
 
   /**
-   * @returns {Promise} Returns all essays.
+   * Returns the data of a single document of the given type with a UID that matches the given slug.
+   * If the document does not exist, returns undefined.
+   * @param {String} type A Prismic document type.
+   * @param {String} slug A URL slug of the requested document.
+   */
+  async getTypedDocumentBySlug(type, slug) {
+    try {
+      const results = (await this.api.query(
+        this.predicates.at(`my.${type}.uid`, slug)
+      )).results;
+
+      if (results.length === 0) {
+        return undefined;
+      }
+
+      return results[0].data;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+   * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
+   */
+  async fetchPageBySlug(slug) {
+    return this.getTypedDocumentBySlug("page", slug);
+  }
+
+  /**
+   * @returns {Object} Returns the site metadata.
    */
   async fetchSiteMetadata() {
     return (await this.getDocumentsByType("site_metadata")).results[0].data;

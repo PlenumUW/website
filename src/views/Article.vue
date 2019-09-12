@@ -10,6 +10,9 @@ import View from "./View";
 export default {
   name: "article",
   extends: View,
+  data: function() {
+    return {};
+  },
   computed: {
     title: function() {
       return "Article Title";

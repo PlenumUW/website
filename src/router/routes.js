@@ -12,10 +12,7 @@ const routes = [
   {
     path: "/about",
     name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    componentName: "about",
+    componentName: "page", // about
     meta: {
       hue: undefined,
       menuItem: true
@@ -24,7 +21,7 @@ const routes = [
   {
     path: "/issues",
     name: "issues",
-    componentName: "page",
+    componentName: "issues",
     meta: {
       hue: undefined,
       menuItem: true

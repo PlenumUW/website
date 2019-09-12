@@ -22,6 +22,8 @@ class Api {
       this.api = await prismicJS.api(this.endpoint, this.options);
       this.predicates = prismicJS.Predicates;
       const { results } = await this.api.query("");
+      console.log("API", this.api);
+      console.log("Results", results);
       this.initialized = true;
     } catch (err) {
       throw err;
@@ -40,8 +42,26 @@ class Api {
    * @returns {Promise} Returns all essays.
    */
   async fetchPages() {
-    const essays = (await this.getDocuments("page")).results;
-    return essays;
+    return (await this.getDocuments("page")).results;
+  }
+
+  _getPrismicRawText(prismicArr) {
+    return prismicArr[0].text;
+  }
+
+  /**
+   * @returns {Promise} Returns all essays.
+   */
+  async fetchSiteMetadata() {
+    const { title, description, image } = (await this.getDocuments(
+      "site_metadata"
+    )).results[0].data;
+
+    return {
+      description: this._getPrismicRawText(description),
+      title: this._getPrismicRawText(title),
+      image
+    };
   }
 
   /**
@@ -54,11 +74,7 @@ class Api {
     }
     type = type.toLowerCase();
 
-    if (
-      !Object.keys(this.api.types).find(
-        key => this.api.types[key].toLowerCase() === type
-      )
-    ) {
+    if (!Object.keys(this.api.types).find(key => key === type)) {
       throw new Error("Requested type is not a valid Prismic document type.");
     }
 

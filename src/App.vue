@@ -51,6 +51,7 @@ export default {
   components: { TheSiteHeader, TheMainMenu, SiteFooter },
   data: function() {
     return {
+      metadata: undefined,
       prevBgColor: undefined,
       menuOpen: false // TODO: Find better name, or clarify difference between expanded and open
     };
@@ -79,15 +80,6 @@ export default {
     },
     hideMainContent: function() {
       return this.menuOpen;
-    },
-    metaTitle: function() {
-      return "Plenum Journal";
-    },
-    metaImgSrc: function() {
-      return window.location.origin + require("@/assets/raster/meta-image.png");
-    },
-    metaDescription: function() {
-      return "Plenum is an online journal of geographic works produced by undergraduate students at the University of Washington.";
     }
   },
   watch: {
@@ -133,18 +125,11 @@ export default {
       });
     }
   },
-  created: function() {
+  created: async function() {
     fitText();
-    // API.init()
-    //   .then(res => {
-    //     console.log(res);
-    //     return API.fetchEssays();
-    //   })
-    //   .then(response => {
-    //     console.log(response);
-    //     return API.fetchPages();
-    //   })
-    //   .then(res => console.log(res));
+
+    await API.init();
+    this.metadata = await API.fetchSiteMetadata();
 
     // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
     this.$router.beforeEach((to, from, next) => {
@@ -163,22 +148,41 @@ export default {
     }
   },
   meta() {
-    const metaTitle = this.metaTitle;
+    if (!this.metadata) return {};
+
+    const metaTitle = this.metadata.title;
     const baseUrl = window.location.origin;
-    const metaImgSrc = this.metaImgSrc;
-    const metaDescription = this.metaDescription;
+    const metaImage = this.metadata.image;
+    const metaDescription = this.metadata.description;
 
     return {
       title: "Plenum Journal",
+      // TODO: create meta generation file that reuses vmids and takes data as paremeters
       meta: [
         { property: "og:title", content: metaTitle, vmid: "title" },
         { property: "og:type", content: "website", vmid: "type" },
         { property: "og:url", content: baseUrl, vmid: "url" },
         {
           property: "og:image",
-          content: metaImgSrc,
+          content: metaImage.url,
           vmid: "image"
         },
+        {
+          property: "og:image:secure_url",
+          content: metaImage.url,
+          vmid: "image-strict-url"
+        },
+        {
+          property: "og:image:width",
+          content: metaImage.dimensions.width,
+          vmid: "image-width"
+        },
+        {
+          property: "og:image:height",
+          content: metaImage.dimensions.height,
+          vmid: "image-height"
+        },
+        { property: "og:image:alt", content: metaImage.alt, vmid: "image-alt" },
         {
           property: "og:description",
           content: metaDescription,

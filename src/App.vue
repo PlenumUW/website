@@ -37,6 +37,7 @@ import sweep from "@/utils/sweep";
 import colors from "@/utils/colors";
 import { fitText } from "@/utils/fittext.js";
 import API from "@/utils/API.js";
+import MetadataManager from "@/utils/MetadataManager.js";
 
 // eslint-disable-next-line no-unused-vars
 import whatInput from "what-input";
@@ -148,48 +149,9 @@ export default {
     }
   },
   meta() {
-    if (!this.metadata) return {};
-
-    const metaTitle = this.metadata.title;
-    const baseUrl = window.location.origin;
-    const metaImage = this.metadata.image;
-    const metaDescription = this.metadata.description;
-
-    return {
-      title: "Plenum Journal",
-      // TODO: create meta generation file that reuses vmids and takes data as paremeters
-      meta: [
-        { property: "og:title", content: metaTitle, vmid: "title" },
-        { property: "og:type", content: "website", vmid: "type" },
-        { property: "og:url", content: baseUrl, vmid: "url" },
-        {
-          property: "og:image",
-          content: metaImage.url,
-          vmid: "image"
-        },
-        {
-          property: "og:image:secure_url",
-          content: metaImage.url,
-          vmid: "image-strict-url"
-        },
-        {
-          property: "og:image:width",
-          content: metaImage.dimensions.width,
-          vmid: "image-width"
-        },
-        {
-          property: "og:image:height",
-          content: metaImage.dimensions.height,
-          vmid: "image-height"
-        },
-        { property: "og:image:alt", content: metaImage.alt, vmid: "image-alt" },
-        {
-          property: "og:description",
-          content: metaDescription,
-          vmid: "description"
-        }
-      ]
-    };
+    return MetadataManager.metaDefault(this.metadata, "website", {
+      titleTemplate: false
+    });
   }
 };
 </script>

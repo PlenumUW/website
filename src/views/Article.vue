@@ -4,6 +4,9 @@
   </article>
 </template>
 <script>
+// TODO: VUE WARNING - Do not use built-in or reserved HTML elements as component id: article
+import MetadataManager from "@/utils/MetadataManager.js";
+
 import View from "./View";
 
 export default {
@@ -13,7 +16,7 @@ export default {
     title: function() {
       return "Article Title";
     },
-    metaDescription: function() {
+    description: function() {
       return "Description of the Article"; // TODO: Two sentence abstract!!
     },
     imgSrc: function() {
@@ -26,41 +29,25 @@ export default {
         "Firstname Middlename Lastname",
         "First Last"
       ];
+    },
+    metadata: function() {
+      return {
+        title: this.title,
+        description: this.description,
+        image: {
+          url: this.imgSrc,
+          dimensions: {
+            width: 1000,
+            height: 1400
+          },
+          alt: "Alt text"
+        },
+        authors: this.authors
+      };
     }
   },
   meta() {
-    const title = this.title;
-    const metaDescription = this.metaDescription;
-    const imgSrc = this.imgSrc;
-    const authors = this.authors;
-
-    const { origin, pathname } = window.location;
-    const url = origin + pathname;
-    return {
-      title: title,
-      titleTemplate: "%s - Plenum",
-      meta: [
-        { vmid: "title", property: "og:title", content: title },
-        { vmid: "type", property: "og:type", content: "article" },
-        { vmid: "url", property: "og:url", content: url },
-        {
-          vmid: "image",
-          property: "og:image",
-          content: imgSrc
-        },
-        {
-          vmid: "description",
-          property: "og:description",
-          content: metaDescription
-        },
-        ...(() =>
-          authors.map((author, index) => ({
-            vmid: "author" + index === 0 ? "" : index, // Adding index overrides parent metadata, while creating an array for this page
-            property: "og:author",
-            content: author
-          })))()
-      ]
-    };
+    return MetadataManager.metaDefault(this.metadata, "article");
   }
 };
 </script>

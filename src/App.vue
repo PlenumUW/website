@@ -36,8 +36,6 @@
 import sweep from "@/utils/sweep";
 import colors from "@/utils/colors";
 import { fitText } from "@/utils/fittext.js";
-import API from "@/utils/API.js";
-import MetadataManager from "@/utils/MetadataManager.js";
 
 // eslint-disable-next-line no-unused-vars
 import whatInput from "what-input";
@@ -129,9 +127,6 @@ export default {
   created: async function() {
     fitText();
 
-    await API.init();
-    this.metadata = await API.fetchSiteMetadata();
-
     // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
     this.$router.beforeEach((to, from, next) => {
       const resetScrollPosition = el => {
@@ -147,11 +142,6 @@ export default {
       // Transition is naturally called if first visit is on non-home route
       this.backgroundTransitionLeave({}, () => {}, 300);
     }
-  },
-  meta() {
-    return MetadataManager.metaDefault(this.metadata, "website", {
-      titleTemplate: false
-    });
   }
 };
 </script>

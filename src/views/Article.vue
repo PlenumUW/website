@@ -5,8 +5,6 @@
 </template>
 <script>
 // TODO: VUE WARNING - Do not use built-in or reserved HTML elements as component id: article
-import MetadataManager from "@/utils/MetadataManager.js";
-
 import View from "./View";
 
 export default {
@@ -47,7 +45,7 @@ export default {
     }
   },
   meta() {
-    return MetadataManager.metaDefault(this.metadata, "article");
+    return this.MetadataManager.metaDefault(this.metadata, "article");
   }
 };
 </script>

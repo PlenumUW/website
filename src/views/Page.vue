@@ -114,13 +114,28 @@ export default {
   components: { HeaderGradient },
   data: function() {
     return {
-      items: _.range(0, 5, 1)
+      items: _.range(0, 5, 1),
+      rawData: undefined
     };
   },
   computed: {
     title: function() {
-      return "Page Title";
+      return this.rawData
+        ? this.PrismicProcessor.getPrismicRawText(this.rawData["page_title"])
+        : "";
     }
+  },
+  created: async function() {
+    const slugs = this.$route.path.split("/").filter(el => el.length > 0);
+    const parentSlug = slugs[0];
+
+    this.rawData = await this.$api.fetchPageBySlug(parentSlug);
+    this.metadata = {
+      title: this.title
+    };
+  },
+  meta() {
+    return this.MetadataManager.metaDefault(this.metadata, "website");
   }
 };
 </script>

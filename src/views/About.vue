@@ -11,6 +11,31 @@ import View from "./View";
 
 export default {
   name: "about",
-  extends: View
+  extends: View,
+  data: function() {
+    return {
+      rawData: undefined
+    };
+  },
+  // TODO: Make dry with Page view
+  created: async function() {
+    const slugs = this.$route.path.split("/").filter(el => el.length > 0);
+    const parentSlug = slugs[0];
+
+    this.rawData = await this.$api.fetchPageBySlug(parentSlug);
+    this.metadata = {
+      title: this.title
+    };
+  },
+  computed: {
+    title: function() {
+      return this.PrismicProcessor.getPrismicRawText(
+        this.rawData["page_title"]
+      );
+    }
+  },
+  meta() {
+    return this.MetadataManager.metaDefault(this.metadata, "website");
+  }
 };
 </script>

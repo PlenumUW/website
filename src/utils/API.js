@@ -34,46 +34,38 @@ class Api {
    * @returns {Promise} Returns all essays.
    */
   async fetchEssays() {
-    const essays = (await this.getDocuments("essay")).results;
+    const essays = (await this.getDocumentsByType("essay")).results;
     return essays;
   }
 
   /**
    * @returns {Promise} Returns all essays.
    */
-  async fetchPages() {
-    return (await this.getDocuments("page")).results;
+  async fetchAllPages() {
+    return (await this.getDocumentsByType("page")).results;
   }
 
   /**
-   * Returns the raw text from a Prismic data object.
-   * @param {Array} prismicArr Array that contains a Prismic data object.
+   * @returns {Promise} Returns all essays.
    */
-  // TODO: move to prismic data mgmt class
-  _getPrismicRawText(prismicArr) {
-    return prismicArr[0].text;
+  async fetchPageBySlug(slug) {
+    // TODO: add error handling
+    return (await this.api.query(this.predicates.at("my.page.uid", slug)))
+      .results[0].data;
   }
 
   /**
    * @returns {Promise} Returns all essays.
    */
   async fetchSiteMetadata() {
-    const { title, description, image } = (await this.getDocuments(
-      "site_metadata"
-    )).results[0].data;
-
-    return {
-      description: this._getPrismicRawText(description),
-      title: this._getPrismicRawText(title),
-      image
-    };
+    return (await this.getDocumentsByType("site_metadata")).results[0].data;
   }
 
   /**
    * @param {String} type Prismic portfolio document type, e.g. 'about', 'project'.
    * @returns {Promise} Promise of the specified Prismic document.
    */
-  async getDocuments(type) {
+  async getDocumentsByType(type) {
     if (!this.initialized) {
       throw new Error("Api must be initialized before requests can be handled");
     }
@@ -100,6 +92,6 @@ class Api {
 const prismicEndpoint = window.prismic.endpoint;
 const prismicApiOptions = {};
 
-let API = new Api(prismicEndpoint, prismicApiOptions); // TODO: move outside of this file
+let API = new Api(prismicEndpoint, prismicApiOptions);
 
 export default API;

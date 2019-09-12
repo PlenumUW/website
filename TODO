@@ -13,4 +13,5 @@ API:
     ✔ Review prismic guide @done(19-09-11 16:54)
         - Necessity to install live template compiler?
     ✔ Install prismic dependencies @done(19-09-11 16:54)
+    ☐ Add error handling to ALL async/await usages @created(19-09-12 11:09)
 

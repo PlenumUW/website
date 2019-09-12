@@ -4,8 +4,6 @@
   </article>
 </template>
 <script>
-import MetadataManager from "@/utils/MetadataManager.js";
-
 import View from "./View";
 
 export default {
@@ -38,26 +36,7 @@ export default {
     }
   },
   meta() {
-    return MetadataManager.metaDefault(this.metadata, "book");
-
-    // if (!this.metadata) return {};
-
-    // const { title, description, image, authors } = this.metadata;
-    // const { origin, pathname } = window.location;
-    // const url = origin + pathname;
-
-    // return {
-    //   title: title,
-    //   titleTemplate: "%s - Plenum", // TODO: import reused meta elements like this
-    //   meta: MetadataManager.getOpenGraphMetadata({
-    //     type: "book",
-    //     title,
-    //     description,
-    //     image,
-    //     url,
-    //     authors
-    //   })
-    // };
+    return this.MetadataManager.metaDefault(this.metadata, "book");
   }
 };
 </script>

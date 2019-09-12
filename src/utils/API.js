@@ -85,6 +85,13 @@ class Api {
   }
 
   /**
+   * @returns {Object} Returns the site metadata.
+   */
+  async fetchSiteFooter() {
+    return (await this.getDocumentsByType("site_footer")).results[0].data;
+  }
+
+  /**
    * @param {String} type Prismic portfolio document type, e.g. 'about', 'project'.
    * @returns {Promise} Promise of the specified Prismic document.
    */

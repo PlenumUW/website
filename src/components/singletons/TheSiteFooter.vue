@@ -1,6 +1,5 @@
 <template>
   <paper class="site-footer" :color="color" :shadow="6">
-    <!-- <div class="site-footer"> -->
     <div class="site-footer__info-container">
       <div class="site-footer__header">
         <logo class="logo"></logo>
@@ -14,20 +13,20 @@
     </div>
 
     <div class="site-footer__links">
-      <a href="https://www.washington.edu/online/privacy">Terms of Use</a>
-      <a href="https://www.washington.edu/online/terms">Privacy</a>
-      <a href="https://geography.washington.edu/">
+      <a v-if="terms" :href="terms">Terms of Use</a>
+      <a v-if="privacy" :href="privacy">Privacy</a>
+      <a :href="uwLogoLink">
         <uw-logo class="uw-logo"></uw-logo>
       </a>
     </div>
-    <!-- </div> -->
   </paper>
 </template>
 
 <script>
-// TODO: use a prismic document for footer text?
 import Logo from "@/assets/svg/inline.logo.svg";
 import UwLogo from "@/assets/svg/inline.uw-logo.svg";
+
+import PrismicProcessor from "@/utils/PrismicProcessor";
 
 export default {
   name: "SiteFooter",
@@ -38,10 +37,33 @@ export default {
       required: true
     }
   },
-  computed: {
-    description: function() {
-      return "Plenum is an online journal of geographic works produced by undergraduate students at the University of Washington. The journal is managed by and for students with support by graduate students, the Department of Geography, staff, and professors.";
-    }
+  data: function() {
+    return {
+      description: undefined,
+      privacy: undefined,
+      terms: undefined,
+      uwLogoLink: undefined,
+      facebook: undefined,
+      instagram: undefined,
+      twitter: undefined
+    };
+  },
+  created: async function() {
+    const rawData = await this.$api.fetchSiteFooter();
+
+    this.description = PrismicProcessor.getPrismicRawText(rawData.description);
+
+    this.privacy = rawData["privacy_statement"].url;
+
+    this.terms = rawData["terms_of_use"].url;
+
+    this.uwLogoLink = rawData["uw_logo_link"].url || ""; // Ensures that uw logo always exists, even if not a link // TODO: remove hover effect if not a link
+
+    this.facebook = rawData.facebook.url;
+
+    this.instagram = rawData.instagram.url;
+
+    this.twitter = rawData.facebook.url;
   }
 };
 </script>

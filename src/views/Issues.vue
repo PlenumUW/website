@@ -25,7 +25,7 @@ export default {
       title: "Issue Catalogue"
     };
 
-    this.issues = await this.$api.getIssues();
+    this.issues = await this.$api.fetchAllIssues();
   },
   meta() {
     return this.MetadataManager.metaDefault(this.metadata, "website");

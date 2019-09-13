@@ -38,3 +38,11 @@
 [context."preview"]
   command = "npm run preview"
   publish = "dist"
+
+[[redirects]]
+  from = "http://editor.plenum.space"
+  to = "http://plenum-website.prismic.io"
+
+[[redirects]]
+  from = "https://editor.plenum.space"
+  to = "https://plenum-website.prismic.io"

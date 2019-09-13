@@ -15,7 +15,8 @@
 [context.production]
 #  command = "make production"
   [context.production.environment]
-#    ACCESS_TOKEN = "super secret"
+    NODE_ENV = "production"
+    BUILD_OPTION = "prerender"
 
 # Deploy Preview context: All deploys generated from a pull/merge request
 # will inherit these settings.
@@ -35,4 +36,5 @@
   publish = "under-construction"
 
 [context."content-preview"]
+  command = "npm run preview"
   publish = "dist"

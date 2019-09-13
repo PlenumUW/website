@@ -50,9 +50,20 @@ API.init().then(() => {
       console.log("render event");
     },
     meta() {
-      return MetadataManager.metaDefault(this.metadata, "website", {
+      let metadata = MetadataManager.metaDefault(this.metadata, "website", {
         titleTemplate: false
       });
+
+      if (process.env.VUE_APP_INDEX_SITE === "false") {
+        const noIndex = { name: "robots", content: "noindex" };
+        if (!metadata.meta) {
+          metadata.meta = [noIndex];
+        } else {
+          metadata.meta.push(noIndex);
+        }
+      }
+
+      return metadata;
     }
   }).$mount("#app");
 });

@@ -39,8 +39,8 @@ API.init().then(() => {
       const { title, description, image } = rawMeta;
 
       this.metadata = {
-        description: PrismicProcessor.getPrismicRawText(description),
-        title: PrismicProcessor.getPrismicRawText(title),
+        description: PrismicProcessor.getRawText(description),
+        title: PrismicProcessor.getRawText(title),
         image
       };
     },

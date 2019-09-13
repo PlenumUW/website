@@ -34,9 +34,7 @@ export default {
   },
   computed: {
     title: function() {
-      return this.PrismicProcessor.getPrismicRawText(
-        this.rawData["page_title"]
-      );
+      return this.PrismicProcessor.getRawText(this.rawData["page_title"]);
     }
   },
   meta() {

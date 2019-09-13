@@ -21,6 +21,7 @@ class Api {
     try {
       this.api = await prismicJS.api(this.endpoint, this.options);
       this.predicates = prismicJS.Predicates;
+
       const { results } = await this.api.query("");
       console.log("API", this.api);
       console.log("Results", results);
@@ -89,6 +90,11 @@ class Api {
    */
   async fetchSiteFooter() {
     return (await this.getDocumentsByType("site_footer")).results[0].data;
+  }
+
+  async getDocumentById(id) {
+    return (await this.api.query(this.predicates.at("document.id", id)))
+      .results[0];
   }
 
   /**

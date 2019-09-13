@@ -10,8 +10,9 @@ import Page from "./../views/Page.vue";
 import Issues from "./../views/Issues.vue";
 import Issue from "./../views/Issue.vue";
 import Article from "./../views/Article.vue";
+import Reroute from "./../views/Reroute.vue";
 
-const views = [Home, About, Page, Issues, Issue, Article];
+const views = [Home, About, Page, Issues, Issue, Article, Reroute];
 
 import { routes } from "./routes";
 

@@ -3,6 +3,8 @@ import App from "./App.vue";
 import router from "./router/router";
 import store from "./store";
 
+import Cookies from "js-cookie";
+
 import VueMeta from "vue-meta";
 
 import API from "@/utils/API.js";

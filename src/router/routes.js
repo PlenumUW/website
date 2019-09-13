@@ -105,6 +105,15 @@ const routes = [
     }
   },
   {
+    path: "/route-to-preview",
+    name: "route to preview",
+    componentName: "reroute",
+    meta: {
+      hue: undefined,
+      menuItem: false
+    }
+  },
+  {
     path: "/404",
     name: "not found",
     componentName: "page",

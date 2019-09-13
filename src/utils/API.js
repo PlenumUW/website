@@ -92,7 +92,7 @@ class Api {
     return (await this.getDocumentsByType("site_footer")).results[0].data;
   }
 
-  async getDocumentById(id, options) {
+  async getDocumentById(id, options = {}) {
     return (await this.api.query(
       this.predicates.at("document.id", id),
       options

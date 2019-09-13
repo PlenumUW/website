@@ -35,6 +35,6 @@
   command = ""
   publish = "under-construction"
 
-[context."content-preview"]
+[context."preview"]
   command = "npm run preview"
   publish = "dist"

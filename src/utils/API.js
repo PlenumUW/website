@@ -21,7 +21,7 @@ class Api {
     try {
       this.api = await prismicJS.api(this.endpoint, this.options);
       this.predicates = prismicJS.Predicates;
-      await this.api.query(""); // Initializes the API
+      console.log(await this.api.query("")); // Initializes the API
       this.initialized = true;
     } catch (err) {
       throw err;
@@ -86,6 +86,21 @@ class Api {
    */
   async fetchEssayBySlug(slug) {
     return this.getTypedDocumentBySlug("essay", slug);
+  }
+
+  /**
+   * @param {String} slug A URL slug of a document.
+   * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
+   */
+  async fetchEssayBySlugs(issueSlug, essaySlug) {
+    let issue = this.getTypedDocumentBySlug("issue", issueSlug);
+    if (!issue) return undefined;
+
+    let essay = this.fetchEssayBySlug(essaySlug);
+    if (!essay) return undefined;
+
+    // check whether the essay ID matches an essay id in the issue;
+    return essay;
   }
 
   /**

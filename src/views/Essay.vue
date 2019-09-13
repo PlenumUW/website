@@ -40,7 +40,8 @@ export default {
   },
   created: async function() {
     const essaySlug = this.$route.params.essaySlug;
-    const essay = await this.$api.fetchEssayBySlug(essaySlug);
+    const issueSlug = this.$route.params.issueSlug;
+    const essay = await this.$api.fetchEssayBySlugs(issueSlug, essaySlug);
 
     if (!this.docExists(essay)) {
       return;

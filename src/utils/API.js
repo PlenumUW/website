@@ -92,9 +92,11 @@ class Api {
     return (await this.getDocumentsByType("site_footer")).results[0].data;
   }
 
-  async getDocumentById(id) {
-    return (await this.api.query(this.predicates.at("document.id", id)))
-      .results[0];
+  async getDocumentById(id, options) {
+    return (await this.api.query(
+      this.predicates.at("document.id", id),
+      options
+    )).results[0];
   }
 
   /**
@@ -125,7 +127,7 @@ class Api {
   }
 }
 
-const prismicEndpoint = window.prismic.endpoint;
+const prismicEndpoint = "https://plenum-website.cdn.prismic.io/api/v2"; //window.prismic.endpoint;
 const prismicApiOptions = {};
 
 let API = new Api(prismicEndpoint, prismicApiOptions);

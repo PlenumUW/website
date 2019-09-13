@@ -10,18 +10,20 @@ import Page from "./../views/Page.vue";
 import Issues from "./../views/Issues.vue";
 import Issue from "./../views/Issue.vue";
 import Essay from "./../views/Essay.vue";
+import NotFound from "./../views/NotFound.vue";
 
-const views = [Home, About, Page, Issues, Issue, Essay];
+const views = [Home, About, Page, Issues, Issue, Essay, NotFound];
 
 import { routes } from "./routes";
 
 Vue.use(Router);
 
+// Add a unique perceptually uniform color to each route.
 let hues = colors.getEquidistantHues(routes.length);
 hues = _.shuffle(hues);
 const updatedRoutes = routes.map((route, index) => {
   let routeView = views.find(
-    view => view.name.toLowerCase() === route.componentName
+    view => view.name.toLowerCase() === route.componentName.toLowerCase()
   );
 
   if (!routeView) {
@@ -35,9 +37,8 @@ const updatedRoutes = routes.map((route, index) => {
   return route;
 });
 
-export default new Router({
+let router = new Router({
   mode: "history",
-  // base: process.env.BASE_URL,
   routes: updatedRoutes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -47,3 +48,12 @@ export default new Router({
     }
   }
 });
+
+// Preset routing methods
+router.presets = {
+  docNotFound: path => {
+    router.replace({ name: "not found", params: { brokenPath: path } });
+  }
+};
+
+export default router;

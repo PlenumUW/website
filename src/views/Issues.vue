@@ -10,11 +10,11 @@
   </div>
 </template>
 <script>
-import View from "./View";
+import BaseView from "./BaseView";
 
 export default {
-  name: "issues",
-  extends: View,
+  name: "Issues",
+  extends: BaseView,
   data: function() {
     return {
       issues: []

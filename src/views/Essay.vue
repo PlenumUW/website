@@ -15,12 +15,11 @@
   </article>
 </template>
 <script>
-// TODO: VUE WARNING - Do not use built-in or reserved HTML elements as component id: article
-import View from "./View";
+import BaseView from "./BaseView";
 
 export default {
   name: "Essay",
-  extends: View,
+  extends: BaseView,
   data: function() {
     return {
       essay: undefined,
@@ -32,23 +31,29 @@ export default {
   },
   computed: {
     combinedTitle: function() {
+      if (!this.title || !this.subtitle) return "";
+
       let title = this.title;
       if (this.subtitle) title += ": " + this.subtitle;
       return title;
     }
   },
   created: async function() {
-    const essay = await this.$api.fetchEssayBySlug(
-      this.$route.params.essaySlug
-    );
+    const essaySlug = this.$route.params.essaySlug;
+    const essay = await this.$api.fetchEssayBySlug(essaySlug);
+
+    if (!this.docExists(essay)) {
+      return;
+    }
+
     this.essay = essay;
 
-    const rawText = this.PrismicProcessor.getRawText;
+    const rawTextOf = this.PrismicProcessor.getRawText;
 
-    const title = rawText(essay.title);
-    const subtitle = rawText(essay.subtitle);
-    const authors = essay.authors.map(({ author }) => rawText(author));
-    const description = rawText(essay.description);
+    const title = rawTextOf(essay.title);
+    const subtitle = rawTextOf(essay.subtitle);
+    const authors = essay.authors.map(({ author }) => rawTextOf(author));
+    const description = rawTextOf(essay.description);
     const { metaImage, ...heroImage } = essay.hero_image;
 
     this.title = title;

@@ -73,6 +73,13 @@ class Api {
   /**
    * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
    */
+  async fetchEssayBySlug(slug) {
+    return this.getTypedDocumentBySlug("essay", slug);
+  }
+
+  /**
+   * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
+   */
   async fetchPageBySlug(slug) {
     return this.getTypedDocumentBySlug("page", slug);
   }

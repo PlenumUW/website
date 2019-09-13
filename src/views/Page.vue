@@ -53,9 +53,7 @@
           </section>
 
           <section>
-            <h2>
-              Secondary Title
-            </h2>
+            <h2>Secondary Title</h2>
             <p>
               Donec finibus mauris ante, ullamcorper molestie diam dictum id.
               Vivamus sit amet pharetra nunc. Ut volutpat leo sit amet mauris
@@ -68,9 +66,7 @@
           </section>
 
           <section>
-            <h2>
-              Secondary Title
-            </h2>
+            <h2>Secondary Title</h2>
             <p>
               Maecenas iaculis venenatis elit id consectetur. Ut dignissim
               sodales justo, ut tincidunt diam. Quisque pellentesque semper
@@ -121,7 +117,7 @@ export default {
   computed: {
     title: function() {
       return this.rawData
-        ? this.PrismicProcessor.getPrismicRawText(this.rawData["page_title"])
+        ? this.PrismicProcessor.getRawText(this.rawData["page_title"])
         : "";
     }
   },

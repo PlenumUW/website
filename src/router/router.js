@@ -9,9 +9,9 @@ import About from "./../views/About.vue";
 import Page from "./../views/Page.vue";
 import Issues from "./../views/Issues.vue";
 import Issue from "./../views/Issue.vue";
-import Article from "./../views/Article.vue";
+import Essay from "./../views/Essay.vue";
 
-const views = [Home, About, Page, Issues, Issue, Article];
+const views = [Home, About, Page, Issues, Issue, Essay];
 
 import { routes } from "./routes";
 

@@ -37,9 +37,9 @@ const routes = [
     }
   },
   {
-    path: "/issue/:issueSlug/:articleSlug",
-    name: "article",
-    componentName: "article",
+    path: "/issue/:issueSlug/:essaySlug",
+    name: "essay",
+    componentName: "essay",
     meta: {
       hue: undefined,
       menuItem: false

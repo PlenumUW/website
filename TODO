@@ -5,9 +5,6 @@ Focus:
         ☐ Move focus into menu on menu open
         ☐ Move focus to menu button if menu closed, but move to body if closed because of link activation
 
-Footer:
-    ☐ Center footer content to home paper?
-
 API:
     ✔ Review portfolio methodology @done(19-09-11 16:54)
     ✔ Review prismic guide @done(19-09-11 16:54)
@@ -15,6 +12,10 @@ API:
     ✔ Install prismic dependencies @done(19-09-11 16:54)
     ☐ Add error handling to ALL async/await usages @created(19-09-12 11:09)
     Views to add API calls to:
-        ☐ Article @created(19-09-12 12:58)
+        ☐ Essay @created(19-09-12 12:58)
+            ☐ Add guard that checks for correct issue first
         ✔ Site Footer @created(19-09-12 12:58) @done(19-09-12 13:27)
 
+Build:
+    ☐ Serve doesn't work unless 'dist' folder exists?
+        - Why do I have to prerender before I can do live serve?

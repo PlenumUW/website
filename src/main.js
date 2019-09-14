@@ -50,9 +50,12 @@ API.init().then(() => {
       console.log("render event");
     },
     meta() {
-      let metadata = MetadataManager.metaDefault(this.metadata, "website", {
-        titleTemplate: false
-      });
+      const homeVersion = true;
+      let metadata = MetadataManager.metaDefault(
+        this.metadata,
+        "website",
+        homeVersion
+      );
 
       if (process.env.VUE_APP_INDEX_SITE === "false") {
         const noIndex = { name: "robots", content: "noindex" };

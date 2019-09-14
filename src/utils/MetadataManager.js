@@ -63,21 +63,16 @@ class MetadataManager {
     return metadata;
   }
 
-  static metaDefault(metadata, type, overrides = {}) {
+  static metaDefault(metadata, type, routerAtHome = false) {
     if (!metadata) return {};
-
-    const titleVar = "%s";
 
     const { title, description, image, authors } = metadata;
     const { origin, pathname } = window.location;
     const url = origin + pathname;
 
     return {
-      title: overrides.title || title,
-      titleTemplate:
-        overrides.titleTemplate === false
-          ? titleVar
-          : overrides.titleTemplate || `${titleVar} - Plenum`,
+      title: title,
+      titleTemplate: this.getTitleTemplate(routerAtHome),
       meta: this.getOpenGraphMetadata({
         type,
         title,
@@ -87,6 +82,17 @@ class MetadataManager {
         authors
       })
     };
+  }
+
+  static getTitleTemplate(homeVersion) {
+    const previewPrefix = "Previewing: ";
+    if (homeVersion) return `${previewPrefix}Plenum Journal`;
+
+    const variable = "%s ";
+    const prefix = process.env.VUE_APP_PREVIEW ? previewPrefix : "";
+    const postfix = "- Plenum";
+
+    return prefix + variable + postfix;
   }
 }
 

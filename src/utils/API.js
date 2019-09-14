@@ -58,6 +58,21 @@ class Api {
   }
 
   /**
+   * @returns {Object} The most recently published issue.
+   */
+  async fetchCurrentIssue() {
+    const response = await this.api.query(
+      this.predicates.at("document.type", "issue"),
+      {
+        orderings: "[my.issue.publication_date desc]"
+      }
+    );
+
+    const issues = response.results;
+    return issues[0];
+  }
+
+  /**
    * Returns the data of a single document of the given type with a UID that matches the given slug.
    * @param {String} type A Prismic document type.
    * @param {String} slug A URL slug of a document.

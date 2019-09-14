@@ -1,5 +1,4 @@
 Focus:
-    ☐ Build focus directive (and component for extension?)
     ☐ Add mobile menu focus mgmt
         ☐ Add focus outline to menu button
         ☐ Move focus into menu on menu open
@@ -12,12 +11,15 @@ API:
     ✔ Install prismic dependencies @done(19-09-11 16:54)
     ✔ Add error handling to ALL async/await usages @created(19-09-12 11:09) @done(19-09-13 15:10)
     ✔ Add documentation @done(19-09-13 15:10)
+    ☐ Change site footer and other single type documents API calls with api.getSingle @created(19-09-13 21:21)
     Views to add API calls to:
         ✔ Essay @created(19-09-12 12:58) @done(19-09-13 18:53)
             ✔ Add guard that checks for correct issue first @done(19-09-13 18:53)
         ✔ Site Footer @created(19-09-12 12:58) @done(19-09-12 13:27)
     Issue View:
-        ☐ Validate the validity of the issue slug, reroute if invalid @created(19-09-13 19:04)
+        ☐ Validate the issue slug, reroute if invalid @created(19-09-13 19:04)
+    Issues View:
+        ☐ Priority: Very Low - Add cap of initial issues, paginate @created(19-09-13 19:43)
 
 Build:
     ☐ Serve doesn't work unless 'dist' folder exists?
@@ -26,3 +28,20 @@ Build:
 Warnings/Errors:
     Issue View:
         ☐ The computed property "metadata" is already defined in data. @created(19-09-13 19:03)
+
+Components:
+    ☐ Simple Image @created(19-09-13 19:45)
+        - Placeholder w/ background animation
+        - Source set
+    ☐ Richtext @created(19-09-13 19:46)
+        - Live template? Or components for each prismic rich text type?
+            - I like the idea of generating vue components that match prismic types :)
+
+Styling:
+    View transitions:
+        ☐ Add slide off animation @created(19-09-13 19:44)
+        ☐ Add slide on animation @created(19-09-13 19:44)
+
+Efficiency:
+    ☐ https://www.webpagetest.org @created(19-09-14 09:00)
+        ☐ Get an A! @created(19-09-14 09:00)

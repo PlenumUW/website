@@ -20,6 +20,10 @@ Vue.use(VueMeta, {
   refreshOnceOnNavigation: true
 });
 
+Vue.filter("prismicRawText", function(arr) {
+  return PrismicProcessor.getRawText(arr);
+});
+
 API.init().then(() => {
   Vue.prototype.$api = API;
 

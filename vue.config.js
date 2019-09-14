@@ -51,21 +51,22 @@ module.exports = {
       .loader("vue-svg-loader");
   },
   configureWebpack: {
-    plugins: process.env.BUILD_OPTION
-      ? [
-          new PrerenderSPAPlugin({
-            staticDir: resolve("dist"),
-            outputDir: resolve("dist"),
-            routes: staticRoutePaths,
-            renderer: new Renderer({
-              inject: {
-                foo: "bar"
-              },
-              headless: true,
-              renderAfterDocumentEvent: "render-event"
+    plugins:
+      process.env.BUILD_OPTION === "prerender"
+        ? [
+            new PrerenderSPAPlugin({
+              staticDir: resolve("dist"),
+              outputDir: resolve("dist"),
+              routes: staticRoutePaths,
+              renderer: new Renderer({
+                inject: {
+                  foo: "bar"
+                },
+                headless: true,
+                renderAfterDocumentEvent: "render-event"
+              })
             })
-          })
-        ]
-      : []
+          ]
+        : []
   }
 };

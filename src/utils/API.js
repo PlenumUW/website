@@ -100,6 +100,13 @@ class Api {
     }
   }
 
+  // TODO: have this class extend the ResolvedApi ?
+  // This would remove the moments of '$api.api...', however, it would
+  // couple this API with prismic API? Is it already coupled?
+  async getById(id, options = {}) {
+    return await this.api.getByID(id, options);
+  }
+
   /**
    * @param {String} slug A URL slug of a document.
    * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.

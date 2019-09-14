@@ -74,7 +74,12 @@ class Api {
         return undefined;
       }
 
-      return results[0].data;
+      const result = results[0];
+
+      let data = result.data;
+      data.id = result.id;
+
+      return data;
     } catch (err) {
       throw err;
     }
@@ -93,14 +98,18 @@ class Api {
    * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
    */
   async fetchEssayBySlugs(issueSlug, essaySlug) {
-    let issue = this.getTypedDocumentBySlug("issue", issueSlug);
+    // TODO: improve the efficiency of this, only one API call should be made
+    let issue = await this.getTypedDocumentBySlug("issue", issueSlug);
     if (!issue) return undefined;
 
-    let essay = this.fetchEssayBySlug(essaySlug);
+    let essay = await this.fetchEssayBySlug(essaySlug);
     if (!essay) return undefined;
 
-    // check whether the essay ID matches an essay id in the issue;
-    return essay;
+    const issueContainsEssay = issue.essays.find(
+      essayObj => essayObj.essay.id === essay.id
+    );
+
+    return issueContainsEssay ? essay : undefined;
   }
 
   /**

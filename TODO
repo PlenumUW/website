@@ -11,7 +11,7 @@ API:
     ✔ Install prismic dependencies @done(19-09-11 16:54)
     ✔ Add error handling to ALL async/await usages @created(19-09-12 11:09) @done(19-09-13 15:10)
     ✔ Add documentation @done(19-09-13 15:10)
-    ☐ Change site footer and other single type documents API calls with api.getSingle @created(19-09-13 21:21)
+    ✔ Change site footer and other single type documents API calls with api.getSingle @created(19-09-13 21:21) @started(19-09-14 09:51) @done(19-09-14 09:57) @lasted(6m5s)
     Views to add API calls to:
         ✔ Essay @created(19-09-12 12:58) @done(19-09-13 18:53)
             ✔ Add guard that checks for correct issue first @done(19-09-13 18:53)

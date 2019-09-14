@@ -73,6 +73,14 @@ class Api {
   }
 
   /**
+   * @param {String} slug A URL slug of a document.
+   * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
+   */
+  async fetchIssueBySlug(slug) {
+    return this.getTypedDocumentBySlug("issue", slug);
+  }
+
+  /**
    * Returns the data of a single document of the given type with a UID that matches the given slug.
    * @param {String} type A Prismic document type.
    * @param {String} slug A URL slug of a document.
@@ -149,14 +157,14 @@ class Api {
    * @returns {Object} Returns the site metadata document.
    */
   async fetchSiteMetadata() {
-    return (await this.getDocumentsByType("site_metadata")).results[0].data;
+    return (await this.api.getSingle("site_metadata")).data;
   }
 
   /**
    * @returns {Object} Returns the site footer document.
    */
   async fetchSiteFooter() {
-    return (await this.getDocumentsByType("site_footer")).results[0].data;
+    return (await this.api.getSingle("site_footer")).data;
   }
 
   /**

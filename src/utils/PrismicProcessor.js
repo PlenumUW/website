@@ -6,7 +6,7 @@ class PrismicProcessor {
    * @param {Array} prismicArr Array that contains a Prismic data object.
    */
   static getRawText(prismicArr) {
-    if (typeof prismicArr !== Array || prismicArr.length === 0)
+    if (typeof prismicArr !== "object" || prismicArr.length === 0)
       return undefined;
 
     return prismicArr[0].text;

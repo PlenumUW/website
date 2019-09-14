@@ -1,7 +1,7 @@
 <template>
   <home-slice v-if="!loading" class="c-issue-slice" :color="bgColor">
     <template #title>
-      <router-link :to="issueSlug">{{ title }}</router-link>
+      <router-link :to="issueSlug">{{ title | prismicRawText }}</router-link>
     </template>
 
     <template #content>
@@ -88,7 +88,7 @@ export default {
       return this.issue.data.cover_image.url;
     },
     title: function() {
-      return this.PrismicProcessor.getRawText(this.issue.data.title);
+      return this.issue.data.title;
     },
     issueSlug: function() {
       return `/issue/${this.issue.uid}`;
@@ -100,26 +100,26 @@ export default {
       return Object.keys(this.issue).length === 0;
     },
     categories: function() {
-      let cats = {};
+      let categories = {};
 
       this.issue.essays.forEach(essay => {
-        const essayCat = this.PrismicProcessor.getRawText(
+        const essayCategory = this.PrismicProcessor.getRawText(
           essay.data.category.data.name
         );
 
-        if (!Object.keys(cats).find(cat => cat.name === essayCat)) {
+        if (!Object.keys(categories).find(cat => cat.name === essayCategory)) {
           const { list_position, name } = essay.data.category.data;
-          cats[essayCat] = {
+          categories[essayCategory] = {
             name: this.PrismicProcessor.getRawText(name),
             position: list_position,
             essays: []
           };
         }
 
-        cats[essayCat].essays.push(essay);
+        categories[essayCategory].essays.push(essay);
       });
 
-      return cats;
+      return categories;
     },
     orderedCategories: function() {
       return Object.values(this.categories).sort(

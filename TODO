@@ -13,10 +13,16 @@ API:
     ✔ Add error handling to ALL async/await usages @created(19-09-12 11:09) @done(19-09-13 15:10)
     ✔ Add documentation @done(19-09-13 15:10)
     Views to add API calls to:
-        ☐ Essay @created(19-09-12 12:58)
-            ☐ Add guard that checks for correct issue first
+        ✔ Essay @created(19-09-12 12:58) @done(19-09-13 18:53)
+            ✔ Add guard that checks for correct issue first @done(19-09-13 18:53)
         ✔ Site Footer @created(19-09-12 12:58) @done(19-09-12 13:27)
+    Issue View:
+        ☐ Validate the validity of the issue slug, reroute if invalid @created(19-09-13 19:04)
 
 Build:
     ☐ Serve doesn't work unless 'dist' folder exists?
         - Why do I have to prerender before I can do live serve?
+
+Warnings/Errors:
+    Issue View:
+        ☐ The computed property "metadata" is already defined in data. @created(19-09-13 19:03)

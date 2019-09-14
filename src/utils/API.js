@@ -21,7 +21,7 @@ class Api {
     try {
       this.api = await prismicJS.api(this.endpoint, this.options);
       this.predicates = prismicJS.Predicates;
-      await this.api.query(""); // Initializes the API
+      console.log(await this.api.query("")); // Initializes the API
       this.initialized = true;
     } catch (err) {
       throw err;
@@ -74,7 +74,12 @@ class Api {
         return undefined;
       }
 
-      return results[0].data;
+      const result = results[0];
+
+      let data = result.data;
+      data.id = result.id;
+
+      return data;
     } catch (err) {
       throw err;
     }
@@ -89,14 +94,29 @@ class Api {
   }
 
   /**
-   * @param {String} slug A URL slug of a document.
-   * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
+   * Returns an essay, only if the essay exists and exists within an issue that
+   * corresponds to the given issue slug.
+   * @param {String} issueSlug The slug of an issue.
+   * @param {String} essaySlug The slug of an essay.
    */
-  async fetchEssayBySlug(slug) {
-    return this.getTypedDocumentBySlug("essay", slug);
+  async fetchEssayBySlugs(issueSlug, essaySlug) {
+    // TODO: improve the efficiency of this, only one API call should be made
+    // TODO: does the validation process need to exist in the API? NO
+    let issue = await this.getTypedDocumentBySlug("issue", issueSlug);
+    if (!issue) return undefined;
+
+    let essay = await this.fetchEssayBySlug(essaySlug);
+    if (!essay) return undefined;
+
+    const issueContainsEssay = issue.essays.find(
+      essayObj => essayObj.essay.id === essay.id
+    );
+
+    return issueContainsEssay ? essay : undefined;
   }
 
   /**
+   * @param {String} slug A URL slug of a document.
    * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
    */
   async fetchPageBySlug(slug) {

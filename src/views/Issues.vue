@@ -10,11 +10,11 @@
   </div>
 </template>
 <script>
-import View from "./View";
+import BaseView from "./BaseView";
 
 export default {
-  name: "issues",
-  extends: View,
+  name: "Issues",
+  extends: BaseView,
   data: function() {
     return {
       issues: []
@@ -25,7 +25,7 @@ export default {
       title: "Issue Catalogue"
     };
 
-    this.issues = await this.$api.getIssues();
+    this.issues = await this.$api.fetchAllIssues();
   },
   meta() {
     return this.MetadataManager.metaDefault(this.metadata, "website");

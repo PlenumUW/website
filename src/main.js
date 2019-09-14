@@ -20,6 +20,10 @@ Vue.use(VueMeta, {
   refreshOnceOnNavigation: true
 });
 
+Vue.filter("prismicRawText", function(arr) {
+  return PrismicProcessor.getRawText(arr);
+});
+
 API.init().then(() => {
   Vue.prototype.$api = API;
 
@@ -39,9 +43,10 @@ API.init().then(() => {
       const { title, description, image } = rawMeta;
 
       this.metadata = {
-        description: PrismicProcessor.getPrismicRawText(description),
-        title: PrismicProcessor.getPrismicRawText(title),
-        image
+        description: PrismicProcessor.getRawText(description),
+        title: PrismicProcessor.getRawText(title),
+        image,
+        meta: MetadataManager.getTwitterMetadata(true, true)
       };
     },
     mounted() {

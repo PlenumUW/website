@@ -2,7 +2,7 @@ const routes = [
   {
     path: "/",
     name: "home",
-    componentName: "home",
+    componentName: "Home",
     meta: {
       // TODO: should the route have a meta 'hue', or have a meta colors object that includes the specific rgb values of menu, bg, etc...
       hue: undefined,
@@ -12,7 +12,7 @@ const routes = [
   {
     path: "/about",
     name: "about",
-    componentName: "page", // about
+    componentName: "Page", // about
     meta: {
       hue: undefined,
       menuItem: true
@@ -21,7 +21,7 @@ const routes = [
   {
     path: "/issues",
     name: "issues",
-    componentName: "issues",
+    componentName: "Issues",
     meta: {
       hue: undefined,
       menuItem: true
@@ -30,16 +30,16 @@ const routes = [
   {
     path: "/issue/:issueSlug",
     name: "issue",
-    componentName: "issue",
+    componentName: "Issue",
     meta: {
       hue: undefined,
       menuItem: false
     }
   },
   {
-    path: "/issue/:issueSlug/:articleSlug",
-    name: "article",
-    componentName: "article",
+    path: "/issue/:issueSlug/:essaySlug",
+    name: "essay",
+    componentName: "Essay",
     meta: {
       hue: undefined,
       menuItem: false
@@ -48,7 +48,7 @@ const routes = [
   {
     path: "/atlas",
     name: "atlas",
-    componentName: "page",
+    componentName: "Page",
     meta: {
       hue: undefined,
       menuItem: true
@@ -57,14 +57,14 @@ const routes = [
       {
         path: ":projectSlug",
         name: "project",
-        componentName: "page"
+        componentName: "Page"
       }
     ]
   },
   {
     path: "/events",
     name: "events",
-    componentName: "page",
+    componentName: "Page",
     meta: {
       hue: undefined,
       menuItem: true
@@ -73,14 +73,14 @@ const routes = [
       {
         path: ":eventSlug",
         name: "event",
-        componentName: "page"
+        componentName: "Page"
       }
     ]
   },
   {
     path: "/resources",
     name: "resources",
-    componentName: "page",
+    componentName: "Page",
     meta: {
       hue: undefined,
       menuItem: true
@@ -89,7 +89,7 @@ const routes = [
   {
     path: "/contribute",
     name: "contribute",
-    componentName: "page",
+    componentName: "Page",
     meta: {
       hue: undefined,
       menuItem: true
@@ -98,7 +98,7 @@ const routes = [
   {
     path: "/join-us",
     name: "join us",
-    componentName: "page",
+    componentName: "Page",
     meta: {
       hue: undefined,
       menuItem: true
@@ -107,7 +107,7 @@ const routes = [
   {
     path: "/404",
     name: "not found",
-    componentName: "page",
+    componentName: "NotFound",
     meta: {
       hue: undefined,
       menuItem: false
@@ -116,7 +116,7 @@ const routes = [
   {
     path: "*",
     name: "not found x",
-    componentName: "page",
+    componentName: "Page",
     meta: {
       hue: undefined,
       menuItem: false

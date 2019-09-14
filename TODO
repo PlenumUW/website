@@ -1,20 +1,46 @@
 Focus:
-    ☐ Build focus directive (and component for extension?)
     ☐ Add mobile menu focus mgmt
         ☐ Add focus outline to menu button
         ☐ Move focus into menu on menu open
         ☐ Move focus to menu button if menu closed, but move to body if closed because of link activation
-
-Footer:
-    ☐ Center footer content to home paper?
 
 API:
     ✔ Review portfolio methodology @done(19-09-11 16:54)
     ✔ Review prismic guide @done(19-09-11 16:54)
         - Necessity to install live template compiler?
     ✔ Install prismic dependencies @done(19-09-11 16:54)
-    ☐ Add error handling to ALL async/await usages @created(19-09-12 11:09)
+    ✔ Add error handling to ALL async/await usages @created(19-09-12 11:09) @done(19-09-13 15:10)
+    ✔ Add documentation @done(19-09-13 15:10)
+    ✔ Change site footer and other single type documents API calls with api.getSingle @created(19-09-13 21:21) @started(19-09-14 09:51) @done(19-09-14 09:57) @lasted(6m5s)
     Views to add API calls to:
-        ☐ Article @created(19-09-12 12:58)
+        ✔ Essay @created(19-09-12 12:58) @done(19-09-13 18:53)
+            ✔ Add guard that checks for correct issue first @done(19-09-13 18:53)
         ✔ Site Footer @created(19-09-12 12:58) @done(19-09-12 13:27)
+    Issue View:
+        ✔ Validate the issue slug, reroute if invalid @created(19-09-13 19:04) @done(19-09-14 15:54)
+    Issues View:
+        ☐ Priority: Very Low - Add cap of initial issues, paginate @created(19-09-13 19:43)
 
+Build:
+    ☐ Serve doesn't work unless 'dist' folder exists?
+        - Why do I have to prerender before I can do live serve?
+
+Warnings/Errors:
+
+Components:
+    ☐ Simple Image @created(19-09-13 19:45)
+        - Placeholder w/ background animation
+        - Source set
+    ☐ Richtext @created(19-09-13 19:46)
+        - Live template? Or components for each prismic rich text type?
+            - I like the idea of generating vue components that match prismic types :)
+
+Styling:
+    View transitions:
+        ☐ Add slide off animation @created(19-09-13 19:44)
+        ☐ Add slide on animation @created(19-09-13 19:44)
+
+Efficiency:
+    ☐ https://www.webpagetest.org @created(19-09-14 09:00)
+        ☐ Get an A! @created(19-09-14 09:00)
+    ☐ Chrome Dev Tools Audit @created(19-09-14 15:56)

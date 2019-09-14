@@ -51,7 +51,7 @@ export default {
   created: async function() {
     const rawData = await this.$api.fetchSiteFooter();
 
-    this.description = PrismicProcessor.getPrismicRawText(rawData.description);
+    this.description = PrismicProcessor.getRawText(rawData.description);
 
     this.privacy = rawData["privacy_statement"].url;
 

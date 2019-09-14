@@ -53,9 +53,7 @@
           </section>
 
           <section>
-            <h2>
-              Secondary Title
-            </h2>
+            <h2>Secondary Title</h2>
             <p>
               Donec finibus mauris ante, ullamcorper molestie diam dictum id.
               Vivamus sit amet pharetra nunc. Ut volutpat leo sit amet mauris
@@ -68,9 +66,7 @@
           </section>
 
           <section>
-            <h2>
-              Secondary Title
-            </h2>
+            <h2>Secondary Title</h2>
             <p>
               Maecenas iaculis venenatis elit id consectetur. Ut dignissim
               sodales justo, ut tincidunt diam. Quisque pellentesque semper
@@ -104,13 +100,13 @@
 <script>
 import _ from "lodash";
 
-import View from "./View";
+import BaseView from "./BaseView";
 
 import HeaderGradient from "@/components/HeaderGradient";
 
 export default {
-  name: "page",
-  extends: View,
+  name: "Page",
+  extends: BaseView,
   components: { HeaderGradient },
   data: function() {
     return {
@@ -121,7 +117,7 @@ export default {
   computed: {
     title: function() {
       return this.rawData
-        ? this.PrismicProcessor.getPrismicRawText(this.rawData["page_title"])
+        ? this.PrismicProcessor.getRawText(this.rawData["page_title"])
         : "";
     }
   },
@@ -131,9 +127,8 @@ export default {
 
     this.rawData = await this.$api.fetchPageBySlug(parentSlug);
 
-    // TODO: bind this action to all requests where it's a single document per route
-    if (!this.rawData) {
-      this.$router.replace("/404");
+    if (!this.docExists(this.rawData)) {
+      return;
     }
 
     this.metadata = {

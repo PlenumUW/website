@@ -1,7 +1,7 @@
 <template>
-  <home-slice class="c-issue-slice" :color="bgColor">
+  <home-slice v-if="!loading" class="c-issue-slice" :color="bgColor">
     <template #title>
-      <router-link :to="issueSlug">{{ title }}</router-link>
+      <router-link :to="issueSlug">{{ title | prismicRawText }}</router-link>
     </template>
 
     <template #content>
@@ -9,40 +9,45 @@
 
       <section class="toc">
         <header class="toc__header">
-          <a :href="issueDownloadLink"
-            ><img
+          <a :href="issueDownloadLink">
+            <img
               src="http://placehold.jp/10/bfbfbf/000000/50x50.png?text=Download Icon"
-          /></a>
+            />
+          </a>
           <h1 class="toc__header__title">Contents</h1>
         </header>
 
         <div class="toc__body">
           <ul>
             <li
-              v-for="(cat, catIndex) in categories"
-              :key="`category-${cat.name}`"
+              v-for="({ name, essays }, catIndex) in orderedCategories"
+              :key="`category-${catIndex}`"
               class="toc__category"
             >
-              <h2 class="toc__category__title">{{ cat.name }}</h2>
+              <h2 class="toc__category__title">{{ name }}</h2>
 
               <ol class="toc__category__menu">
                 <li
-                  v-for="(item, itemIndex) in cat.items"
-                  :key="`category-${catIndex}_item-${itemIndex}`"
+                  v-for="(essay, essayIndex) in essays"
+                  :key="`category-${name}_item-${essayIndex}`"
                   class="toc__category__menu-item-wrapper"
                 >
                   <router-link
-                    :to="item.href"
+                    :to="getEssayUrlPath(essay.uid)"
                     class="toc__category__menu-item-link"
                   >
                     <div class="menu-item">
-                      <div class="menu-item__page-number">
-                        {{ item.page }}
+                      <div class="menu-item__page-number">5</div>
+                      <div class="menu-item__title">
+                        {{ essay.data.title | prismicRawText }}
                       </div>
-                      <div class="menu-item__title">{{ item.title }}</div>
                       <div class="menu-item__authors">
-                        <div v-for="author in item.authors" :key="author">
-                          {{ author }}
+                        <div
+                          v-for="({ author }, authorIndex) in essay.data
+                            .authors"
+                          :key="`${essay.uid}_author-${authorIndex}`"
+                        >
+                          {{ author | prismicRawText }}
                         </div>
                       </div>
                     </div>
@@ -59,94 +64,72 @@
   </home-slice>
 </template>
 <script>
+import BaseSlice from "@/components/slices/BaseSlice.vue";
 import HomeSlice from "./HomeSlice.vue";
 
 export default {
   name: "IssueSlice",
+  extends: BaseSlice,
   components: {
     HomeSlice
   },
   props: {
+    issue: {
+      type: Object,
+      required: true
+    },
     bgColor: {
       type: String,
       required: true
     }
   },
-  data: function() {
-    return {
-      categories: [
-        {
-          name: "editorial",
-          items: [
-            {
-              title: "Letter from the Editors",
-              href: "/href/journal/essay",
-              authors: [
-                "Firstname Last",
-                "First Lastname",
-                "Firstname Middlename Lastname",
-                "First Last"
-              ],
-              page: 1
-            }
-          ]
-        },
-        {
-          name: "essays",
-          items: [
-            {
-              title: "Essay Title: And Subtitle",
-              href: "/href/journal/essay",
-              authors: ["Firstname Middlename Lastname"],
-              page: 7
-            },
-            {
-              title: "Essay Title: And Subtitle Which is Extra Long",
-              href: "/href/journal/essay",
-              authors: ["Firstname Last"],
-              page: 17
-            },
-            {
-              title: "Essay Title: And Subtitle",
-              href: "/href/journal/essay",
-              authors: ["First Lastname"],
-              page: 24
-            }
-          ]
-        },
-        {
-          name: "GIS",
-          items: [
-            {
-              title: "Project Title: And Subtitle",
-              href: "/href/journal/essay",
-              authors: ["Firstname Middlename Lastname"],
-              page: 3
-            },
-            {
-              title: "Project Title",
-              href: "/href/journal/essay",
-              authors: ["Firstname Last"],
-              page: 30
-            }
-          ]
-        }
-      ]
-    };
-  },
   computed: {
     imgSrc: function() {
-      // return "http://placehold.jp/80/bfbfbf/ffffff/1400x1800.png?text=Issue Cover Image";
-      return "https://payload.cargocollective.com/1/2/91108/13121143/11_MC_DCG_501.jpg";
+      return this.issue.data.cover_image.url;
     },
     title: function() {
-      return "Current Issue";
+      return this.issue.data.title;
     },
     issueSlug: function() {
-      return "/issue/issue-title";
+      return `/issue/${this.issue.uid}`;
     },
     issueDownloadLink: function() {
-      return "#";
+      return this.issue.data.download_file.url;
+    },
+    loading: function() {
+      return Object.keys(this.issue).length === 0;
+    },
+    categories: function() {
+      let categories = {};
+
+      this.issue.essays.forEach(essay => {
+        const essayCategory = this.PrismicProcessor.getRawText(
+          essay.data.category.data.name
+        );
+
+        if (!Object.keys(categories).find(cat => cat.name === essayCategory)) {
+          const { list_position, name } = essay.data.category.data;
+          categories[essayCategory] = {
+            name: this.PrismicProcessor.getRawText(name),
+            position: list_position,
+            essays: []
+          };
+        }
+
+        categories[essayCategory].essays.push(essay);
+      });
+
+      return categories;
+    },
+    orderedCategories: function() {
+      return Object.values(this.categories).sort(
+        (a, b) => a.position - b.position
+      );
+    }
+  },
+  methods: {
+    getEssayUrlPath(essaySlug) {
+      return `/issue/${this.issue.uid}/${essaySlug}`;
     }
   }
 };

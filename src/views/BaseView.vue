@@ -3,7 +3,7 @@ import MetadataManager from "@/utils/MetadataManager";
 import PrismicProcessor from "@/utils/PrismicProcessor";
 
 export default {
-  name: "View",
+  name: "BaseView",
   props: {
     color: {
       type: String,
@@ -16,6 +16,19 @@ export default {
       MetadataManager,
       PrismicProcessor
     };
+  },
+  methods: {
+    handleDocNotFound(path) {
+      this.$router.presets.docNotFound(path);
+    },
+    docExists(doc) {
+      if (!doc) {
+        this.handleDocNotFound(this.$route.path);
+        return false;
+      }
+
+      return true;
+    }
   }
 };
 </script>

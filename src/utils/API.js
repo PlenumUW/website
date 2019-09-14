@@ -21,9 +21,7 @@ class Api {
     try {
       this.api = await prismicJS.api(this.endpoint, this.options);
       this.predicates = prismicJS.Predicates;
-      const { results } = await this.api.query("");
-      console.log("API", this.api);
-      console.log("Results", results);
+      await this.api.query(""); // Initializes the API
       this.initialized = true;
     } catch (err) {
       throw err;
@@ -31,28 +29,40 @@ class Api {
   }
 
   /**
-   * @returns {Promise} Returns all essays.
+   * @param {String} type Prismic document type to be retrieved.
+   * @return {Array} All prismic documents that match the given type.
    */
-  async fetchEssays() {
-    return (await this.getDocumentsByType("essay")).results;
+  async fetchAllOf(type) {
+    return (await this.getDocumentsByType(type)).results;
   }
 
   /**
-   * @returns {Array} Returns all documents of type 'Page'.
+   * @returns {Array} All essays.
    */
-  async fetchAllPages() {
-    return (await this.getDocumentsByType("page")).results;
+  async fetchAllEssays() {
+    return await this.fetchAllOf("essay");
   }
 
-  async getIssues() {
-    return (await this.getDocumentsByType("issue")).results;
+  /**
+   * @returns {Array} All pages.
+   */
+  async fetchAllPages() {
+    return await this.fetchAllOf("page");
+  }
+
+  /**
+   * @returns {Array} All issues.
+   */
+  async fetchAllIssues() {
+    return await this.fetchAllOf("issue");
   }
 
   /**
    * Returns the data of a single document of the given type with a UID that matches the given slug.
-   * If the document does not exist, returns undefined.
    * @param {String} type A Prismic document type.
-   * @param {String} slug A URL slug of the requested document.
+   * @param {String} slug A URL slug of a document.
+   * @return {Object} Prismic document that matches the given slug.
+   * @return {undefined} If document of type with given slug does not exist.
    */
   async getTypedDocumentBySlug(type, slug) {
     try {
@@ -71,6 +81,15 @@ class Api {
   }
 
   /**
+   * @param {String} slug A URL slug of a document.
+   * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
+   */
+  async fetchEssayBySlug(slug) {
+    return this.getTypedDocumentBySlug("essay", slug);
+  }
+
+  /**
+   * @param {String} slug A URL slug of a document.
    * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
    */
   async fetchEssayBySlug(slug) {
@@ -85,14 +104,14 @@ class Api {
   }
 
   /**
-   * @returns {Object} Returns the site metadata.
+   * @returns {Object} Returns the site metadata document.
    */
   async fetchSiteMetadata() {
     return (await this.getDocumentsByType("site_metadata")).results[0].data;
   }
 
   /**
-   * @returns {Object} Returns the site metadata.
+   * @returns {Object} Returns the site footer document.
    */
   async fetchSiteFooter() {
     return (await this.getDocumentsByType("site_footer")).results[0].data;

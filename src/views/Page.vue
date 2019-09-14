@@ -100,13 +100,13 @@
 <script>
 import _ from "lodash";
 
-import View from "./View";
+import BaseView from "./BaseView";
 
 import HeaderGradient from "@/components/HeaderGradient";
 
 export default {
-  name: "page",
-  extends: View,
+  name: "Page",
+  extends: BaseView,
   components: { HeaderGradient },
   data: function() {
     return {
@@ -127,9 +127,8 @@ export default {
 
     this.rawData = await this.$api.fetchPageBySlug(parentSlug);
 
-    // TODO: bind this action to all requests where it's a single document per route
-    if (!this.rawData) {
-      this.$router.replace("/404");
+    if (!this.docExists(this.rawData)) {
+      return;
     }
 
     this.metadata = {

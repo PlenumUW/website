@@ -6,14 +6,14 @@
 </template>
 
 <script>
-import View from "./View";
+import BaseView from "./BaseView";
 
 import IssueSlice from "@/components/slices/home/IssueSlice";
 import AtlasSlice from "@/components/slices/home/AtlasSlice";
 
 export default {
-  name: "home",
-  extends: View,
+  name: "Home",
+  extends: BaseView,
   components: { IssueSlice, AtlasSlice }
 };
 </script>

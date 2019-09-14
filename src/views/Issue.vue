@@ -4,11 +4,11 @@
   </article>
 </template>
 <script>
-import View from "./View";
+import BaseView from "./BaseView";
 
 export default {
-  name: "issue",
-  extends: View,
+  name: "Issue",
+  extends: BaseView,
   computed: {
     title: function() {
       return "Issue Title";

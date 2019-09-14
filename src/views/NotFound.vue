@@ -1,7 +1,5 @@
 <template>
-  <div class="not-found">
-    {{ message }}
-  </div>
+  <div class="not-found">{{ message }}</div>
 </template>
 
 <script>
@@ -19,6 +17,16 @@ export default {
 
       return msg;
     }
+  },
+  created() {
+    this.metadata = {
+      title: "Not Found"
+    };
+  },
+  meta() {
+    let meta = this.MetadataManager.metaDefault(this.metadata);
+    meta.meta.push({ name: "robots", content: "noindex" });
+    return meta;
   }
 };
 </script>

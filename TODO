@@ -17,7 +17,7 @@ API:
             ✔ Add guard that checks for correct issue first @done(19-09-13 18:53)
         ✔ Site Footer @created(19-09-12 12:58) @done(19-09-12 13:27)
     Issue View:
-        ☐ Validate the issue slug, reroute if invalid @created(19-09-13 19:04)
+        ✔ Validate the issue slug, reroute if invalid @created(19-09-13 19:04) @done(19-09-14 15:54)
     Issues View:
         ☐ Priority: Very Low - Add cap of initial issues, paginate @created(19-09-13 19:43)
 
@@ -26,8 +26,6 @@ Build:
         - Why do I have to prerender before I can do live serve?
 
 Warnings/Errors:
-    Issue View:
-        ☐ The computed property "metadata" is already defined in data. @created(19-09-13 19:03)
 
 Components:
     ☐ Simple Image @created(19-09-13 19:45)
@@ -45,3 +43,4 @@ Styling:
 Efficiency:
     ☐ https://www.webpagetest.org @created(19-09-14 09:00)
         ☐ Get an A! @created(19-09-14 09:00)
+    ☐ Chrome Dev Tools Audit @created(19-09-14 15:56)

@@ -45,7 +45,8 @@ API.init().then(() => {
       this.metadata = {
         description: PrismicProcessor.getRawText(description),
         title: PrismicProcessor.getRawText(title),
-        image
+        image,
+        meta: MetadataManager.getTwitterMetadata(true, true)
       };
     },
     mounted() {

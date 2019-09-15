@@ -36,6 +36,10 @@ Components:
             - I like the idea of generating vue components that match prismic types :)
 
 Styling:
+    Main Menu Inset Shadow:
+        ☐ Change sliding effect to a transition of width, not max-with @created(19-09-14 23:07)
+            - Transition width on list element, append with inset transition
+            - This method allows for inset to fit to 45px, rather than overflowing
     View transitions:
         ☐ Add slide off animation @created(19-09-13 19:44)
         ☐ Add slide on animation @created(19-09-13 19:44)

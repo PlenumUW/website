@@ -20,9 +20,7 @@
           @click.native="handleMenuItemClick"
         >
           <div class="c-main-menu__item-content">
-            <div class="c-main-menu__item-content__name">
-              {{ name }}
-            </div>
+            <div class="c-main-menu__item-content__name">{{ name }}</div>
           </div>
         </router-link>
       </li>
@@ -149,6 +147,13 @@ $menu-width--mobile: calc(
     height: $menu-item-height;
     width: 100%;
     margin-bottom: 13px;
+
+    // @include mdElevation(2, $inset: true);
+    // @include mdElevationTransition(2);
+
+    // &:hover {
+    //   @include mdElevation(6, $inset: true);
+    // }
 
     &:last-of-type {
       margin-bottom: 0;

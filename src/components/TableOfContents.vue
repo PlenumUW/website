@@ -5,31 +5,29 @@
       <a v-if="downloadUrl" :href="downloadUrl">Download</a>
     </header>
 
-    <div class="toc__body">
-      <ul class="toc__entry-list">
+      <ul class="toc__body">
         <li
           v-for="(entry, index) in contents"
           :key="`item-${index}`"
-          class="toc__category__menu-item-wrapper"
+          class="toc__body__list-item"
         >
-          <router-link :to="getPath(entry.uid)" class="toc__category__menu-item-link">
-            <span class="menu-item-bullet">&#9702;</span>
-            <span class="menu-item">
+          <router-link :to="getPath(entry.uid)" class="toc__body__list-item__link">
+            <span class="toc__body__list-item__bullet">&#9702;</span>
+            <span class="toc__body__list-item__content">
               <!-- eslint-disable-next-line -->
-              <span class="menu-item__title">{{entry.data.title | prismicRawText}}
+              <span class="toc__body__list-item__title">{{entry.data.title | prismicRawText}}
                 <span
-                  class="menu-item__subtitle"
+                  class="toc__body__list-item__subtitle"
                 >{{ entry.data.subtitle | prismicRawText }}</span>
               </span>
               <span
                 v-if="entry.data.authors.length < 3"
-                class="menu-item__authors"
+                class="toc__body__list-item__authors"
               >&#32;({{ getListedAuthors(entry.data.authors) }})</span>
             </span>
           </router-link>
         </li>
       </ul>
-    </div>
   </section>
 </template>
 <script>
@@ -91,45 +89,56 @@ $toc_padding: 20px;
   @include for-size(desktop-up) {
     @include font-size(4.5em);
   }
+}
 
 
-  &__header {
-    top: 0;
-    width: 100%;
-    margin-bottom: 1em;
+.toc__header {
+  top: 0;
+  width: 100%;
+  margin-bottom: 1em;
 
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-end;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
 
-    line-height: 1em;
+  line-height: 1em;
 
-    justify-content: space-between;
+  justify-content: space-between;
 
-    a:focus {
-      @include focus();
-    }
+  a:focus {
+    @include focus();
+  }
 
-    &__title {
-      font-size: 1em; // Override h1 font-size
-      font-family: $font-serif; // Override h1 font-family
-      font-weight: 200; //Override
+  &__title {
+    font-size: 1em; // Override h1 font-size
+    font-family: $font-serif; // Override h1 font-family
+    font-weight: 200; //Override
+  }
+}
+
+
+.toc__body {
+  position: relative;
+
+  font-variant: discretionary-ligatures;
+
+
+  &:focus-within {
+    > *:not(:focus-within) {
+      opacity: 0.2;
     }
   }
 
-  &__body {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  &__list-item {
+    display: inline;
 
-    position: relative;
-
-    font-variant: discretionary-ligatures;
-  }
-
-  &__category {
-    margin-bottom: 25px;
+    &:not(:first-of-type) {
+      &:before {
+        content: "";
+        padding-left: 0.5em;
+      }
+    }
 
     @include for-size(tablet-portrait-up) {
       margin-bottom: 42px;
@@ -139,70 +148,53 @@ $toc_padding: 20px;
       margin-bottom: 0;
     }
 
+    &__link {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:focus {
+        @include focus();
+      }
+    }
+
+    &__bullet {
+      margin-right: -0.4em;
+    }
+
+    &__content {
+
+    }
+
     &__title {
       margin-bottom: 10px;
 
       text-transform: capitalize;
-    }
 
-    &__menu {
-      margin-left: 10px;
+       font-weight: 200;
+      grid-row: 1;
+      grid-column: 2;
 
-      @include for-size(tablet-portrait-up) {
-        margin-left: 47px;
-      }
-
-      &-item-wrapper {
-        display: inline;
-
-        &:not(:first-of-type) {
-          &:before {
-            content: "";
-            padding-left: 0.5em;
-          }
-        }
-      }
-
-      &-item-link {
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-
-        &:focus {
-          @include focus();
-        }
+      &:before {
+        content: "◦";
       }
     }
-  }
-}
 
-.menu-item-bullet {
-  margin-right: -0.4em;
-}
+    &__subtitle {
+      font-weight: 200;
+      font-style: italic;
+    }
 
-.menu-item {
-  &__title {
-    font-weight: 200;
-    grid-row: 1;
-    grid-column: 2;
-
-    &:before {
-      content: "◦";
+    &__authors {
+      grid-row: 2;
+      grid-column: 2;
+      font-style: italic;
+      font-variant: unicase;
     }
   }
 
-  &__subtitle {
-    font-weight: 200;
-    font-style: italic;
-  }
 
-  &__authors {
-    grid-row: 2;
-    grid-column: 2;
-    font-style: italic;
-    font-variant: unicase;
-  }
 }
 </style>

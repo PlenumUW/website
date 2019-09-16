@@ -13,7 +13,7 @@
           class="toc__category__menu-item-wrapper"
         >
           <router-link :to="getPath(entry.uid)" class="toc__category__menu-item-link">
-            <!-- <span class="menu-item-bullet">&#9702;</span> -->
+            <span class="menu-item-bullet">&#9702;</span>
             <span class="menu-item">
               <!-- eslint-disable-next-line -->
               <span class="menu-item__title">{{entry.data.title | prismicRawText}}
@@ -78,50 +78,40 @@ $toc_padding: 20px;
   padding: 10px;
 
   font-family: $font-serif;
-  // font-size: 70px;
-  // line-height: 80px;
-  line-height: 1.2em;
   font-weight: 200;
+  letter-spacing: -0.05em;
+  line-height: 1em;
 
-  @include font-size(6em);
+  @include font-size(1.8em);
 
   @include for-size(tablet-portrait-up) {
     padding: $toc_padding;
+    @include font-size(3em);
+  }
+  @include for-size(desktop-up) {
+    @include font-size(4.5em);
   }
 
+
   &__header {
+    top: 0;
+    width: 100%;
+    margin-bottom: 1em;
+
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-end;
 
-    margin-bottom: 20px;
+    line-height: 1em;
 
-    top: 0;
-
-    width: 100%;
-
-    @include for-size(tablet-landscape-up) {
-      margin-bottom: 1.5em;
-
-      justify-content: space-between;
-    }
-
-    a {
-      display: none;
-      height: 100%;
-
-      @include for-size(tablet-landscape-up) {
-        display: unset;
-      }
-    }
+    justify-content: space-between;
 
     a:focus {
       @include focus();
     }
 
     &__title {
-      line-height: 1em;
       font-size: 1em; // Override h1 font-size
       font-family: $font-serif; // Override h1 font-family
       font-weight: 200; //Override
@@ -136,22 +126,6 @@ $toc_padding: 20px;
     position: relative;
 
     font-variant: discretionary-ligatures;
-
-    &__image-preview {
-      width: 500px;
-      height: 300px;
-      transform: translateX(
-        25px
-      ); // TODO: reference the home slice's right padding
-
-      position: sticky;
-      top: 0;
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
   }
 
   &__category {
@@ -173,6 +147,7 @@ $toc_padding: 20px;
 
     &__menu {
       margin-left: 10px;
+
       @include for-size(tablet-portrait-up) {
         margin-left: 47px;
       }
@@ -180,14 +155,15 @@ $toc_padding: 20px;
       &-item-wrapper {
         display: inline;
 
-        &:after {
-          content: "";
-          padding-left: 80px;
+        &:not(:first-of-type) {
+          &:before {
+            content: "";
+            padding-left: 0.5em;
+          }
         }
       }
 
       &-item-link {
-        // display: inline-block; // Only to shrink outline to content width
         text-decoration: none;
 
         &:hover {
@@ -203,7 +179,7 @@ $toc_padding: 20px;
 }
 
 .menu-item-bullet {
-  margin-right: -15px;
+  margin-right: -0.4em;
 }
 
 .menu-item {

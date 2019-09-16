@@ -10,7 +10,7 @@
     </template>
 
     <template #content>
-      <paper :color="bgColor">
+      <paper v-if="imgSrc" :color="bgColor">
         <img class="c-issue-slice__cover-image" :src="imgSrc" :shadow="6" />
       </paper>
 
@@ -105,16 +105,20 @@ export default {
   &__cover-image {
     width: 100%;
     height: auto;
-
-    border-bottom: 3px solid black;
   }
 
   &__toc {
-    top: -40px;
-    left: 40px;
     width: 100%;
 
+    max-width: 1100px;
+    margin-left: auto;
+
     position: relative;
+
+    @include for-size(tablet-landscape-up) {
+      top: -40px;
+      left: 40px;
+    }
   }
 
   @include rfs(3em, --header-height);

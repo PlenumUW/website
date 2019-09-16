@@ -52,6 +52,7 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
 
 * {
     color: $text-color;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 @include headings();

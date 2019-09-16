@@ -155,7 +155,7 @@ export default {
       }
     }
 
-    $paper-padding: 50px;
+    $paper-padding: 1.2em;
     &__title {
       margin-bottom: 15px;
 
@@ -164,17 +164,19 @@ export default {
 
       text-align: left;
 
-      @include font-size(3em);
+      @include font-size(2em);
 
       @include for-size(tablet-landscape-up) {
         margin-bottom: 65px;
+
+        padding-left: 50px;
 
         @include font-size(5em);
       }
     }
 
     &__paper {
-      padding: 1.2em;
+      padding: $paper-padding;
 
       @include for-size(tablet-portrait-up) {
         padding: 2em;

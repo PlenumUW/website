@@ -55,6 +55,12 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
+a {
+  &:focus {
+    @include focus();
+  }
+}
+
 @include headings();
 
 /*

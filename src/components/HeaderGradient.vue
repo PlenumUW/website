@@ -28,6 +28,7 @@ $header-height--desktop: $g-header-height--desktop;
   top: 0;
   width: 100%;
   z-index: -1;
+  transform: translateX(calc(#{$g-home-right-padding} / -2));
 
   @include for-size(tablet-landscape-up) {
     display: block;

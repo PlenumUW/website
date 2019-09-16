@@ -40,11 +40,14 @@ Styling:
         ☐ Change sliding effect to a transition of width, not max-with @created(19-09-14 23:07)
             - Transition width on list element, append with inset transition
             - This method allows for inset to fit to 45px, rather than overflowing
+<<<<<<< HEAD
         ☐ Add 100vh background and gradient fade into main content @created(19-09-15 16:32)
             - .c-the-main-nav gets a wide width, 100vh, top: 0
                 - background = bg color w/ boxshadow 
             - .c-main-menu given top positioning that puts it in middle of screen
 
+=======
+>>>>>>> dev/toc/core
     View transitions:
         ☐ Add slide off animation @created(19-09-13 19:44)
         ☐ Add slide on animation @created(19-09-13 19:44)

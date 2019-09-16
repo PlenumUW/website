@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     paperColor: function() {
-      return this.complementaryColor || this.presetRgbString;
+      return this.complementaryColor || "transparent";
     },
     shadowClass: function() {
       return ["shadow-" + this.shadow];

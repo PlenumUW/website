@@ -5,9 +5,10 @@
     </home-slice-header>
 
     <div class="c-home-slice__paper-wrapper">
-      <paper :color="color" :shadow="12">
+      <paper v-if="!hideBackground" :color="color" :shadow="12">
         <slot name="content"></slot>
       </paper>
+      <slot v-else name="content"></slot>
     </div>
 
     <home-slice-header
@@ -15,9 +16,8 @@
       :color="color"
       :aria-hidden="true"
       role="presentation"
+      >_</home-slice-header
     >
-      _
-    </home-slice-header>
   </section>
 </template>
 <script>
@@ -30,6 +30,13 @@ export default {
     color: {
       type: String,
       required: true
+    },
+    hideBackground: {
+      type: Boolean,
+      required: false,
+      default: function() {
+        return false;
+      }
     }
   }
 };
@@ -50,8 +57,8 @@ export default {
     padding-left: 0;
 
     @include for-size(tablet-landscape-up) {
-      padding-left: 133px;
-      padding-right: 70px;
+      padding-left: 0px;
+      padding-right: $g-home-right-padding;
     }
   }
 

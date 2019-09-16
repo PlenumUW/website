@@ -86,12 +86,10 @@ $lefter-width: $g-lefter-width;
 
   @include for-size(tablet-landscape-up) {
     left: -124px;
-    width: 100vw;
+    width: 100vw; // TODO: make 100% and move outside main content
     margin-top: 50px;
-    // margin-bottom: 20px;
 
     position: absolute;
-    padding-left: 124px;
   }
 
   &__info-container {

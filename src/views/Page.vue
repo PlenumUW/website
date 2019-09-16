@@ -113,11 +113,13 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .c-page {
   width: 100%;
 
   position: relative;
+
+  font-family: $font-serif;
 
   &__section {
     width: 100%;
@@ -126,9 +128,11 @@ export default {
     padding-right: 20px;
 
     @include for-size(tablet-landscape-up) {
+      width: calc(100% - 100px);
       margin-bottom: 50px;
+      margin-right: auto;
 
-      padding-left: 100px;
+      // padding-left: 100px;
 
       &:last-of-type {
         margin-bottom: 0;
@@ -136,6 +140,7 @@ export default {
     }
 
     &__header {
+      display: none;
       top: 0;
       width: 120%; // Extends gradient beyond the edge of the paper
 
@@ -144,9 +149,13 @@ export default {
       @include header-offset(
         height
       ); // TODO: change all header mixins to this responsive one
+
+      @include for-size(tablet-landscape-up) {
+        display: block;
+      }
     }
 
-    $paper-padding: 20px;
+    $paper-padding: 50px;
     &__title {
       margin-bottom: 15px;
 
@@ -165,11 +174,18 @@ export default {
     }
 
     &__paper {
-      padding: $paper-padding;
+      padding: 1.2em;
+
       @include for-size(tablet-portrait-up) {
+        padding: 2em;
+      }
+
+      @include for-size(tablet-landscape-up) {
+        width: calc(100% - 100px);
+        min-width: 800px;
         margin-bottom: 75px;
 
-        margin-left: 100px;
+        margin-left: auto;
 
         padding: 70px 80px;
 
@@ -182,6 +198,12 @@ export default {
     &__content {
       padding-bottom: 30px; // Helps hide the box-shadow when the paper scrolls under the gradient header // TODO: figure out how to bind this with paper box-shadows
 
+      @include font-size(1.1em);
+
+      @include for-size(tablet-portrait-up) {
+        @include font-size(1.4em);
+      }
+
       section {
         margin-bottom: 60px;
 
@@ -193,14 +215,11 @@ export default {
       h2 {
         margin-bottom: 20px;
 
-        @include font-size(2.2em);
+        @include font-size(1.5em);
       }
 
       p {
         margin-bottom: 30px;
-
-        font-family: $font-serif;
-        @include font-size(1.3em);
 
         &:last-of-type {
           margin-bottom: 0;

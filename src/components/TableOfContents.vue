@@ -34,7 +34,7 @@
 </template>
 <script>
 import PrismicProcessor from "@/utils/PrismicProcessor";
-
+// &#32; space
 export default {
   name: "TableOfContents",
   props: {
@@ -80,8 +80,8 @@ $toc_padding: 20px;
   font-family: $font-serif;
   // font-size: 70px;
   // line-height: 80px;
-  line-height: 1em;
-  font-weight: 300;
+  line-height: 1.2em;
+  font-weight: 200;
 
   @include font-size(6em);
 
@@ -124,6 +124,7 @@ $toc_padding: 20px;
       line-height: 1em;
       font-size: 1em; // Override h1 font-size
       font-family: $font-serif; // Override h1 font-family
+      font-weight: 200; //Override
     }
   }
 
@@ -133,6 +134,8 @@ $toc_padding: 20px;
     justify-content: space-between;
 
     position: relative;
+
+    font-variant: discretionary-ligatures;
 
     &__image-preview {
       width: 500px;
@@ -223,6 +226,7 @@ $toc_padding: 20px;
     grid-row: 2;
     grid-column: 2;
     font-style: italic;
+    font-variant: unicase;
   }
 }
 </style>

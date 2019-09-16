@@ -57,8 +57,8 @@ export default {
     padding-left: 0;
 
     @include for-size(tablet-landscape-up) {
-      padding-left: 133px;
-      padding-right: 70px;
+      padding-left: 0px;
+      padding-right: $g-home-right-padding;
     }
   }
 

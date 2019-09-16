@@ -34,7 +34,7 @@
 </template>
 <script>
 import PrismicProcessor from "@/utils/PrismicProcessor";
-// &#32; space
+
 export default {
   name: "TableOfContents",
   props: {

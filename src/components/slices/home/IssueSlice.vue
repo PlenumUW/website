@@ -111,7 +111,7 @@ export default {
 
   &__toc {
     top: -40px;
-    left: -40px;
+    left: 40px;
     width: 100%;
 
     position: relative;

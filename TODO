@@ -31,9 +31,9 @@ Components:
     ☐ Simple Image @created(19-09-13 19:45)
         - Placeholder w/ background animation
         - Source set
-    ☐ Richtext @created(19-09-13 19:46)
+    ✔ Richtext @created(19-09-13 19:46) @done(19-09-14 22:33)
         - Live template? Or components for each prismic rich text type?
-            - I like the idea of generating vue components that match prismic types :)
+             ☐ I like the idea of generating vue components that match prismic types :) @created(19-09-14 22:33)
 
 Styling:
     Main Menu Inset Shadow:
@@ -53,3 +53,14 @@ Efficiency:
     ☐ https://www.webpagetest.org @created(19-09-14 09:00)
         ☐ Get an A! @created(19-09-14 09:00)
     ☐ Chrome Dev Tools Audit @created(19-09-14 15:56)
+
+Icons:
+    ☐ Create equal height, equal angle, and equal long bar positioned icons similar to logo @created(19-09-15 12:04)
+        ☐ Download @created(19-09-15 12:04)
+        ☐ Link @created(19-09-15 12:04)
+    ☐ Create merge transitions for the logo @created(19-09-15 12:05)
+        ☐ On hover of a file download element, transition the logo to download icon, etc @created(19-09-15 12:05)
+
+Bugs:
+    ☐ Class '.app--no-scroll', activated when menu is open in mobile, removes the scrollbar, which shifts the background text while the menu opens @created(19-09-14 21:18)
+    ☐ Main content area should be visible if menu is forced open via mobile and then expanded to tablet/desktop @created(19-09-14 21:19)

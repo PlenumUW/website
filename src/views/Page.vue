@@ -1,8 +1,8 @@
 <template>
   <div class="c-page">
     <section
-      v-for="(section, index) in [1, 2]"
-      :key="`${index}-${uid}`"
+      v-for="([titleSlice, ...slices], index) in sections"
+      :key="`${title}-slice-${index}`"
       class="c-page__section"
     >
       <header class="c-page__section__header">
@@ -12,86 +12,18 @@
         ></header-gradient>
       </header>
 
-      <h1 class="c-page__section__title">{{ title }}</h1>
+      <!-- This design is highly coupled, so much so that can always use h1 instead of rich-text -->
+      <h1 class="c-page__section__title">
+        {{ titleSlice.primary.section_title | prismicRawText }}
+      </h1>
 
       <div class="c-page__section__content">
         <paper class="c-page__section__paper" :color="color">
-          <section>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Pellentesque quis lacus aliquet, mollis lacus et, sollicitudin
-              turpis. Vestibulum dapibus tincidunt urna, et varius justo
-              tincidunt vel. Sed sodales ut sem id efficitur. Vestibulum quis
-              ligula quis nunc ultrices suscipit. Aenean vestibulum purus
-              placerat, dictum orci et, scelerisque ante. Quisque imperdiet
-              dolor scelerisque luctus bibendum. Curabitur sed sapien sit amet
-              metus viverra efficitur. Nullam ac sagittis ipsum. Suspendisse
-              lorem neque, mollis nec ullamcorper vitae, consectetur a orci. Ut
-              interdum malesuada commodo. Sed et sollicitudin turpis. Proin a
-              egestas massa, vulputate egestas diam. Nulla risus dolor,
-              vulputate vitae turpis in, blandit semper nulla. Quisque ultrices
-              eget libero et tempor. Nulla mi diam, laoreet in est eget,
-              interdum bibendum massa. Praesent convallis blandit lectus quis
-              iaculis.
-            </p>
-            <p>
-              Aliquam fringilla diam vitae erat porta, vitae congue justo
-              hendrerit. Vivamus cursus tristique arcu, vehicula pulvinar justo
-              porttitor ac. Donec nec est et ligula tempor interdum ut at nunc.
-              Maecenas posuere libero et tellus dignissim bibendum. Donec non
-              metus lectus. Donec vel diam aliquet, pulvinar nisi varius,
-              vehicula velit. Pellentesque euismod elit eu sapien auctor
-              volutpat. Integer faucibus quis lectus ut iaculis. Fusce imperdiet
-              et nisi at interdum. Fusce condimentum neque eget tortor
-              pellentesque, at tempor metus sodales. Quisque enim magna, commodo
-              sit amet velit eget, interdum ultricies orci. Donec dignissim,
-              enim ac bibendum imperdiet, elit orci faucibus augue, eget
-              dignissim est est at nunc. Nulla faucibus felis a sodales
-              porttitor. Vestibulum nec purus eget libero porta lobortis id et
-              ante.
-            </p>
-          </section>
-
-          <section>
-            <h2>Secondary Title</h2>
-            <p>
-              Donec finibus mauris ante, ullamcorper molestie diam dictum id.
-              Vivamus sit amet pharetra nunc. Ut volutpat leo sit amet mauris
-              condimentum imperdiet. Suspendisse eu sodales lacus. Nulla
-              tristique orci leo, ac iaculis nisl euismod sit amet. Praesent
-              quis velit accumsan, dictum velit eu, sodales tellus. Vestibulum
-              ante ipsum primis in faucibus orci luctus et ultrices posuere
-              cubilia Curae; Donec pretium et tellus sit amet pulvinar.
-            </p>
-          </section>
-
-          <section>
-            <h2>Secondary Title</h2>
-            <p>
-              Maecenas iaculis venenatis elit id consectetur. Ut dignissim
-              sodales justo, ut tincidunt diam. Quisque pellentesque semper
-              ipsum, sit amet sollicitudin metus congue sit amet. Suspendisse
-              vel nisi mollis, eleifend eros et, gravida justo. Mauris faucibus
-              dolor nibh, et tempus est tristique vel. Quisque gravida quam vel
-              sollicitudin aliquet. Proin scelerisque, nunc id aliquam
-              malesuada, erat risus vulputate arcu, vitae scelerisque sapien ex
-              a dolor. Praesent ac urna nisl. Sed ex metus, tristique et elit
-              id, imperdiet gravida massa. Sed ut sagittis justo. Proin sed
-              velit vel sem faucibus cursus consectetur volutpat mi. Curabitur
-              sagittis luctus metus, molestie venenatis nisl elementum eu. Fusce
-              id consequat elit. Nullam a arcu vel sem laoreet eleifend. In
-              finibus cursus orci, sit amet mollis leo hendrerit a. Vivamus
-              posuere imperdiet facilisis.
-            </p>
-            <p>
-              Fusce vitae felis risus. Aliquam quis gravida dui, quis laoreet
-              nulla. Maecenas id varius nisi. Sed facilisis aliquam vulputate.
-              Nullam mattis turpis eu nisl fringilla, ut porttitor lectus
-              blandit. Nam ut augue sit amet purus facilisis blandit eget non
-              elit. Phasellus in pellentesque velit. Nulla molestie ac ipsum ac
-              tempus. Aliquam pellentesque placerat velit.
-            </p>
-          </section>
+          <rich-text
+            v-for="({ primary, slice_type }, sliceIndex) in slices"
+            :key="`section-${index}_slice-${sliceIndex}`"
+            :body="primary[slice_type]"
+          ></rich-text>
         </paper>
       </div>
     </section>
@@ -104,10 +36,12 @@ import BaseView from "./BaseView";
 
 import HeaderGradient from "@/components/HeaderGradient";
 
+import RichText from "@/components/prismic/RichText.vue";
+
 export default {
   name: "Page",
   extends: BaseView,
-  components: { HeaderGradient },
+  components: { HeaderGradient, RichText },
   data: function() {
     return {
       items: _.range(0, 5, 1),
@@ -119,6 +53,45 @@ export default {
       return this.rawData
         ? this.PrismicProcessor.getRawText(this.rawData["page_title"])
         : "";
+    },
+    slices: function() {
+      if (!this.rawData) return [];
+
+      return this.rawData.body[0].primary.text;
+    },
+    testSlice: function() {
+      if (!this.rawData) return [];
+
+      return [this.slices[0]];
+    },
+    sliceTypes: function() {
+      if (!this.rawData) return [];
+
+      return _.uniqBy(this.slices.map(slice => slice.type));
+    },
+    body: function() {
+      if (!this.rawData) return [];
+
+      return this.rawData.body;
+    },
+    sections: function() {
+      let sections = [];
+
+      let section = [];
+      this.body.forEach(({ primary, slice_type }) => {
+        if (slice_type === "section_title" && section.length > 0) {
+          sections.push(section);
+          section = [];
+        }
+
+        section.push({ primary, slice_type });
+      });
+
+      if (section.length > 0) {
+        sections.push(section);
+      }
+
+      return sections;
     }
   },
   created: async function() {
@@ -140,11 +113,13 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .c-page {
   width: 100%;
 
   position: relative;
+
+  font-family: $font-serif;
 
   &__section {
     width: 100%;
@@ -153,9 +128,11 @@ export default {
     padding-right: 20px;
 
     @include for-size(tablet-landscape-up) {
+      width: calc(100% - 100px);
       margin-bottom: 50px;
+      margin-right: auto;
 
-      padding-left: 100px;
+      // padding-left: 100px;
 
       &:last-of-type {
         margin-bottom: 0;
@@ -163,6 +140,7 @@ export default {
     }
 
     &__header {
+      display: none;
       top: 0;
       width: 120%; // Extends gradient beyond the edge of the paper
 
@@ -171,9 +149,13 @@ export default {
       @include header-offset(
         height
       ); // TODO: change all header mixins to this responsive one
+
+      @include for-size(tablet-landscape-up) {
+        display: block;
+      }
     }
 
-    $paper-padding: 20px;
+    $paper-padding: 50px;
     &__title {
       margin-bottom: 15px;
 
@@ -192,11 +174,18 @@ export default {
     }
 
     &__paper {
-      padding: $paper-padding;
+      padding: 1.2em;
+
       @include for-size(tablet-portrait-up) {
+        padding: 2em;
+      }
+
+      @include for-size(tablet-landscape-up) {
+        width: calc(100% - 100px);
+        min-width: 800px;
         margin-bottom: 75px;
 
-        margin-left: 100px;
+        margin-left: auto;
 
         padding: 70px 80px;
 
@@ -209,6 +198,12 @@ export default {
     &__content {
       padding-bottom: 30px; // Helps hide the box-shadow when the paper scrolls under the gradient header // TODO: figure out how to bind this with paper box-shadows
 
+      @include font-size(1.1em);
+
+      @include for-size(tablet-portrait-up) {
+        @include font-size(1.4em);
+      }
+
       section {
         margin-bottom: 60px;
 
@@ -220,14 +215,11 @@ export default {
       h2 {
         margin-bottom: 20px;
 
-        @include font-size(2.2em);
+        @include font-size(1.5em);
       }
 
       p {
         margin-bottom: 30px;
-
-        font-family: $font-serif;
-        @include font-size(1.3em);
 
         &:last-of-type {
           margin-bottom: 0;

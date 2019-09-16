@@ -51,7 +51,7 @@ import SiteFooter from "@/components/singletons/TheSiteFooter";
 
 export default {
   components: { TheSiteHeader, TheMainMenu, SiteFooter },
-  data: function() {
+  data: function () {
     return {
       metadata: undefined,
       prevBgColor: undefined,
@@ -59,12 +59,13 @@ export default {
     };
   },
   computed: {
+
     /**
      * The background color of the application.
      */
     // TODO: Put bgColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
-    bgColor: function() {
+    bgColor: function () {
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -77,15 +78,16 @@ export default {
 
       return color;
     },
-    viewKey: function() {
+    viewKey: function () {
+      console.log(this.$route.name);
       return this.$route.name;
     },
-    hideMainContent: function() {
+    hideMainContent: function () {
       return this.menuOpen;
     }
   },
   watch: {
-    bgColor: function(newVal, oldVal) {
+    bgColor: function (newVal, oldVal) {
       this.prevBgColor = oldVal;
     }
   },
@@ -93,6 +95,7 @@ export default {
     handleLogoClick() {
       this.setMenuOpen(false);
     },
+
     /**
      * @param {Boolean} val New value for menuOpen.
      */
@@ -100,6 +103,7 @@ export default {
       if (typeof val !== "boolean") throw new Error("Incorrect value type.");
       this.menuOpen = val;
     },
+
     /**
      * Tweens the application's background color through perceptually uniform color space.
      * @param {Element} el Transitioning element.
@@ -127,12 +131,12 @@ export default {
       });
     }
   },
-  created: async function() {
+  created: async function () {
     fitText();
 
     // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
     this.$router.beforeEach((to, from, next) => {
-      const resetScrollPosition = el => {
+      const resetScrollPosition = (el) => {
         if (el) el.scrollTop = 0;
       };
 
@@ -140,7 +144,7 @@ export default {
       next();
     });
   },
-  mounted: function() {
+  mounted: function () {
     if (this.$route.name === "home") {
       // Transition is naturally called if first visit is on non-home route
       this.backgroundTransitionLeave({}, () => {}, 300);

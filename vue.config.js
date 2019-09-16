@@ -5,9 +5,7 @@ const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
 const _ = require("lodash");
 
 const { routes } = require("./src/router/routes");
-let [staticRoutes, dynamicRoutes] = _.partition(routes, route => {
-  return !route.path.includes(":");
-});
+let [staticRoutes, dynamicRoutes] = _.partition(routes, route => !route.path.includes(":"));
 staticRoutes = staticRoutes.filter(route => route.path !== "*");
 const staticRoutePaths = staticRoutes.map(route => route.path);
 
@@ -26,9 +24,9 @@ module.exports = {
       patterns: ["./src/styles/globals.scss"]
     }
   },
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     // Create environment variable of the build date
-    config.plugin("define").tap(definitions => {
+    config.plugin("define").tap((definitions) => {
       definitions[0]["process.env"][
         "BUILD_DATE_ISO"
       ] = new Date().toISOString();
@@ -54,19 +52,19 @@ module.exports = {
     plugins:
       process.env.BUILD_OPTION === "prerender"
         ? [
-            new PrerenderSPAPlugin({
-              staticDir: resolve("dist"),
-              outputDir: resolve("dist"),
-              routes: staticRoutePaths,
-              renderer: new Renderer({
-                inject: {
-                  foo: "bar"
-                },
-                headless: true,
-                renderAfterDocumentEvent: "render-event"
-              })
+          new PrerenderSPAPlugin({
+            staticDir: resolve("dist"),
+            outputDir: resolve("dist"),
+            routes: staticRoutePaths,
+            renderer: new Renderer({
+              inject: {
+                foo: "bar"
+              },
+              headless: true,
+              renderAfterDocumentEvent: "render-event"
             })
-          ]
+          })
+        ]
         : []
   }
 };

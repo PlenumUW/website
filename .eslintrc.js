@@ -3,10 +3,12 @@ module.exports = {
   env: {
     node: true
   },
-  extends: ["@vue/prettier"], //"plugin:vue/essential"
+  plugins: ["es-beautifier"],
+  extends: ["plugin:vue/essential", "plugin:es-beautifier/standard"], //"plugin:vue/essential"
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    "comma-dangle": ["error", "never"]
   },
   parserOptions: {
     parser: "babel-eslint"

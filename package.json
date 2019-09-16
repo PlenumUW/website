@@ -34,6 +34,7 @@
     "backpack.css": "^2.0.0",
     "chai": "^4.1.2",
     "eslint": "^5.16.0",
+    "eslint-plugin-es-beautifier": "^1.0.1",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.9.0",

@@ -47,28 +47,28 @@ export default {
     }
   },
   computed: {
-    essays: function() {
+    essays: function () {
       return this.issue.essays;
     },
-    imgSrc: function() {
+    imgSrc: function () {
       return this.issue.data.cover_image.url;
     },
-    title: function() {
+    title: function () {
       return this.issue.data.title;
     },
-    issueSlug: function() {
+    issueSlug: function () {
       return `/issue/${this.issue.uid}`;
     },
-    issueDownloadLink: function() {
+    issueDownloadLink: function () {
       return this.issue.data.download_file.url;
     },
-    loading: function() {
+    loading: function () {
       return Object.keys(this.issue).length === 0;
     },
-    categories: function() {
+    categories: function () {
       let categories = {};
 
-      this.issue.essays.forEach(essay => {
+      this.issue.essays.forEach((essay) => {
         const essayCategory = this.PrismicProcessor.getRawText(
           essay.data.category.data.name
         );
@@ -87,12 +87,12 @@ export default {
 
       return categories;
     },
-    orderedCategories: function() {
+    orderedCategories: function () {
       return Object.values(this.categories).sort(
         (a, b) => a.position - b.position
       );
     },
-    essayPath: function() {
+    essayPath: function () {
       return `/issue/${this.issue.uid}`;
     }
   }

@@ -15,12 +15,12 @@ import BaseView from "./BaseView";
 export default {
   name: "Issues",
   extends: BaseView,
-  data: function() {
+  data: function () {
     return {
       issues: []
     };
   },
-  created: async function() {
+  created: async function () {
     this.metadata = {
       title: "Issue Catalogue"
     };

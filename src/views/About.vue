@@ -12,13 +12,13 @@ import BaseView from "./BaseView";
 export default {
   name: "About",
   extends: BaseView,
-  data: function() {
+  data: function () {
     return {
       rawData: undefined
     };
   },
   computed: {
-    title: function() {
+    title: function () {
       return this.PrismicProcessor.getRawText(this.rawData["page_title"]);
     }
   },

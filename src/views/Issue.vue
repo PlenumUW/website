@@ -14,24 +14,24 @@ import BaseView from "./BaseView";
 export default {
   name: "Issue",
   extends: BaseView,
-  data: function() {
+  data: function () {
     return {
       issue: undefined
     };
   },
   computed: {
-    title: function() {
+    title: function () {
       if (!this.issue) return "";
 
       return this.PrismicProcessor.getRawText(this.issue.title);
     },
-    image: function() {
+    image: function () {
       if (!this.issue) return "";
 
       return this.issue.cover_image;
     }
   },
-  created: async function() {
+  created: async function () {
     const issue = await this.$api.fetchIssueBySlug(
       this.$route.params.issueSlug
     );

@@ -1,18 +1,20 @@
-!(function(e) {
-  if ("object" == typeof exports && "undefined" != typeof module)
+!(function (e) {
+  if ("object" == typeof exports && "undefined" != typeof module) {
     module.exports = e();
-  else if ("function" == typeof define && define.amd) define([], e);
+  } else if ("function" == typeof define && define.amd) define([], e);
   else {
     var f;
     "undefined" != typeof window
       ? (f = window)
       : "undefined" != typeof global
-      ? (f = global)
-      : "undefined" != typeof self && (f = self),
-      (f.sweep = e());
+        ? (f = global)
+        : "undefined" != typeof self && (f = self),
+    (f.sweep = e());
   }
-})(function() {
-  var define, module, exports;
+})(function () {
+  var define,
+    module,
+    exports;
   return (function e(t, n, r) {
     function s(o, u) {
       if (!n[o]) {
@@ -26,7 +28,7 @@
         var l = (n[o] = { exports: {} });
         t[o][0].call(
           l.exports,
-          function(e) {
+          function (e) {
             var n = t[o][1][e];
             return s(n ? n : e);
           },
@@ -46,18 +48,18 @@
   })(
     {
       1: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           var hsluv = require("hsluv");
           var convert = require("./convert.js");
 
-          var sweep = (function() {
+          var sweep = (function () {
             // keep current animations in this closure; deal with each in
             // a single tick to prevent dom thrashing and event hell
             var batch = [];
 
             function tick() {
               // increment frames step:
-              batch.forEach(function(animation) {
+              batch.forEach(function (animation) {
                 ++animation.frame;
               });
 
@@ -65,7 +67,7 @@
               var computedSteps = [],
                 callbacks = [];
 
-              batch.forEach(function(animation) {
+              batch.forEach(function (animation) {
                 var targets = animation.targets;
                 var properties = animation.properties;
                 var from = animation.from;
@@ -123,7 +125,7 @@
                           components[1],
                           components[2]
                         ])
-                        .map(function(component) {
+                        .map(function (component) {
                           return Math.floor(component * 255);
                         }) +
                       "," +
@@ -140,9 +142,9 @@
               });
 
               // DOM painting step:
-              computedSteps.forEach(function(step) {
-                step.properties.forEach(function(property) {
-                  step.targets.forEach(function(target) {
+              computedSteps.forEach(function (step) {
+                step.properties.forEach(function (property) {
+                  step.targets.forEach(function (target) {
                     target.style[property] = step.composed;
                   });
                 });
@@ -150,12 +152,12 @@
 
               // remove finished animations step:
               callbacks = batch
-                .map(function(animation) {
+                .map(function (animation) {
                   return animation.frame === animation.end
                     ? animation.pause()
                     : false;
                 })
-                .filter(function(animation) {
+                .filter(function (animation) {
                   return typeof animation === "function";
                 });
 
@@ -172,8 +174,9 @@
 
             // push the animation to batch and start a tick if one doesn't already exist
             function queueAnimation() {
-              if (batch.indexOf(this) === -1 && batch.push(this) === 1)
+              if (batch.indexOf(this) === -1 && batch.push(this) === 1) {
                 requestAnimationFrame(tick);
+              }
             }
 
             // remove the animation from batch and return its callback
@@ -181,7 +184,7 @@
               return (batch.splice(batch.indexOf(this), 1)[0] || {}).callback;
             }
 
-            return function(targets, properties, from, to, args) {
+            return function (targets, properties, from, to, args) {
               var steps,
                 angle,
                 callback,
@@ -194,29 +197,34 @@
               if (!NodeList.prototype.isPrototypeOf(targets)) {
                 if (!Array.isArray(targets)) targets = [targets];
                 if (
-                  targets.some(function(target) {
+                  targets.some(function (target) {
                     return !(target instanceof Element);
                   })
-                )
+                ) {
                   throw "The first argument to sweep() must be an array of DOM elements or a single DOM element";
+                }
               }
 
               if (
-                properties.some(function(property) {
+                properties.some(function (property) {
                   return typeof targets[0].style[property] !== "string";
                 })
-              )
+              ) {
                 throw "The second argument to sweep() must be either a string or an array of strings";
+              }
 
-              if (typeof from !== "string")
+              if (typeof from !== "string") {
                 throw "The third argument to sweep() must be a string";
+              }
 
-              if (typeof to !== "string")
+              if (typeof to !== "string") {
                 throw "The fourth argument to sweep() must be a string";
+              }
 
               if (args) {
-                if (typeof args !== "object")
+                if (typeof args !== "object") {
                   throw "The fifth argument to sweep() must be an object";
+                }
 
                 callback = args.callback;
                 direction = args.direction;
@@ -322,7 +330,7 @@
         { "./convert.js": 2, hsluv: 3 }
       ],
       2: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /**
            * Lightweight module to convert colors from
            * rgb, rgba, hex, hsl, hsla, or CSS named colors
@@ -470,8 +478,8 @@
             return outRgb === inRgb
               ? color
               : outRgb
-              ? hslaToRgba(color)
-              : rgbaToHsla(color);
+                ? hslaToRgba(color)
+                : rgbaToHsla(color);
           }
 
           function toRgba(color) {
@@ -483,7 +491,7 @@
           }
 
           // From tinycolor.js http://bgrins.github.io/TinyColor/docs/tinycolor.html
-          var matchers = (function() {
+          var matchers = (function () {
             // <http://www.w3.org/TR/css3-values/#integers>
             var CSS_INTEGER = "[-\\+]?\\d+%?";
 
@@ -687,15 +695,15 @@
         {}
       ],
       3: [
-        function(require, module, exports) {
-          (function() {
-            var HxOverrides = function() {};
-            HxOverrides.cca = function(s, index) {
+        function (require, module, exports) {
+          (function () {
+            var HxOverrides = function () {};
+            HxOverrides.cca = function (s, index) {
               var x = s.charCodeAt(index);
               if (x != x) return undefined;
               return x;
             };
-            HxOverrides.substr = function(s, pos, len) {
+            HxOverrides.substr = function (s, pos, len) {
               if (pos != null && pos != 0 && len != null && len < 0) return "";
               if (len == null) len = s.length;
               if (pos < 0) {
@@ -704,19 +712,20 @@
               } else if (len < 0) len = s.length + len - pos;
               return s.substr(pos, len);
             };
-            var Std = function() {};
-            Std.parseInt = function(x) {
+            var Std = function () {};
+            Std.parseInt = function (x) {
               var v = parseInt(x, 10);
               if (
                 v == 0 &&
                 (HxOverrides.cca(x, 1) == 120 || HxOverrides.cca(x, 1) == 88)
-              )
+              ) {
                 v = parseInt(x);
+              }
               if (isNaN(v)) return null;
               return v;
             };
-            var StringTools = function() {};
-            StringTools.hex = function(n, digits) {
+            var StringTools = function () {};
+            StringTools.hex = function (n, digits) {
               var s = "";
               var hexChars = "0123456789ABCDEF";
               do {
@@ -727,41 +736,41 @@
               return s;
             };
             var hsluv = hsluv || {};
-            hsluv.Geometry = function() {};
-            hsluv.Geometry.intersectLineLine = function(a, b) {
+            hsluv.Geometry = function () {};
+            hsluv.Geometry.intersectLineLine = function (a, b) {
               var x = (a.intercept - b.intercept) / (b.slope - a.slope);
               var y = a.slope * x + a.intercept;
               return { x: x, y: y };
             };
-            hsluv.Geometry.distanceFromOrigin = function(point) {
+            hsluv.Geometry.distanceFromOrigin = function (point) {
               return Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2));
             };
-            hsluv.Geometry.distanceLineFromOrigin = function(line) {
+            hsluv.Geometry.distanceLineFromOrigin = function (line) {
               return (
                 Math.abs(line.intercept) /
                 Math.sqrt(Math.pow(line.slope, 2) + 1)
               );
             };
-            hsluv.Geometry.perpendicularThroughPoint = function(line, point) {
+            hsluv.Geometry.perpendicularThroughPoint = function (line, point) {
               var slope = -1 / line.slope;
               var intercept = point.y - slope * point.x;
               return { slope: slope, intercept: intercept };
             };
-            hsluv.Geometry.angleFromOrigin = function(point) {
+            hsluv.Geometry.angleFromOrigin = function (point) {
               return Math.atan2(point.y, point.x);
             };
-            hsluv.Geometry.normalizeAngle = function(angle) {
+            hsluv.Geometry.normalizeAngle = function (angle) {
               var m = 2 * Math.PI;
               return ((angle % m) + m) % m;
             };
-            hsluv.Geometry.lengthOfRayUntilIntersect = function(theta, line) {
+            hsluv.Geometry.lengthOfRayUntilIntersect = function (theta, line) {
               return (
                 line.intercept /
                 (Math.sin(theta) - line.slope * Math.cos(theta))
               );
             };
-            hsluv.Hsluv = function() {};
-            hsluv.Hsluv.getBounds = function(L) {
+            hsluv.Hsluv = function () {};
+            hsluv.Hsluv.getBounds = function (L) {
               var result = [];
               var sub1 = Math.pow(L + 16, 3) / 1560896;
               var sub2;
@@ -789,7 +798,7 @@
               }
               return result;
             };
-            hsluv.Hsluv.maxSafeChromaForL = function(L) {
+            hsluv.Hsluv.maxSafeChromaForL = function (L) {
               var bounds = hsluv.Hsluv.getBounds(L);
               var min = 1.7976931348623157e308;
               var _g = 0;
@@ -800,7 +809,7 @@
               }
               return min;
             };
-            hsluv.Hsluv.maxChromaForLH = function(L, H) {
+            hsluv.Hsluv.maxChromaForLH = function (L, H) {
               var hrad = (H / 360) * Math.PI * 2;
               var bounds = hsluv.Hsluv.getBounds(L);
               var min = 1.7976931348623157e308;
@@ -816,7 +825,7 @@
               }
               return min;
             };
-            hsluv.Hsluv.dotProduct = function(a, b) {
+            hsluv.Hsluv.dotProduct = function (a, b) {
               var sum = 0;
               var _g1 = 0;
               var _g = a.length;
@@ -826,15 +835,15 @@
               }
               return sum;
             };
-            hsluv.Hsluv.fromLinear = function(c) {
+            hsluv.Hsluv.fromLinear = function (c) {
               if (c <= 0.0031308) return 12.92 * c;
               else return 1.055 * Math.pow(c, 0.416666666666666685) - 0.055;
             };
-            hsluv.Hsluv.toLinear = function(c) {
+            hsluv.Hsluv.toLinear = function (c) {
               if (c > 0.04045) return Math.pow((c + 0.055) / 1.055, 2.4);
               else return c / 12.92;
             };
-            hsluv.Hsluv.xyzToRgb = function(tuple) {
+            hsluv.Hsluv.xyzToRgb = function (tuple) {
               return [
                 hsluv.Hsluv.fromLinear(
                   hsluv.Hsluv.dotProduct(hsluv.Hsluv.m[0], tuple)
@@ -847,7 +856,7 @@
                 )
               ];
             };
-            hsluv.Hsluv.rgbToXyz = function(tuple) {
+            hsluv.Hsluv.rgbToXyz = function (tuple) {
               var rgbl = [
                 hsluv.Hsluv.toLinear(tuple[0]),
                 hsluv.Hsluv.toLinear(tuple[1]),
@@ -859,20 +868,21 @@
                 hsluv.Hsluv.dotProduct(hsluv.Hsluv.minv[2], rgbl)
               ];
             };
-            hsluv.Hsluv.yToL = function(Y) {
-              if (Y <= hsluv.Hsluv.epsilon)
+            hsluv.Hsluv.yToL = function (Y) {
+              if (Y <= hsluv.Hsluv.epsilon) {
                 return (Y / hsluv.Hsluv.refY) * hsluv.Hsluv.kappa;
-              else
+              } else {
                 return (
                   116 * Math.pow(Y / hsluv.Hsluv.refY, 0.333333333333333315) -
                   16
                 );
+              }
             };
-            hsluv.Hsluv.lToY = function(L) {
+            hsluv.Hsluv.lToY = function (L) {
               if (L <= 8) return (hsluv.Hsluv.refY * L) / hsluv.Hsluv.kappa;
               else return hsluv.Hsluv.refY * Math.pow((L + 16) / 116, 3);
             };
-            hsluv.Hsluv.xyzToLuv = function(tuple) {
+            hsluv.Hsluv.xyzToLuv = function (tuple) {
               var X = tuple[0];
               var Y = tuple[1];
               var Z = tuple[2];
@@ -892,7 +902,7 @@
               var V = 13 * L * (varV - hsluv.Hsluv.refV);
               return [L, U, V];
             };
-            hsluv.Hsluv.luvToXyz = function(tuple) {
+            hsluv.Hsluv.luvToXyz = function (tuple) {
               var L = tuple[0];
               var U = tuple[1];
               var V = tuple[2];
@@ -904,7 +914,7 @@
               var Z = (9 * Y - 15 * varV * Y - varV * X) / (3 * varV);
               return [X, Y, Z];
             };
-            hsluv.Hsluv.luvToLch = function(tuple) {
+            hsluv.Hsluv.luvToLch = function (tuple) {
               var L = tuple[0];
               var U = tuple[1];
               var V = tuple[2];
@@ -918,7 +928,7 @@
               }
               return [L, C, H];
             };
-            hsluv.Hsluv.lchToLuv = function(tuple) {
+            hsluv.Hsluv.lchToLuv = function (tuple) {
               var L = tuple[0];
               var C = tuple[1];
               var H = tuple[2];
@@ -927,7 +937,7 @@
               var V = Math.sin(Hrad) * C;
               return [L, U, V];
             };
-            hsluv.Hsluv.hsluvToLch = function(tuple) {
+            hsluv.Hsluv.hsluvToLch = function (tuple) {
               var H = tuple[0];
               var S = tuple[1];
               var L = tuple[2];
@@ -937,7 +947,7 @@
               var C = (max / 100) * S;
               return [L, C, H];
             };
-            hsluv.Hsluv.lchToHsluv = function(tuple) {
+            hsluv.Hsluv.lchToHsluv = function (tuple) {
               var L = tuple[0];
               var C = tuple[1];
               var H = tuple[2];
@@ -947,7 +957,7 @@
               var S = (C / max) * 100;
               return [H, S, L];
             };
-            hsluv.Hsluv.hpluvToLch = function(tuple) {
+            hsluv.Hsluv.hpluvToLch = function (tuple) {
               var H = tuple[0];
               var S = tuple[1];
               var L = tuple[2];
@@ -957,7 +967,7 @@
               var C = (max / 100) * S;
               return [L, C, H];
             };
-            hsluv.Hsluv.lchToHpluv = function(tuple) {
+            hsluv.Hsluv.lchToHpluv = function (tuple) {
               var L = tuple[0];
               var C = tuple[1];
               var H = tuple[2];
@@ -967,7 +977,7 @@
               var S = (C / max) * 100;
               return [H, S, L];
             };
-            hsluv.Hsluv.rgbToHex = function(tuple) {
+            hsluv.Hsluv.rgbToHex = function (tuple) {
               var h = "#";
               var _g1 = 0;
               var _g = tuple.length;
@@ -978,7 +988,7 @@
               }
               return h;
             };
-            hsluv.Hsluv.hexToRgb = function(hex) {
+            hsluv.Hsluv.hexToRgb = function (hex) {
               hex = hex.toUpperCase();
               return [
                 Std.parseInt("0x" + HxOverrides.substr(hex, 1, 2)) / 255.0,
@@ -986,38 +996,38 @@
                 Std.parseInt("0x" + HxOverrides.substr(hex, 5, 2)) / 255.0
               ];
             };
-            hsluv.Hsluv.lchToRgb = function(tuple) {
+            hsluv.Hsluv.lchToRgb = function (tuple) {
               return hsluv.Hsluv.xyzToRgb(
                 hsluv.Hsluv.luvToXyz(hsluv.Hsluv.lchToLuv(tuple))
               );
             };
-            hsluv.Hsluv.rgbToLch = function(tuple) {
+            hsluv.Hsluv.rgbToLch = function (tuple) {
               return hsluv.Hsluv.luvToLch(
                 hsluv.Hsluv.xyzToLuv(hsluv.Hsluv.rgbToXyz(tuple))
               );
             };
-            hsluv.Hsluv.hsluvToRgb = function(tuple) {
+            hsluv.Hsluv.hsluvToRgb = function (tuple) {
               return hsluv.Hsluv.lchToRgb(hsluv.Hsluv.hsluvToLch(tuple));
             };
-            hsluv.Hsluv.rgbToHsluv = function(tuple) {
+            hsluv.Hsluv.rgbToHsluv = function (tuple) {
               return hsluv.Hsluv.lchToHsluv(hsluv.Hsluv.rgbToLch(tuple));
             };
-            hsluv.Hsluv.hpluvToRgb = function(tuple) {
+            hsluv.Hsluv.hpluvToRgb = function (tuple) {
               return hsluv.Hsluv.lchToRgb(hsluv.Hsluv.hpluvToLch(tuple));
             };
-            hsluv.Hsluv.rgbToHpluv = function(tuple) {
+            hsluv.Hsluv.rgbToHpluv = function (tuple) {
               return hsluv.Hsluv.lchToHpluv(hsluv.Hsluv.rgbToLch(tuple));
             };
-            hsluv.Hsluv.hsluvToHex = function(tuple) {
+            hsluv.Hsluv.hsluvToHex = function (tuple) {
               return hsluv.Hsluv.rgbToHex(hsluv.Hsluv.hsluvToRgb(tuple));
             };
-            hsluv.Hsluv.hpluvToHex = function(tuple) {
+            hsluv.Hsluv.hpluvToHex = function (tuple) {
               return hsluv.Hsluv.rgbToHex(hsluv.Hsluv.hpluvToRgb(tuple));
             };
-            hsluv.Hsluv.hexToHsluv = function(s) {
+            hsluv.Hsluv.hexToHsluv = function (s) {
               return hsluv.Hsluv.rgbToHsluv(hsluv.Hsluv.hexToRgb(s));
             };
-            hsluv.Hsluv.hexToHpluv = function(s) {
+            hsluv.Hsluv.hexToHpluv = function (s) {
               return hsluv.Hsluv.rgbToHpluv(hsluv.Hsluv.hexToRgb(s));
             };
             hsluv.Hsluv.m = [

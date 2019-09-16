@@ -19,7 +19,7 @@ export default {
       required: true
     }
   },
-  mounted: function() {
+  mounted: function () {
     window.fitText(this.$refs["fit-text"], 0.9);
   }
 };

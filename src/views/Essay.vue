@@ -20,7 +20,7 @@ import BaseView from "./BaseView";
 export default {
   name: "Essay",
   extends: BaseView,
-  data: function() {
+  data: function () {
     return {
       essay: undefined,
       title: undefined,
@@ -30,7 +30,7 @@ export default {
     };
   },
   computed: {
-    combinedTitle: function() {
+    combinedTitle: function () {
       if (!this.title || !this.subtitle) return "";
 
       let title = this.title;
@@ -38,7 +38,7 @@ export default {
       return title;
     }
   },
-  created: async function() {
+  created: async function () {
     const essaySlug = this.$route.params.essaySlug;
     const issueSlug = this.$route.params.issueSlug;
     const essay = await this.$api.fetchEssayBySlugs(issueSlug, essaySlug);

@@ -19,12 +19,12 @@ export default {
   name: "Home",
   extends: BaseView,
   components: { IssueSlice, AtlasSlice },
-  data: function() {
+  data: function () {
     return {
       currentIssue: undefined
     };
   },
-  created: async function() {
+  created: async function () {
     let currentIssue = await this.$api.fetchCurrentIssue();
 
     // move to ToC component

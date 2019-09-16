@@ -42,39 +42,39 @@ export default {
   name: "Page",
   extends: BaseView,
   components: { HeaderGradient, RichText },
-  data: function() {
+  data: function () {
     return {
       items: _.range(0, 5, 1),
       rawData: undefined
     };
   },
   computed: {
-    title: function() {
+    title: function () {
       return this.rawData
         ? this.PrismicProcessor.getRawText(this.rawData["page_title"])
         : "";
     },
-    slices: function() {
+    slices: function () {
       if (!this.rawData) return [];
 
       return this.rawData.body[0].primary.text;
     },
-    testSlice: function() {
+    testSlice: function () {
       if (!this.rawData) return [];
 
       return [this.slices[0]];
     },
-    sliceTypes: function() {
+    sliceTypes: function () {
       if (!this.rawData) return [];
 
       return _.uniqBy(this.slices.map(slice => slice.type));
     },
-    body: function() {
+    body: function () {
       if (!this.rawData) return [];
 
       return this.rawData.body;
     },
-    sections: function() {
+    sections: function () {
       let sections = [];
 
       let section = [];
@@ -94,7 +94,7 @@ export default {
       return sections;
     }
   },
-  created: async function() {
+  created: async function () {
     const slugs = this.$route.path.split("/").filter(el => el.length > 0);
     const parentSlug = slugs[0];
 

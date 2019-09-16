@@ -48,7 +48,7 @@ const routes = [
   {
     path: "/atlas",
     name: "atlas",
-    componentName: "Page",
+    componentName: "ComingSoon",
     meta: {
       hue: undefined,
       menuItem: true
@@ -57,14 +57,14 @@ const routes = [
       {
         path: ":projectSlug",
         name: "project",
-        componentName: "Page"
+        componentName: "ComingSoon"
       }
     ]
   },
   {
     path: "/events",
     name: "events",
-    componentName: "Page",
+    componentName: "ComingSoon",
     meta: {
       hue: undefined,
       menuItem: true
@@ -73,14 +73,14 @@ const routes = [
       {
         path: ":eventSlug",
         name: "event",
-        componentName: "Page"
+        componentName: "ComingSoon"
       }
     ]
   },
   {
     path: "/resources",
     name: "resources",
-    componentName: "Page",
+    componentName: "ComingSoon",
     meta: {
       hue: undefined,
       menuItem: true
@@ -108,15 +108,6 @@ const routes = [
     path: "/404",
     name: "not found",
     componentName: "NotFound",
-    meta: {
-      hue: undefined,
-      menuItem: false
-    }
-  },
-  {
-    path: "*",
-    name: "not found x",
-    componentName: "Page",
     meta: {
       hue: undefined,
       menuItem: false

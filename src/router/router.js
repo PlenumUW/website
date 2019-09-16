@@ -11,8 +11,9 @@ import Issues from "./../views/Issues.vue";
 import Issue from "./../views/Issue.vue";
 import Essay from "./../views/Essay.vue";
 import NotFound from "./../views/NotFound.vue";
+import ComingSoon from "./../views/ComingSoon.vue";
 
-const views = [Home, About, Page, Issues, Issue, Essay, NotFound];
+const views = [Home, About, Page, Issues, Issue, Essay, NotFound, ComingSoon];
 
 import { routes } from "./routes";
 

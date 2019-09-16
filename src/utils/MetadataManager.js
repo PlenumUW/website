@@ -53,8 +53,9 @@ class MetadataManager {
 
     if (title) metadata.push(this._getOpenGraphMetaTag("title", title));
 
-    if (description)
+    if (description) {
       metadata.push(this._getOpenGraphMetaTag("description", description));
+    }
 
     if (type) metadata.push(this._getOpenGraphMetaTag("type", type));
 
@@ -66,13 +67,11 @@ class MetadataManager {
       authors = typeof authors === "string" ? [authors] : authors;
 
       metadata.push(
-        ...authors.map((author, index) => {
-          return this._getOpenGraphMetaTag(
-            "author",
-            author,
-            "author" + (index === 0 ? "" : index)
-          );
-        })
+        ...authors.map((author, index) => this._getOpenGraphMetaTag(
+          "author",
+          author,
+          "author" + (index === 0 ? "" : index)
+        ))
       );
     }
 
@@ -86,8 +85,9 @@ class MetadataManager {
 
     if (title) metadata.push(this._getPrimaryMetaTag("title", title));
 
-    if (description)
+    if (description) {
       metadata.push(this._getPrimaryMetaTag("description", description));
+    }
 
     return metadata;
   }
@@ -97,13 +97,19 @@ class MetadataManager {
 
     if (home) metadata.push(this._getTwitterMetaTag("site", "@PlenumJournal"));
 
-    if (largeImage)
+    if (largeImage) {
       metadata.push(this._getTwitterMetaTag("card", "summary_large_image"));
+    }
 
     return metadata;
   }
 
-  static metaDefault(metadata, type, overrides = {}) {
+  static addNoIndexing(metadata) {
+    metadata.meta.push({ name: "robots", content: "noindex" });
+    return metadata;
+  }
+
+  static metaDefault(metadata, type = "website", overrides = {}) {
     if (!metadata) return {};
 
     const titleVar = "%s";

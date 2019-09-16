@@ -9,7 +9,7 @@ export default {
   name: "NotFound",
   extends: BaseView,
   computed: {
-    message: function() {
+    message: function () {
       let msg = "404 - Site ";
       const brokenPath = this.$route.params.brokenPath;
       if (brokenPath) msg += `at path, '${brokenPath}', `;
@@ -25,7 +25,7 @@ export default {
   },
   meta() {
     let meta = this.MetadataManager.metaDefault(this.metadata);
-    meta.meta.push({ name: "robots", content: "noindex" });
+    meta = this.MetadataManager.addNoIndexing(meta);
     return meta;
   }
 };

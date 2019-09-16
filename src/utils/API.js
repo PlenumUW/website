@@ -1,13 +1,10 @@
 import prismicJS from "prismic-javascript";
 
 /**
- * Prismic Api specific to portfolio
- */
-class Api {
-  /**
    * Constructs an interface to interact with the Prismic API.
    * @param {Object} prismic Prismic javascript object.
    */
+class Api {
   constructor(endpoint, options) {
     this.endpoint = endpoint;
     this.options = options;

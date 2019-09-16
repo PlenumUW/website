@@ -18,19 +18,19 @@ export default {
     width: {
       type: Number,
       required: false,
-      default: function() {
+      default: function () {
         return undefined;
       }
     }
   },
-  data: function() {
+  data: function () {
     return {
       focused: false,
       padding: 10
     };
   },
   computed: {
-    height: function() {
+    height: function () {
       return this.width;
     }
   },

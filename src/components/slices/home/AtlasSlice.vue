@@ -46,7 +46,7 @@ export default {
       required: true
     }
   },
-  data: function() {
+  data: function () {
     return {
       projects: _.fill(new Array(3), {
         title: "Project Title",
@@ -59,7 +59,7 @@ export default {
     };
   },
   computed: {
-    currentProjects: function() {
+    currentProjects: function () {
       let index = this.projectPairIndex;
       return [this.projects[index], this.projects[index + 1]];
     }

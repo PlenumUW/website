@@ -110,11 +110,12 @@ export default {
     body: {
       required: true,
       type: Array,
+
       /**
        * Validates that the given objects are valid Prismic objects.
        */
-      validator: function(val) {
-        return val.every(p => {
+      validator: function (val) {
+        return val.every((p) => {
           const hasProps =
             p.hasOwnProperty("type") &&
             ((p.hasOwnProperty("spans") && p.hasOwnProperty("text")) ||
@@ -139,23 +140,23 @@ export default {
     classes: {
       required: false,
       type: String,
-      default: function() {
+      default: function () {
         return "";
       }
     }
   },
-  data: function() {
+  data: function () {
     return {
       olListOpen: false,
       ulListOpen: false
     };
   },
   computed: {
-    html: function() {
+    html: function () {
       return this.buildHtml();
     },
     // Whether there is a wrapping element tag that is currently open
-    wrappingHtmlElementOpen: function() {
+    wrappingHtmlElementOpen: function () {
       return this.olListOpen || this.ulListOpen;
     }
   },
@@ -167,9 +168,7 @@ export default {
       );
     },
     findElement(type) {
-      const elKey = Object.keys(Elements).find(key => {
-        return Elements[key].type === type;
-      });
+      const elKey = Object.keys(Elements).find(key => Elements[key].type === type);
 
       if (elKey === undefined) {
         throw new Error("Prismic element type, '" + type + "', unhandled.");
@@ -207,7 +206,7 @@ export default {
       html += this.processOpeningWrappers(type);
       html += open({}, this.wrappingHtmlElementOpen ? "" : this.classes);
 
-      spans.forEach(span => {
+      spans.forEach((span) => {
         const { type, data, start, end } = span;
         const { open, close } = this.findElement(type);
 

@@ -37,13 +37,13 @@ export default {
       required: true
     }
   },
-  data: function() {
+  data: function () {
     return {
       menuHovered: false
     };
   },
   computed: {
-    menuItems: function() {
+    menuItems: function () {
       return this.$router.options.routes.filter(route => route.meta.menuItem);
     }
   },

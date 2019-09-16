@@ -34,7 +34,7 @@ export default {
     hideBackground: {
       type: Boolean,
       required: false,
-      default: function() {
+      default: function () {
         return false;
       }
     }

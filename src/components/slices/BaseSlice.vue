@@ -3,7 +3,7 @@ import PrismicProcessor from "@/utils/PrismicProcessor";
 
 export default {
   name: "BaseSlice",
-  data: function() {
+  data: function () {
     return {
       PrismicProcessor
     };

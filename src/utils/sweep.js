@@ -330,7 +330,9 @@
         { "./convert.js": 2, hsluv: 3 }
       ],
       2: [
-        function (require, module, exports) {
+        // eslint-disable-next-line
+        function(require, module, exports) {
+
           /**
            * Lightweight module to convert colors from
            * rgb, rgba, hex, hsl, hsla, or CSS named colors

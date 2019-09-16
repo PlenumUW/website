@@ -52,7 +52,7 @@ let router = new Router({
 
 // Preset routing methods
 router.presets = {
-  docNotFound: path => {
+  docNotFound: (path) => {
     router.replace({ name: "not found", params: { brokenPath: path } });
   }
 };

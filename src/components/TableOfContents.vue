@@ -53,6 +53,7 @@ export default {
     getPath(slug) {
       return `${this.contentPath}/${slug}`;
     },
+    // TODO: move to prismic processor? make dry with atlas slice. add seperator parameter
     getListedAuthors(authors) {
       let authorsListed = "";
       authors.forEach(({ author }, index) => {

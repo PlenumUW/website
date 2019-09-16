@@ -7,40 +7,44 @@
     <template #content>
       <div class="c-atlas-slice__previews">
         <div
-          v-for="(project, projectIndex) in currentProjects"
-          :key="`${project.title}-${projectIndex}`"
+          v-for="(project, projectIndex) in chunkedProjects[currentPairIndex]"
+          :key="`project-${projectIndex}`"
           class="c-atlas-slice__project"
         >
-          <router-link :to="project.slug" class="c-atlas-slice__project__link">
-            <img class="c-atlas-slice__project__image" :src="project.imgSrc" />
-            <p class="c-atlas-slice__project__title">{{ project.title }}</p>
-            <p
-              v-for="(author, authorIndex) in project.authors"
-              :key="`${project.title}-author-${authorIndex}`"
-              class="c-atlas-slice__project__author"
-            >
-              {{ author }}
+          <router-link :to="getProjectPath(project.uid)" class="c-atlas-slice__project__link">
+            <img class="c-atlas-slice__project__image" :src="getProjectImageSrc(project)" />
+            <p class="c-atlas-slice__project__title">{{ getProjectTitle(project) }}</p>
+            <p class="c-atlas-slice__project__author">
+              {{ getListedAuthors(project) }}
             </p>
           </router-link>
         </div>
       </div>
 
-      <div v-if="false" class="c-atlas-slice__navigation">
-        <img src="http://placehold.jp/300x200.png?text=Atlas Navigation" />
+      <div v-if="projects.length > 0" class="c-atlas-slice__navigation">
+        <button @click="prevPair" :disabled="currentPairIndex === 0"><<</button>
+        <button @click="nextPair" :disabled="currentPairIndex === projects.length / 2 - 1">>></button>
+        <!-- <img src="http://placehold.jp/300x200.png?text=Atlas Navigation" /> -->
       </div>
     </template>
   </home-slice>
 </template>
 <script>
 import _ from "lodash";
+import BaseSlice from "@/components/slices/BaseSlice.vue";
 import HomeSlice from "./HomeSlice.vue";
 
 export default {
   name: "AtlasSlice",
+  extends: BaseSlice,
   components: {
     HomeSlice
   },
   props: {
+    projects: {
+      type: Array,
+      required: true
+    },
     bgColor: {
       type: String,
       required: true
@@ -48,20 +52,51 @@ export default {
   },
   data: function () {
     return {
-      projects: _.fill(new Array(3), {
-        title: "Project Title",
-        authors: ["Firstname Lastname"],
-        slug: "/atlas/project/title",
-        imgSrc:
-          "http://placehold.jp/50/bfbfbf/ffffff/600x800.png?text=Atlas Project Image"
-      }),
-      projectPairIndex: 0
+      currentPairIndex: 0
     };
   },
   computed: {
-    currentProjects: function () {
-      let index = this.projectPairIndex;
-      return [this.projects[index], this.projects[index + 1]];
+    chunkedProjects: function () {
+      return _.chunk(this.projects, 2);
+    }
+  },
+  methods: {
+    nextPair() {
+      if (this.currentPairIndex === this.projects.length / 2 - 1) {
+        this.currentPairIndex = 0;
+        return;
+      }
+
+      this.currentPairIndex++;
+    },
+    prevPair() {
+      if (this.currentPairIndex === 0) {
+        return;
+      }
+
+      this.currentPairIndex--;
+    },
+    getProjectPath(projectSlug) {
+      return `/atlas/${projectSlug}`;
+    },
+    getProjectTitle(project) {
+      return this.PrismicProcessor.getRawText(project.data.title);
+    },
+    getProjectImageSrc(project) {
+      return project.data.cover_image.url;
+    },
+    getListedAuthors(project) {
+      const authors = project.data.authors;
+
+      let authorsListed = "";
+      authors.forEach(({ author }, index) => {
+        authorsListed += this.PrismicProcessor.getRawText(author);
+        if (index !== authors.length - 1) {
+          authorsListed += ", ";
+        }
+      });
+
+      return authorsListed;
     }
   }
 };

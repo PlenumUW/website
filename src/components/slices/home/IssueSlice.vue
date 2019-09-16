@@ -65,33 +65,6 @@ export default {
     loading: function () {
       return Object.keys(this.issue).length === 0;
     },
-    categories: function () {
-      let categories = {};
-
-      this.issue.essays.forEach((essay) => {
-        const essayCategory = this.PrismicProcessor.getRawText(
-          essay.data.category.data.name
-        );
-
-        if (!Object.keys(categories).find(cat => cat.name === essayCategory)) {
-          const { list_position, name } = essay.data.category.data;
-          categories[essayCategory] = {
-            name: this.PrismicProcessor.getRawText(name),
-            position: list_position,
-            essays: []
-          };
-        }
-
-        categories[essayCategory].essays.push(essay);
-      });
-
-      return categories;
-    },
-    orderedCategories: function () {
-      return Object.values(this.categories).sort(
-        (a, b) => a.position - b.position
-      );
-    },
     essayPath: function () {
       return `/issue/${this.issue.uid}`;
     }

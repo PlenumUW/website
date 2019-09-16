@@ -70,6 +70,21 @@ class Api {
   }
 
   /**
+   * @returns {Array} The most recently published atlas projects.
+   */
+  async fetchRecentAtlases() {
+    const response = await this.api.query(
+      this.predicates.at("document.type", "atlas_project"),
+      {
+        pageSize: 4,
+        orderings: "[document.first_publication_date desc]"
+      }
+    );
+
+    return response.results;
+  }
+
+  /**
    * @param {String} slug A URL slug of a document.
    * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
    */

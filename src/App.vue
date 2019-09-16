@@ -6,29 +6,32 @@
     :style="{ 'background-color': bgColor }"
     :class="{ 'app--no-scroll': hideMainContent }"
   >
-    <the-site-header
-      :color="bgColor"
-      :hamburgerOpen.sync="menuOpen"
-      @logoClick="handleLogoClick"
-    ></the-site-header>
-
-    <div class="main-content-container">
-      <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
-
-      <main class="main" :class="{ 'main--hidden': hideMainContent }">
-        <transition name="view" @leave="backgroundTransitionLeave">
-          <router-view
-            :key="viewKey"
-            class="router-view"
-            :color="bgColor"
-          ></router-view>
-        </transition>
-      </main>
-      <site-footer
+    <div class="app__horizontal-wrapper">
+      <the-site-header
         :color="bgColor"
-        :class="{ 'site-footer--hidden': hideMainContent }"
-      ></site-footer>
+        :hamburgerOpen.sync="menuOpen"
+        @logoClick="handleLogoClick"
+      ></the-site-header>
+
+      <div class="main-content-container">
+        <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
+
+        <main class="main" :class="{ 'main--hidden': hideMainContent }">
+          <transition name="view" @leave="backgroundTransitionLeave">
+            <router-view
+              :key="viewKey"
+              class="router-view"
+              :color="bgColor"
+            ></router-view>
+          </transition>
+        </main>
+      </div>
     </div>
+
+    <site-footer
+      :color="bgColor"
+      :class="{ 'site-footer--hidden': hideMainContent }"
+    ></site-footer>
   </div>
 </template>
 
@@ -161,19 +164,22 @@ export default {
   flex-direction: column;
 
   overflow-x: hidden;
-  // overflow-y: auto;
   overflow-y: scroll; // Scroll required for momentum scrolling in iOS
   -webkit-overflow-scrolling: touch; // Required for momentum scrolling in iOS
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  &--no-scroll {
+    overflow: hidden;
+  }
+
+  &__horizontal-wrapper {
+    display: flex;
+  flex-direction: column;
   @include for-size(tablet-landscape-up) {
     flex-direction: row;
   }
-
-  &--no-scroll {
-    overflow: hidden;
   }
 }
 

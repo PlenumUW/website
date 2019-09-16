@@ -76,21 +76,13 @@ $lefter-width: $g-lefter-width;
   flex-direction: column;
   width: 100%;
   height: fit-content;
-  margin-top: 60px;
+  margin-top: 50px;
 
   position: relative;
   align-items: center;
   padding-bottom: 20px;
 
   font-family: $font-titling--subtitle;
-
-  @include for-size(tablet-landscape-up) {
-    left: -124px;
-    width: 100vw; // TODO: make 100% and move outside main content
-    margin-top: 50px;
-
-    position: absolute;
-  }
 
   &__info-container {
     display: block;
@@ -160,7 +152,6 @@ $lefter-width: $g-lefter-width;
 
     @include for-size(tablet-landscape-down) {
       width: 80%;
-      // min-width: 300px;
       margin-left: auto;
     }
 

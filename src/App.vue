@@ -137,7 +137,7 @@ export default {
         title.style.opacity = 0;
       }
     },
-    async enter(el, done) {
+    enter(el, done) {
       const paper = el.getElementsByClassName("paper")[0];
       const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
 
@@ -146,7 +146,7 @@ export default {
       const prevColor = this.prevBgColor || defaultColor;
       const nextColor = this.bgColor || defaultColor;
 
-      const transformPaper = new Promise((resolve) => {
+      const transformPaper = () => new Promise((resolve) => {
         Velocity(paper, {
           translateX: [0, "-100vw"],
           translateY: [0, "20vh"],
@@ -155,7 +155,7 @@ export default {
         }, {
           duration: 700,
           easing: "swing",
-          queue: "",
+          queue: false,
           begin: undefined,
           progress: undefined,
           complete: resolve,
@@ -164,11 +164,11 @@ export default {
         });
       });
 
-      const fadeTitles = new Promise((resolve) => {
+      const fadeTitles = () => new Promise((resolve) => {
         Velocity(titles, { opacity: 1 }, {
           duration: 1000,
           easing: "swing",
-          queue: "",
+          queue: false,
           begin: undefined,
           progress: undefined,
           complete: resolve,
@@ -178,15 +178,17 @@ export default {
       });
 
       const animations = () => Promise.all([
-        transformPaper,
-        fadeTitles
+        transformPaper(),
+        fadeTitles()
       ]);
 
-      this.startEnter = async () => {
-        await animations();
-        console.log("enter transition finished");
 
-        done();
+      this.startEnter = () => {
+        console.log("enter transition started");
+        animations().then((res) => {
+          console.log("enter transition finished");
+          done();
+        });
       };
     },
     afterEnter(el) {

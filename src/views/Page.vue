@@ -119,16 +119,16 @@ export default {
       return;
     }
 
-    await this.handleLoad();
-    console.log("api")
+    // await this.handleLoad();
+    console.log("api loaded")
 
     this.metadata = {
       title: this.title
     };
   },
-  rendered: async function () {
+  updated: async function () {
     console.log('page rendered');
-    // await this.handleLoad();
+    await this.handleLoad();
   },
   meta() {
     return this.MetadataManager.metaDefault(this.metadata, "website");

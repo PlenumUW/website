@@ -25,10 +25,7 @@
             @after-enter="afterEnter"
             @enter-cancelled="enterCancelled"
 
-            @before-leave="beforeLeave"
             @leave="leave"
-            @after-leave="afterLeave"
-            @leave-cancelled="leaveCancelled"
           >
             <router-view
               :key="viewKey"
@@ -71,9 +68,6 @@ export default {
       metadata: undefined,
       prevBgColor: undefined,
       menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
-      endLeave: () => {
-        console.log('should not be called')
-      },
       startEnter: () => {}
     };
   },
@@ -110,6 +104,9 @@ export default {
     }
   },
   methods: {
+    enterCancelled() {
+      console.log("enter cancelled")
+    },
     handleLogoClick() {
       this.setMenuOpen(false);
     },
@@ -123,9 +120,8 @@ export default {
     },
 
     beforeEnter(el) {
-      console.log("before enter");
-
       el.style.position = "absolute";
+      el.style.opacity = 0;
       const titles = el.getElementsByTagName("h1");
       const paper = el.getElementsByClassName("paper")[0];
 
@@ -184,16 +180,14 @@ export default {
 
 
       this.startEnter = () => {
-        console.log("enter transition started");
+        el.style.opacity = 1;
         animations().then((res) => {
-          console.log("enter transition finished");
           done();
         });
       };
     },
     afterEnter(el) {
       el.style.position = "relative";
-      console.log("after enter");
     },
 
     /**
@@ -207,11 +201,6 @@ export default {
       done,
       duration = parseInt(css.routerTransitionDuration)
     ) {
-      // this.endLeave = () => {
-      //   console.log("Page finished loading. Page starting 'enter' transition.")
-      //   done();
-      // }
-
       const appBg = this.$refs.app;
       const papers = el.getElementsByClassName("paper");
       const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
@@ -271,13 +260,8 @@ export default {
         tweenBackground
       ]);
 
-      console.log("leave animations started");
       await animations();
       done();
-      console.log("leave animation finished", el);
-    },
-    afterLeave(el) {
-      console.log("after leave");
     }
   },
   created: async function () {

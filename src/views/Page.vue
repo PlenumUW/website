@@ -19,14 +19,14 @@
 
       <div class="c-page__section__content">
         <paper class="c-page__section__paper" :color="color">
-          <div v-if="!loading">
+          <div>
             <rich-text
             v-for="({ primary, slice_type }, sliceIndex) in slices"
             :key="`section-${index}_slice-${sliceIndex}`"
             :body="primary[slice_type]"
             ></rich-text>
           </div>
-          <div v-if="loading" class="c-page__section__paper__placeholder"></div>
+          <div v-if="loading" class="c-page__section__paper__placeholder" aria-hidden="true"></div>
         </paper>
       </div>
     </section>
@@ -119,15 +119,11 @@ export default {
       return;
     }
 
-    // await this.handleLoad();
-    console.log("api loaded")
-
     this.metadata = {
       title: this.title
     };
   },
   updated: async function () {
-    console.log('page rendered');
     await this.handleLoad();
   },
   meta() {

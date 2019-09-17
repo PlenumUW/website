@@ -54,6 +54,14 @@ Styling:
                 - Scroll up while the two are positioned relative to the screen.
                     - Scroll up will be hidden because nothing will move
         ☐ Add API load handlers in each view, which will tell the transition it's ready to be called @created(19-09-17 09:33)
+        ☐ Add cancel transitions @created(19-09-17 10:31)
+            - enterCancelled called if browser history is pushed back while new page is waiting for api
+            - leaveCancelled not called
+        ☐ Add transition callbacks to all views @created(19-09-17 10:34)
+            - Should the calls of the callbacks and apis be inherent in the base class?
+            - Or should each class that extends the base call the callback on its own?
+        ☐ Change starting position of enter transition to be JUST OFF SCREEN, not -100vw @created(19-09-17 10:36)
+            - If vw is full desktop width, the page comes in TOO HOT
 
 Efficiency:
     ☐ https://www.webpagetest.org @created(19-09-14 09:00)

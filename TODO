@@ -60,8 +60,7 @@ Styling:
         ☐ Add transition callbacks to all views @created(19-09-17 10:34)
             - Should the calls of the callbacks and apis be inherent in the base class?
             - Or should each class that extends the base call the callback on its own?
-        ☐ Change starting position of enter transition to be JUST OFF SCREEN, not -100vw @created(19-09-17 10:36)
-            - If vw is full desktop width, the page comes in TOO HOT
+        ✔ Change starting position of enter transition to be JUST OFF SCREEN, not -100vw @created(19-09-17 10:36) @done(19-09-17 12:08)
 
 Efficiency:
     ☐ https://www.webpagetest.org @created(19-09-14 09:00)

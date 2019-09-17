@@ -105,7 +105,9 @@ export default {
   },
   methods: {
     enterCancelled() {
-      console.log("enter cancelled")
+      console.log("enter cancelled");
+      // If cancelled because router when backwards, reverse transition
+      // Otherwise, no difference
     },
     handleLogoClick() {
       this.setMenuOpen(false);
@@ -121,13 +123,9 @@ export default {
 
     beforeEnter(el) {
       el.style.position = "absolute";
-      el.style.opacity = 0;
+      el.style.opacity = 0; // Hides the view when it initially renders in center of viewport
       const titles = el.getElementsByTagName("h1");
       const paper = el.getElementsByClassName("paper")[0];
-
-      paper.style.translateX = "-100vw"
-      paper.style.translateY = "-100vh"
-      paper.style.rotateZ = "-10deg"
 
       for (let title of titles) {
         title.style.opacity = 0;
@@ -144,12 +142,15 @@ export default {
 
       const transformPaper = () => new Promise((resolve) => {
         Velocity(paper, {
-          translateX: [0, "-100vw"],
+          translateX: [
+            0,
+            `${-1 * paper.offsetWidth - css.lefterWidthValue}px`
+          ],
           translateY: [0, "20vh"],
           rotateZ: [0, "-20deg"],
           translateZ: 0
         }, {
-          duration: 700,
+          duration: 500,
           easing: "swing",
           queue: false,
           begin: undefined,
@@ -161,7 +162,7 @@ export default {
       });
 
       const fadeTitles = () => new Promise((resolve) => {
-        Velocity(titles, { opacity: 1 }, {
+        Velocity(titles, { opacity: [1, 0] }, {
           duration: 1000,
           easing: "swing",
           queue: false,

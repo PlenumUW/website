@@ -18,7 +18,8 @@ export default {
     return {
       metadata: undefined,
       MetadataManager,
-      PrismicProcessor
+      PrismicProcessor,
+      loadingHandled: false
     };
   },
   methods: {
@@ -32,16 +33,16 @@ export default {
       }
 
       return true;
-    },
-    handleLoad() {
-      this.loadedCallback();
     }
   },
   created: async function () {
     this.fetchData ? await this.fetchData() : null;
   },
   updated: function () {
-    this.handleLoad();
+    if (!this.loadingHandled) { // Req. b/c updated called multiple times
+      this.loadedCallback();
+      this.loadingHandled = true;
+    }
   }
 };
 </script>

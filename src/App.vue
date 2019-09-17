@@ -3,12 +3,11 @@
     id="app"
     ref="app"
     class="app"
-    :style="{ 'background-color': bgColor }"
     :class="{ 'app--no-scroll': hideMainContent }"
   >
     <div class="app__horizontal-wrapper">
       <the-site-header
-        :color="bgColor"
+        :color="activeColorString"
         :hamburgerOpen.sync="menuOpen"
         @logoClick="handleLogoClick"
       ></the-site-header>
@@ -19,6 +18,8 @@
         <main class="main" :class="{ 'main--hidden': hideMainContent }">
           <transition
             :css="false"
+
+            @appear="appear"
 
             @before-enter="beforeEnter"
             @enter="enter"
@@ -32,7 +33,7 @@
               :id="viewKey"
               class="router-view"
 
-              :color="bgColor"
+              :color="activeColorString"
               :loadedCallback="startEnter"
             ></router-view>
           </transition>
@@ -41,7 +42,7 @@
     </div>
 
     <site-footer
-      :color="bgColor"
+      :color="activeColorString"
       :class="{ 'site-footer--hidden': hideMainContent }"
     ></site-footer>
   </div>
@@ -66,7 +67,8 @@ export default {
   data: function () {
     return {
       metadata: undefined,
-      prevBgColor: undefined,
+      prevRouteColor: [255, 255, 255],
+      activeColorString: "rgb(255, 255, 255)",
       menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
       startEnter: () => {}
     };
@@ -76,9 +78,9 @@ export default {
     /**
      * The background color of the application.
      */
-    // TODO: Put bgColor in global store
+    // TODO: Put currentRouteColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
-    bgColor: function () {
+    currentRouteColor: function () {
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -89,7 +91,9 @@ export default {
           ? colors.getBackgroundColor(hue)
           : "rgb(255, 255, 255)";
 
-      return color;
+      const colorValues = colors.getRgbValuesFromString(color);
+
+      return colorValues;
     },
     viewKey: function () {
       return this.$route.name;
@@ -99,8 +103,8 @@ export default {
     }
   },
   watch: {
-    bgColor: function (newVal, oldVal) {
-      this.prevBgColor = oldVal;
+    currentRouteColor: function (newVal, oldVal) {
+      this.prevRouteColor = oldVal;
     }
   },
   methods: {
@@ -120,8 +124,35 @@ export default {
       if (typeof val !== "boolean") throw new Error("Incorrect value type.");
       this.menuOpen = val;
     },
+    appear(el, done) {
+      const app = document.getElementById("app");
+      const nextRouteColor = this.currentRouteColor;
+      const prevRouteColor = this.prevRouteColor;
 
+      const rgbChannels = ["Red", "Green", "Blue"];
+      let rgbTransition = {};
+      rgbChannels.forEach((channel, index) => {
+        rgbTransition[`backgroundColor${channel}`] = [
+          nextRouteColor[index],
+          255
+        ]
+      })
+
+      Velocity(app, rgbTransition, {
+        duration: 500,
+        easing: "linear",
+        queue: false,
+        begin: undefined,
+        progress: undefined,
+        complete: () => this.activeColorString = colors.serializeRgb(this.currentRouteColor),
+        loop: false,
+        delay: false
+      });
+
+      this.enter(el, done);
+    },
     beforeEnter(el) {
+      console.log('before enter');
       el.style.position = "absolute";
       el.style.opacity = 0; // Hides the view when it initially renders in center of viewport
       const titles = el.getElementsByTagName("h1");
@@ -132,13 +163,11 @@ export default {
       }
     },
     enter(el, done) {
+      console.log('enter');
+      const app = this.$refs.app;
       const paper = el.getElementsByClassName("paper")[0];
       const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
 
-      const defaultColor = "rgb(255, 255, 255)";
-
-      const prevColor = this.prevBgColor || defaultColor;
-      const nextColor = this.bgColor || defaultColor;
 
       const transformPaper = () => new Promise((resolve) => {
         Velocity(paper, {
@@ -174,21 +203,52 @@ export default {
         });
       });
 
+      const prevRouteColor = this.prevRouteColor;
+      const nextRouteColor = this.currentRouteColor;
+
+      const rgbChannels = ["Red", "Green", "Blue"];
+      let rgbTransition = {};
+      rgbChannels.forEach((channel, index) => {
+        rgbTransition[`backgroundColor${channel}`] = [
+          nextRouteColor[index],
+          prevRouteColor[index]
+        ]
+      });
+
+      const tweenBackground = () => new Promise((resolve) => {
+        Velocity(app, rgbChannels, {
+          duration: 500,
+          easing: "linear",
+          queue: false,
+          begin: undefined,
+          progress: undefined,
+          complete: resolve,
+          loop: false,
+          delay: false
+        });
+      });
+
       const animations = () => Promise.all([
+        tweenBackground(),
         transformPaper(),
         fadeTitles()
       ]);
 
-
       this.startEnter = () => {
-        el.style.opacity = 1; // Previously hidden in beforeEnter
+        console.log('start enter method called');
+        el.style.opacity = 1; // Previously hidden in beforeEnter, TODO: make dry with appear // RESET EL METHOD
         animations().then(() => {
           done();
         });
       };
     },
     afterEnter(el) {
+      console.log('after enter')
       el.style.position = "relative";
+
+      if (el.style.opacity === 0) {
+        el.style.opacity = 1;
+      }
     },
 
     /**
@@ -202,14 +262,13 @@ export default {
       done,
       duration = parseInt(css.routerTransitionDuration)
     ) {
-      const appBg = this.$refs.app;
       const papers = el.getElementsByClassName("paper");
       const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
 
       const defaultColor = "rgb(255, 255, 255)";
 
-      const prevColor = this.prevBgColor || defaultColor;
-      const nextColor = this.bgColor || defaultColor;
+      const prevColor = this.prevRouteColor || defaultColor;
+      const nextRouteColor = this.currentRouteColor || defaultColor;
 
       const transformPapers = new Promise((resolve) => {
         Velocity(papers, {
@@ -242,23 +301,9 @@ export default {
         });
       });
 
-      const tweenBackground = new Promise((resolve) => {
-        Velocity(appBg, { "background-color": [nextColor, prevColor] }, {
-          duration: 500,
-          easing: "linear",
-          queue: "",
-          begin: undefined,
-          progress: undefined,
-          complete: resolve,
-          loop: false,
-          delay: false
-        });
-      });
-
       const animations = async () => await Promise.all([
         transformPapers,
-        fadeTitles,
-        tweenBackground
+        fadeTitles
       ]);
 
       await animations();

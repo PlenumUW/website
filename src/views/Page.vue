@@ -2,7 +2,6 @@
   <div class="c-page">
     <section
       v-for="([titleSlice, ...slices], index) in sections"
-      :key="`${title}-slice-${index}`"
       class="c-page__section"
     >
       <header class="c-page__section__header">
@@ -14,16 +13,19 @@
 
       <!-- This design is highly coupled, so much so that can always use h1 instead of rich-text -->
       <h1 class="c-page__section__title">
-        {{ titleSlice.primary.section_title | prismicRawText }}
+        {{ getSectionTitle(titleSlice) }}
       </h1>
 
       <div class="c-page__section__content">
         <paper class="c-page__section__paper" :color="color">
-          <rich-text
+          <div v-if="!loading">
+            <rich-text
             v-for="({ primary, slice_type }, sliceIndex) in slices"
             :key="`section-${index}_slice-${sliceIndex}`"
             :body="primary[slice_type]"
-          ></rich-text>
+            ></rich-text>
+          </div>
+          <div class="c-page__section__paper__placeholder"></div>
         </paper>
       </div>
     </section>
@@ -48,33 +50,45 @@ export default {
       rawData: undefined
     };
   },
+  methods: {
+    getSectionTitle(slice) {
+      if (_.isEmpty(slice)) return "   ";
+
+      return this.PrismicProcessor.getRawText(slice.primary.section_title);
+    }
+  },
   computed: {
+    loading: function () {
+      return !this.rawData;
+    },
     title: function () {
-      return this.rawData
-        ? this.PrismicProcessor.getRawText(this.rawData["page_title"])
-        : "";
+      if (this.loading) return "";
+
+      return this.PrismicProcessor.getRawText(this.rawData["page_title"])
     },
     slices: function () {
-      if (!this.rawData) return [];
+      if (this.loading) return [];
 
       return this.rawData.body[0].primary.text;
     },
     testSlice: function () {
-      if (!this.rawData) return [];
+      if (this.loading) return [];
 
       return [this.slices[0]];
     },
     sliceTypes: function () {
-      if (!this.rawData) return [];
+      if (this.loading) return [];
 
       return _.uniqBy(this.slices.map(slice => slice.type));
     },
     body: function () {
-      if (!this.rawData) return [];
+      if (this.loading) return [];
 
       return this.rawData.body;
     },
     sections: function () {
+      if (this.loading) return [[{}]];
+
       let sections = [];
 
       let section = [];
@@ -157,21 +171,25 @@ export default {
 
     $paper-padding: 1.2em;
     &__title {
+      --font-size: 2em;
       margin-bottom: 15px;
+      line-height: 1em;
+      min-height: 1em;
 
       position: relative;
       padding-left: $paper-padding;
 
       text-align: left;
 
-      @include font-size(2em);
+      @include font-size(var(--font-size));
 
       @include for-size(tablet-landscape-up) {
+        --font-size: 5em;
         margin-bottom: 65px;
 
         padding-left: 50px;
 
-        @include font-size(5em);
+        @include font-size(var(--font-size));
       }
     }
 
@@ -194,6 +212,12 @@ export default {
         &:last-of-type {
           margin-bottom: 0;
         }
+      }
+
+      &__placeholder {
+        // position: absolute;
+        min-height: 100vh;
+        width: 100%;
       }
     }
 

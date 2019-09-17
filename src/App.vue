@@ -241,9 +241,106 @@ export default {
   @include hidden();
 }
 
-.view-leave,
-.view-leave-active,
+.router-view {
+  // transition: transform 800ms ease-in-out;
+  // /deep/ h1 {
+  //   opacity: 1;
+
+  //   // transition: opacity 300ms ease-out;
+  // }
+
+  /deep/ .paper {
+    // transform: translate(0, 0);
+
+    transition: transform 800ms ease-in-out;
+
+    h1 {
+      opacity: 1;
+    }
+  }
+}
+
+.view-enter {
+  // transform: translate(-200vw, 100vh);
+
+  // /deep/ h1 {
+  //   opacity: 0;
+
+  //   transition: opacity 300ms ease-out; // Fade in
+  // }
+
+  /deep/ .paper {
+    transform: translate(-200vw, 40vh);
+
+    transition: transform 800ms ease-out;
+
+
+    h1 {
+      opacity: 1;
+    }
+  }
+}
+
+.view-enter-active {
+  // transition: transform 800ms ease-in-out;
+  // /deep/ h1 {
+  //   transition: opacity 300ms ease-out; // Fade in
+  // }
+
+  /deep/ .paper {
+    transition: transform 800ms ease-in-out;
+  }
+}
+
+.view-enter-to {
+  // transform: translate(0, 0);
+
+  // /deep/ h1 {
+  //   // transform: translate(0, 0);
+  //   opacity: 1;
+
+  //   // transition: opacity 300ms ease-in;
+  // }
+
+  /deep/ .paper {
+    transform: translate(0, 0);
+
+    transition: transform 800ms ease-in-out;
+
+    h1 {
+      opacity: 1;
+    }
+  }
+}
+
+.view-leave-active {
+  // transition: transform 800ms ease-in-out;
+}
+
 .view-leave-to {
+  // transform: translate(200vw, -200vh);
+
+  /deep/ h1 {
+    opacity: 0;
+
+    transition: opacity 300ms ease-in-out; // Fade out
+  }
+
+  /deep/ .paper {
+    transform: translate(200vw, 40vh);
+
+    transition: transform 800ms ease-in-out;
+
+    h1 {
+      opacity: 1;
+    }
+  }
+}
+
+.view-leave,
+.view-leave-to,
+.view-enter,
+.view-enter-to {
   position: absolute;
   left: 0;
   top: 0;

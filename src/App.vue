@@ -19,6 +19,11 @@
           <transition
             :css="false"
 
+
+            @before-appear="() => {}"
+            @appear="appear"
+            @after-appear="() => {}"
+
             @before-enter="beforeEnter"
             @enter="enter"
             @after-enter="afterEnter"
@@ -79,6 +84,14 @@ export default {
     // TODO: Put currentRouteColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
     currentRouteColor: function () {
+      if (process.env.VUE_APP_BUILD_OPTION === "prerender") {
+        return [
+          255,
+          255,
+          255
+        ];
+      }
+
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -106,6 +119,9 @@ export default {
     }
   },
   methods: {
+    setActiveColorString(colorString) {
+      this.activeColorString = colorString;
+    },
     enterCancelled() {
       console.log("enter cancelled");
       // If cancelled because router when backwards, reverse transition
@@ -132,6 +148,35 @@ export default {
       for (let title of titles) {
         title.style.opacity = 0;
       }
+    },
+    appear(el, done) {
+      const prevRouteColor = this.prevRouteColor;
+      const nextRouteColor = this.currentRouteColor;
+
+      const rgbChannels = ["Red", "Green", "Blue"];
+      let rgbTransition = {};
+      rgbChannels.forEach((channel, index) => {
+        rgbTransition[`backgroundColor${channel}`] = [
+          nextRouteColor[index],
+          255
+        ]
+      });
+
+      Velocity(app, rgbTransition, {
+        duration: 500,
+        easing: "linear",
+        queue: false,
+        begin: undefined,
+        progress: undefined,
+        complete: () => {
+          console.log('tween complete');
+          console.log(nextRouteColor)
+          this.setActiveColorString(colors.serializeRgb(nextRouteColor));
+          done();
+        },
+        loop: false,
+        delay: false
+      });
     },
     enter(el, done) {
       console.log('enter');
@@ -193,7 +238,7 @@ export default {
           queue: false,
           begin: undefined,
           progress: undefined,
-          complete: resolve,
+          complete: () => this.setActiveColorString(colors.serializeRgb(nextRouteColor)),
           loop: false,
           delay: false
         });

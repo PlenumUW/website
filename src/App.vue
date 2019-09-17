@@ -22,6 +22,7 @@
               :key="viewKey"
               class="router-view"
               :color="bgColor"
+              :loadedCallback="finishTransition"
             ></router-view>
           </transition>
         </main>
@@ -55,7 +56,10 @@ export default {
     return {
       metadata: undefined,
       prevBgColor: undefined,
-      menuOpen: false // TODO: Find better name, or clarify difference between expanded and open
+      menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
+      finishTransition: () => {
+        console.log('should not be called')
+      }
     };
   },
   computed: {
@@ -115,6 +119,18 @@ export default {
       done,
       duration = parseInt(css.routerTransitionDuration)
     ) {
+      let waitForTransition = () => new Promise((resolve, reject) => _.delay(() => {
+        resolve()
+      }, duration));
+
+      // Callback for views to call once they are done loading
+      // View transition won't finish until the api is done loading
+      // TODO: programmatically transition transforms and fades, currently the CSS transitions finish before the JS transition finishes
+      this.finishTransition = async () => {
+        await waitForTransition();
+        done();
+      };
+
       const defaultColor = "rgb(255, 255, 255)";
 
       const prevColor = this.prevBgColor || defaultColor;
@@ -126,8 +142,8 @@ export default {
       sweep(this.$refs.app, "backgroundColor", prevColor, nextColor, {
         duration,
         // TODO: fork sweep.js to build an lchab sweep, hsluv & hsl flash bright yellow b/w orange and green
-        space: "RGB",
-        callback: () => done()
+        space: "RGB"
+        // callback: () => done()
       });
     }
   },

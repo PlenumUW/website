@@ -2,6 +2,7 @@
   <div class="c-page">
     <section
       v-for="([titleSlice, ...slices], index) in sections"
+      :key="`${index}`"
       class="c-page__section"
     >
       <header class="c-page__section__header">
@@ -117,6 +118,8 @@ export default {
     if (!this.docExists(this.rawData)) {
       return;
     }
+
+    await this.handleLoad();
 
     this.metadata = {
       title: this.title

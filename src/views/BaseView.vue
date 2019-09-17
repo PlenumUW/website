@@ -8,6 +8,10 @@ export default {
     color: {
       type: String,
       required: true
+    },
+    loadedCallback: {
+      type: Function,
+      required: false
     }
   },
   data: function () {
@@ -28,6 +32,9 @@ export default {
       }
 
       return true;
+    },
+    async handleLoad() {
+      await this.loadedCallback();
     }
   }
 };

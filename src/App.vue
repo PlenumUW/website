@@ -19,8 +19,6 @@
           <transition
             :css="false"
 
-            @appear="appear"
-
             @before-enter="beforeEnter"
             @enter="enter"
             @after-enter="afterEnter"
@@ -124,33 +122,6 @@ export default {
       if (typeof val !== "boolean") throw new Error("Incorrect value type.");
       this.menuOpen = val;
     },
-    appear(el, done) {
-      const app = document.getElementById("app");
-      const nextRouteColor = this.currentRouteColor;
-      const prevRouteColor = this.prevRouteColor;
-
-      const rgbChannels = ["Red", "Green", "Blue"];
-      let rgbTransition = {};
-      rgbChannels.forEach((channel, index) => {
-        rgbTransition[`backgroundColor${channel}`] = [
-          nextRouteColor[index],
-          255
-        ]
-      })
-
-      Velocity(app, rgbTransition, {
-        duration: 500,
-        easing: "linear",
-        queue: false,
-        begin: undefined,
-        progress: undefined,
-        complete: () => this.activeColorString = colors.serializeRgb(this.currentRouteColor),
-        loop: false,
-        delay: false
-      });
-
-      this.enter(el, done);
-    },
     beforeEnter(el) {
       console.log('before enter');
       el.style.position = "absolute";
@@ -216,7 +187,7 @@ export default {
       });
 
       const tweenBackground = () => new Promise((resolve) => {
-        Velocity(app, rgbChannels, {
+        Velocity(app, rgbTransition, {
           duration: 500,
           easing: "linear",
           queue: false,

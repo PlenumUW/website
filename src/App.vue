@@ -181,8 +181,8 @@ export default {
 
 
       this.startEnter = () => {
-        el.style.opacity = 1;
-        animations().then((res) => {
+        el.style.opacity = 1; // Previously hidden in beforeEnter
+        animations().then(() => {
           done();
         });
       };

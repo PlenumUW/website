@@ -51,13 +51,6 @@ export default {
       rawData: undefined
     };
   },
-  methods: {
-    getSectionTitle(slice) {
-      if (_.isEmpty(slice)) return "   ";
-
-      return this.PrismicProcessor.getRawText(slice.primary.section_title);
-    }
-  },
   computed: {
     loading: function () {
       return !this.rawData;
@@ -109,22 +102,27 @@ export default {
       return sections;
     }
   },
-  created: async function () {
-    const slugs = this.$route.path.split("/").filter(el => el.length > 0);
-    const parentSlug = slugs[0];
+  methods: {
+    async fetchData() {
+      const slugs = this.$route.path.split("/").filter(el => el.length > 0);
+      const parentSlug = slugs[0];
 
-    this.rawData = await this.$api.fetchPageBySlug(parentSlug);
+      this.rawData = await this.$api.fetchPageBySlug(parentSlug);
 
-    if (!this.docExists(this.rawData)) {
-      return;
+      if (!this.docExists(this.rawData)) {
+        return;
+      }
+    },
+    getSectionTitle(slice) {
+      if (_.isEmpty(slice)) return "   ";
+
+      return this.PrismicProcessor.getRawText(slice.primary.section_title);
     }
-
+  },
+  created: function () {
     this.metadata = {
       title: this.title
     };
-  },
-  updated: async function () {
-    await this.handleLoad();
   },
   meta() {
     return this.MetadataManager.metaDefault(this.metadata, "website");

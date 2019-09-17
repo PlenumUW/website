@@ -57,9 +57,7 @@ Styling:
         ☐ Add cancel transitions @created(19-09-17 10:31)
             - enterCancelled called if browser history is pushed back while new page is waiting for api
             - leaveCancelled not called
-        ☐ Add transition callbacks to all views @created(19-09-17 10:34)
-            - Should the calls of the callbacks and apis be inherent in the base class?
-            - Or should each class that extends the base call the callback on its own?
+        ✔ Add transition callbacks to all views @created(19-09-17 10:34) @started(19-09-17 12:38) @done(19-09-17 12:51) @lasted(13m47s)
         ✔ Change starting position of enter transition to be JUST OFF SCREEN, not -100vw @created(19-09-17 10:36) @done(19-09-17 12:08)
 
 Efficiency:

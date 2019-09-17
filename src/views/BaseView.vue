@@ -33,9 +33,15 @@ export default {
 
       return true;
     },
-    async handleLoad() {
-      await this.loadedCallback();
+    handleLoad() {
+      this.loadedCallback();
     }
+  },
+  created: async function () {
+    this.fetchData ? await this.fetchData() : null;
+  },
+  updated: function () {
+    this.handleLoad();
   }
 };
 </script>

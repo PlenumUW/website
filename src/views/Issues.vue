@@ -20,12 +20,14 @@ export default {
       issues: []
     };
   },
-  created: async function () {
-    this.metadata = {
-      title: "Issue Catalogue"
-    };
+  methods: {
+    async fetchData() {
+      this.metadata = {
+        title: "Issue Catalogue"
+      };
 
-    this.issues = await this.$api.fetchAllIssues();
+      this.issues = await this.$api.fetchAllIssues();
+    }
   },
   meta() {
     return this.MetadataManager.metaDefault(this.metadata, "website");

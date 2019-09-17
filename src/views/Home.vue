@@ -24,19 +24,20 @@ export default {
       currentIssue: undefined
     };
   },
-  created: async function () {
-    let currentIssue = await this.$api.fetchCurrentIssue();
+  methods: {
+    async fetchData() {
+      let currentIssue = await this.$api.fetchCurrentIssue();
 
-    // move to ToC component
-    let essayRequests = [];
-    essayRequests = currentIssue.data.essays.map(({ essay }) =>
-      this.$api.getById(essay.id, {
-        fetchLinks: ["category.name", "category.list_position"]
-      })
-    );
-    currentIssue.essays = await Promise.all(essayRequests);
+      let essayRequests = [];
+      essayRequests = currentIssue.data.essays.map(({ essay }) =>
+        this.$api.getById(essay.id, {
+          fetchLinks: ["category.name", "category.list_position"]
+        })
+      );
+      currentIssue.essays = await Promise.all(essayRequests);
 
-    this.currentIssue = currentIssue;
+      this.currentIssue = currentIssue;
+    }
   }
 };
 </script>

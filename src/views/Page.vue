@@ -26,7 +26,7 @@
             :body="primary[slice_type]"
             ></rich-text>
           </div>
-          <div class="c-page__section__paper__placeholder"></div>
+          <div v-if="loading" class="c-page__section__paper__placeholder"></div>
         </paper>
       </div>
     </section>
@@ -120,10 +120,15 @@ export default {
     }
 
     await this.handleLoad();
+    console.log("api")
 
     this.metadata = {
       title: this.title
     };
+  },
+  rendered: async function () {
+    console.log('page rendered');
+    // await this.handleLoad();
   },
   meta() {
     return this.MetadataManager.metaDefault(this.metadata, "website");

@@ -44,8 +44,16 @@ Styling:
         ☐ Push lefter up @created(19-09-16 11:59)
 
     View transitions:
-        ☐ Add slide off animation @created(19-09-13 19:44)
-        ☐ Add slide on animation @created(19-09-13 19:44)
+        ✔ Add slide off animation @created(19-09-13 19:44) @done(19-09-17 09:29)
+        ✔ Add slide on animation @created(19-09-13 19:44) @done(19-09-17 09:29)
+        ☐ Change direction if pulling from browser history @created(19-09-17 09:30)
+        ☐ Move scroll top to transition's control @created(19-09-17 09:30)
+            - Enter:
+                - El is positioned relative to viewport, as if at the top of the page.
+                - Leaving el is positioned how it was on route leave (e.g mid-page)
+                - Scroll up while the two are positioned relative to the screen.
+                    - Scroll up will be hidden because nothing will move
+        ☐ Add API load handlers in each view, which will tell the transition it's ready to be called @created(19-09-17 09:33)
 
 Efficiency:
     ☐ https://www.webpagetest.org @created(19-09-14 09:00)

@@ -17,12 +17,26 @@
         <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
 
         <main class="main" :class="{ 'main--hidden': hideMainContent }">
-          <transition name="view" @leave="backgroundTransitionLeave">
+          <transition
+            :css="false"
+
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @after-enter="afterEnter"
+            @enter-cancelled="enterCancelled"
+
+            @before-leave="beforeLeave"
+            @leave="leave"
+            @after-leave="afterLeave"
+            @leave-cancelled="leaveCancelled"
+          >
             <router-view
               :key="viewKey"
+              :id="viewKey"
               class="router-view"
+
               :color="bgColor"
-              :loadedCallback="finishTransition"
+              :loadedCallback="startEnter"
             ></router-view>
           </transition>
         </main>
@@ -37,7 +51,7 @@
 </template>
 
 <script>
-import sweep from "@/utils/sweep";
+import Velocity from "velocity-animate";
 import colors from "@/utils/colors";
 import { fitText } from "@/utils/fittext.js";
 
@@ -57,9 +71,10 @@ export default {
       metadata: undefined,
       prevBgColor: undefined,
       menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
-      finishTransition: () => {
+      endLeave: () => {
         console.log('should not be called')
-      }
+      },
+      startEnter: () => {}
     };
   },
   computed: {
@@ -83,7 +98,6 @@ export default {
       return color;
     },
     viewKey: function () {
-      console.log(this.$route.name);
       return this.$route.name;
     },
     hideMainContent: function () {
@@ -108,43 +122,160 @@ export default {
       this.menuOpen = val;
     },
 
-    /**
-     * Tweens the application's background color through perceptually uniform color space.
-     * @param {Element} el Transitioning element.
-     * @param {Function} done Callback to declare that a transition has finished.
-     * @param {String} duration Transition duration in milliseconds
-     */
-    backgroundTransitionLeave(
-      el,
-      done,
-      duration = parseInt(css.routerTransitionDuration)
-    ) {
-      let waitForTransition = () => new Promise((resolve, reject) => _.delay(() => {
-        resolve()
-      }, duration));
+    beforeEnter(el) {
+      console.log("before enter");
 
-      // Callback for views to call once they are done loading
-      // View transition won't finish until the api is done loading
-      // TODO: programmatically transition transforms and fades, currently the CSS transitions finish before the JS transition finishes
-      this.finishTransition = async () => {
-        await waitForTransition();
-        done();
-      };
+      el.style.position = "absolute";
+      const titles = el.getElementsByTagName("h1");
+      const paper = el.getElementsByClassName("paper")[0];
+
+      paper.style.translateX = "-100vw"
+      paper.style.translateY = "-100vh"
+      paper.style.rotateZ = "-10deg"
+
+      for (let title of titles) {
+        title.style.opacity = 0;
+      }
+    },
+    async enter(el, done) {
+      const paper = el.getElementsByClassName("paper")[0];
+      const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
 
       const defaultColor = "rgb(255, 255, 255)";
 
       const prevColor = this.prevBgColor || defaultColor;
       const nextColor = this.bgColor || defaultColor;
 
-      // TODO: determine direction of sweep w/
-      // direction = [absolute value of (fromHue - toHue)] > 180 ? counter-clockwise(-1) : clockwise(1)
-      // This will prevent strange flashes during transitions
-      sweep(this.$refs.app, "backgroundColor", prevColor, nextColor, {
-        duration,
-        // TODO: fork sweep.js to build an lchab sweep, hsluv & hsl flash bright yellow b/w orange and green
-        space: "RGB"
-        // callback: () => done()
+      const transformPaper = new Promise((resolve) => {
+        Velocity(paper, {
+          translateX: [0, "-100vw"],
+          translateY: [0, "20vh"],
+          rotateZ: [0, "-20deg"],
+          translateZ: 0
+        }, {
+          duration: 700,
+          easing: "swing",
+          queue: "",
+          begin: undefined,
+          progress: undefined,
+          complete: resolve,
+          loop: false,
+          delay: false
+        });
       });
+
+      const fadeTitles = new Promise((resolve) => {
+        Velocity(titles, { opacity: 1 }, {
+          duration: 1000,
+          easing: "swing",
+          queue: "",
+          begin: undefined,
+          progress: undefined,
+          complete: resolve,
+          loop: false,
+          delay: false
+        });
+      });
+
+      const animations = () => Promise.all([
+        transformPaper,
+        fadeTitles
+      ]);
+
+      this.startEnter = async () => {
+        await animations();
+        console.log("enter transition finished");
+
+        done();
+      };
+    },
+    afterEnter(el) {
+      el.style.position = "relative";
+      console.log("after enter");
+    },
+
+    /**
+     * Tweens the application's background color through perceptually uniform color space.
+     * @param {Element} el Transitioning element.
+     * @param {Function} done Callback to declare that a transition has finished.
+     * @param {String} duration Transition duration in milliseconds
+     */
+    async leave(
+      el,
+      done,
+      duration = parseInt(css.routerTransitionDuration)
+    ) {
+      // this.endLeave = () => {
+      //   console.log("Page finished loading. Page starting 'enter' transition.")
+      //   done();
+      // }
+
+      const appBg = this.$refs.app;
+      const papers = el.getElementsByClassName("paper");
+      const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
+
+      const defaultColor = "rgb(255, 255, 255)";
+
+      const prevColor = this.prevBgColor || defaultColor;
+      const nextColor = this.bgColor || defaultColor;
+
+      const transformPapers = new Promise((resolve) => {
+        Velocity(papers, {
+          translateX: ["100vw", 0],
+          translateY: ["20vh", 0],
+          rotateZ: ["20deg", 0],
+          translateZ: 0
+        }, {
+          duration: 800,
+          easing: "ease-in",
+          queue: "",
+          begin: undefined,
+          progress: undefined,
+          complete: resolve,
+          loop: false,
+          delay: false
+        });
+      });
+
+      const fadeTitles = new Promise((resolve) => {
+        Velocity(titles, { opacity: 0 }, {
+          duration: 300,
+          easing: "swing",
+          queue: "",
+          begin: undefined,
+          progress: undefined,
+          complete: resolve,
+          loop: false,
+          delay: false
+        });
+      });
+
+      const tweenBackground = new Promise((resolve) => {
+        Velocity(appBg, { "background-color": [nextColor, prevColor] }, {
+          duration: 500,
+          easing: "linear",
+          queue: "",
+          begin: undefined,
+          progress: undefined,
+          complete: resolve,
+          loop: false,
+          delay: false
+        });
+      });
+
+      const animations = async () => await Promise.all([
+        transformPapers,
+        fadeTitles,
+        tweenBackground
+      ]);
+
+      console.log("leave animations started");
+      await animations();
+      done();
+      console.log("leave animation finished", el);
+    },
+    afterLeave(el) {
+      console.log("after leave");
     }
   },
   created: async function () {
@@ -163,7 +294,7 @@ export default {
   mounted: function () {
     if (this.$route.name === "home") {
       // Transition is naturally called if first visit is on non-home route
-      this.backgroundTransitionLeave({}, () => {}, 300);
+      this.leave({}, () => {}, 300);
     }
   }
 };
@@ -258,107 +389,112 @@ export default {
 }
 
 .router-view {
-  // transition: transform 800ms ease-in-out;
-  // /deep/ h1 {
-  //   opacity: 1;
-
-  //   // transition: opacity 300ms ease-out;
-  // }
-
-  /deep/ .paper {
-    // transform: translate(0, 0);
-
-    transition: transform 800ms ease-in-out;
-
-    h1 {
-      opacity: 1;
-    }
-  }
-}
-
-.view-enter {
-  // transform: translate(-200vw, 100vh);
-
-  // /deep/ h1 {
-  //   opacity: 0;
-
-  //   transition: opacity 300ms ease-out; // Fade in
-  // }
-
-  /deep/ .paper {
-    transform: translate(-200vw, 40vh);
-
-    transition: transform 800ms ease-out;
-
-
-    h1 {
-      opacity: 1;
-    }
-  }
-}
-
-.view-enter-active {
-  // transition: transform 800ms ease-in-out;
-  // /deep/ h1 {
-  //   transition: opacity 300ms ease-out; // Fade in
-  // }
-
-  /deep/ .paper {
-    transition: transform 800ms ease-in-out;
-  }
-}
-
-.view-enter-to {
-  // transform: translate(0, 0);
-
-  // /deep/ h1 {
-  //   // transform: translate(0, 0);
-  //   opacity: 1;
-
-  //   // transition: opacity 300ms ease-in;
-  // }
-
-  /deep/ .paper {
-    transform: translate(0, 0);
-
-    transition: transform 800ms ease-in-out;
-
-    h1 {
-      opacity: 1;
-    }
-  }
-}
-
-.view-leave-active {
-  // transition: transform 800ms ease-in-out;
-}
-
-.view-leave-to {
-  // transform: translate(200vw, -200vh);
-
-  /deep/ h1 {
-    opacity: 0;
-
-    transition: opacity 300ms ease-in-out; // Fade out
-  }
-
-  /deep/ .paper {
-    transform: translate(200vw, 40vh);
-
-    transition: transform 800ms ease-in-out;
-
-    h1 {
-      opacity: 1;
-    }
-  }
-}
-
-.view-leave,
-.view-leave-to,
-.view-enter,
-.view-enter-to {
-  position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
 }
+
+// .router-view {
+//   // transition: transform 800ms ease-in-out;
+//   // /deep/ h1 {
+//   //   opacity: 1;
+
+//   //   // transition: opacity 300ms ease-out;
+//   // }
+
+//   /deep/ .paper {
+//     // transform: translate(0, 0);
+
+//     transition: transform 800ms ease-in-out;
+
+//     h1 {
+//       opacity: 1;
+//     }
+//   }
+// }
+
+// .view-enter {
+//   // transform: translate(-200vw, 100vh);
+
+//   // /deep/ h1 {
+//   //   opacity: 0;
+
+//   //   transition: opacity 300ms ease-out; // Fade in
+//   // }
+
+//   /deep/ .paper {
+//     transform: translate(-200vw, 40vh);
+
+//     transition: transform 800ms ease-out;
+
+
+//     h1 {
+//       opacity: 1;
+//     }
+//   }
+// }
+
+// .view-enter-active {
+//   // transition: transform 800ms ease-in-out;
+//   // /deep/ h1 {
+//   //   transition: opacity 300ms ease-out; // Fade in
+//   // }
+
+//   /deep/ .paper {
+//     transition: transform 800ms ease-in-out;
+//   }
+// }
+
+// .view-enter-to {
+//   // transform: translate(0, 0);
+
+//   // /deep/ h1 {
+//   //   // transform: translate(0, 0);
+//   //   opacity: 1;
+
+//   //   // transition: opacity 300ms ease-in;
+//   // }
+
+//   /deep/ .paper {
+//     transform: translate(0, 0);
+
+//     transition: transform 800ms ease-in-out;
+
+//     h1 {
+//       opacity: 1;
+//     }
+//   }
+// }
+
+// .view-leave-active {
+//   // transition: transform 800ms ease-in-out;
+// }
+
+// .view-leave-to {
+//   // transform: translate(200vw, -200vh);
+
+//   /deep/ h1 {
+//     opacity: 0;
+
+//     transition: opacity 300ms ease-in-out; // Fade out
+//   }
+
+//   /deep/ .paper {
+//     transform: translate(200vw, 40vh);
+
+//     transition: transform 800ms ease-in-out;
+
+//     h1 {
+//       opacity: 1;
+//     }
+//   }
+// }
+
+// .view-leave,
+// .view-leave-to,
+// .view-enter,
+// .view-enter-to {
+//   position: absolute;
+//   left: 0;
+//   top: 0;
+// }
 </style>

@@ -29,6 +29,7 @@
             @after-enter="afterEnter"
             @enter-cancelled="enterCancelled"
 
+            @before-leave="beforeLeave"
             @leave="leave"
           >
             <router-view
@@ -54,6 +55,7 @@
 <script>
 import Velocity from "velocity-animate";
 import colors from "@/utils/colors";
+import Animations from "@/utils/Animations";
 import { fitText } from "@/utils/fittext.js";
 
 // eslint-disable-next-line no-unused-vars
@@ -140,14 +142,9 @@ export default {
     },
     beforeEnter(el) {
       console.log('before enter');
-      el.style.position = "absolute";
-      el.style.opacity = 0; // Hides the view when it initially renders in center of viewport
-      const titles = el.getElementsByTagName("h1");
-      const paper = el.getElementsByClassName("paper")[0];
 
-      for (let title of titles) {
-        title.style.opacity = 0;
-      }
+      el.style.opacity = 0; // Hides the view b/c it initially renders in center of viewport
+      el.getElementsByClassName("c-header-gradient")[0].style.opacity = 0;
     },
     appear(el, done) {
       const prevRouteColor = this.prevRouteColor;
@@ -181,74 +178,35 @@ export default {
     enter(el, done) {
       console.log('enter');
       const app = this.$refs.app;
-      const paper = el.getElementsByClassName("paper")[0];
+      const papers = el.getElementsByClassName("paper");
+      console.log(papers);
+      const paper = papers[0];
       const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
 
+      const transformPaper = Animations.slideIntoViewport(paper, {
+        xDistance: paper.offsetWidth + parseInt(css.lefterWidthValue) + 200 // 200 accomodates for rotation into the viewport
+      })
 
-      const transformPaper = () => new Promise((resolve) => {
-        Velocity(paper, {
-          translateX: [
-            0,
-            `${-1 * paper.offsetWidth - css.lefterWidthValue}px`
-          ],
-          translateY: [0, "20vh"],
-          rotateZ: [0, "-20deg"],
-          translateZ: 0
-        }, {
-          duration: 500,
-          easing: "swing",
-          queue: false,
-          begin: undefined,
-          progress: undefined,
-          complete: resolve,
-          loop: false,
-          delay: false
-        });
+      const fadeTitles = Animations.fadeIn(titles);
+
+      const gradients = el.getElementsByClassName("c-header-gradient");
+      console.log(gradients)
+      // TODO: tween mobile menu colors
+      const tweenGradients = Animations.tweenColor(gradients, {
+        prevRgb: this.prevRouteColor,
+        nextRgb: this.currentRouteColor,
+        properties: ["backgroundColor", "color"]
+      })
+
+      const tweenAppBg = Animations.tweenColor(app, {
+        prevRgb: this.prevRouteColor,
+        nextRgb: this.currentRouteColor
       });
 
-      const fadeTitles = () => new Promise((resolve) => {
-        Velocity(titles, { opacity: [1, 0] }, {
-          duration: 1000,
-          easing: "swing",
-          queue: false,
-          begin: undefined,
-          progress: undefined,
-          complete: resolve,
-          loop: false,
-          delay: false
-        });
-      });
-
-      const prevRouteColor = this.prevRouteColor;
-      const nextRouteColor = this.currentRouteColor;
-
-      const rgbChannels = ["Red", "Green", "Blue"];
-      let rgbTransition = {};
-      rgbChannels.forEach((channel, index) => {
-        rgbTransition[`backgroundColor${channel}`] = [
-          nextRouteColor[index],
-          prevRouteColor[index]
-        ]
-      });
-
-      const tweenBackground = () => new Promise((resolve) => {
-        Velocity(app, rgbTransition, {
-          duration: 500,
-          easing: "linear",
-          queue: false,
-          begin: undefined,
-          progress: undefined,
-          complete: () => {
-            this.setActiveColorString(colors.serializeRgb(nextRouteColor));
-            resolve();
-          },
-          loop: false,
-          delay: false
-        });
-      });
 
       const animations = () => Promise.all([
-        tweenBackground(),
+        tweenAppBg(),
+        tweenGradients(),
         transformPaper(),
         fadeTitles()
       ]);
@@ -257,17 +215,33 @@ export default {
         console.log('start enter method called');
         el.style.opacity = 1; // Previously hidden in beforeEnter, TODO: make dry with appear // RESET EL METHOD
         animations().then(() => {
+          this.setActiveColorString(colors.serializeRgb(this.currentRouteColor));
+
+          console.log('enter animation finished');
           done();
         });
       };
     },
     afterEnter(el) {
       console.log('after enter')
-      el.style.position = "relative";
 
       if (el.style.opacity === 0) {
         el.style.opacity = 1;
       }
+      el.getElementsByClassName("c-header-gradient")[0].style.opacity = 1;
+    },
+
+    beforeLeave(el) {
+      el.style.position = "absolute";
+      el.style.top = "0";
+      el.style.left = "0";
+      console.log("before leave", el.style.position);
+      const gradients = el.getElementsByClassName("c-header-gradient");
+      gradients[0].style.opacity = 0; // TODO: the old gradient must remain in place
+      // TODO: if router history are to retain scroll position, and if transition is to occur mid-page
+      // the original gradient must remain while the old page slides out
+      // New page slides in simultaneously or delayed, and new name only shows after slide in.
+      // Old name hides immediately.
     },
 
     /**
@@ -281,52 +255,24 @@ export default {
       done,
       duration = parseInt(css.routerTransitionDuration)
     ) {
+      console.log("leave");
       const papers = el.getElementsByClassName("paper");
       const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
 
-      const defaultColor = "rgb(255, 255, 255)";
-
-      const prevColor = this.prevRouteColor || defaultColor;
-      const nextRouteColor = this.currentRouteColor || defaultColor;
-
-      const transformPapers = new Promise((resolve) => {
-        Velocity(papers, {
-          translateX: ["100vw", 0],
-          translateY: ["20vh", 0],
-          rotateZ: ["20deg", 0],
-          translateZ: 0
-        }, {
-          duration: 800,
-          easing: "ease-in",
-          queue: "",
-          begin: undefined,
-          progress: undefined,
-          complete: resolve,
-          loop: false,
-          delay: false
-        });
+      const transformPapers = Animations.slideOutOfViewport(papers, {
+        xDistance: "100vw"
       });
 
-      const fadeTitles = new Promise((resolve) => {
-        Velocity(titles, { opacity: 0 }, {
-          duration: 300,
-          easing: "swing",
-          queue: "",
-          begin: undefined,
-          progress: undefined,
-          complete: resolve,
-          loop: false,
-          delay: false
-        });
-      });
+      const fadeTitles = Animations.fadeOut(titles);
 
-      const animations = async () => await Promise.all([
-        transformPapers,
-        fadeTitles
+
+      const animations = () => Promise.all([
+        transformPapers(),
+        // tweenGradients(),
+        fadeTitles()
       ]);
 
-      await animations();
-      done();
+      animations().then(() => done());
     }
   },
   created: async function () {

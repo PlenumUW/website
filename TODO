@@ -59,6 +59,9 @@ Styling:
         ✔ Add transition callback handling to all views @created(19-09-17 10:34) @started(19-09-17 12:38) @done(19-09-17 12:51) @lasted(13m47s)
         ✔ Change starting position of enter transition to be JUST OFF SCREEN, not -100vw @created(19-09-17 10:36) @done(19-09-17 12:08)
         ☐ Move transition logic to seperate file @created(19-09-17 12:54) @started(19-09-17 12:54)
+        ☐ Tween header gradients with background, in all views @created(19-09-17 16:00)
+        ☐ Fix bug with coming soon view @created(19-09-17 16:03)
+            - Page's not rendering correcty
 
 Efficiency:
     ☐ https://www.webpagetest.org @created(19-09-14 09:00)

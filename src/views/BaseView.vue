@@ -19,7 +19,8 @@ export default {
       metadata: undefined,
       MetadataManager,
       PrismicProcessor,
-      loadingHandled: false
+      loadingHandled: false,
+      rawData: undefined // TODO: use rawData variable in ALL views
     };
   },
   methods: {
@@ -39,7 +40,7 @@ export default {
     this.fetchData ? await this.fetchData() : null;
   },
   updated: function () {
-    if (!this.loadingHandled) { // Req. b/c updated called multiple times
+    if (this.rawData && !this.loadingHandled) { // Req. b/c updated called multiple times
       this.loadedCallback();
       this.loadingHandled = true;
     }

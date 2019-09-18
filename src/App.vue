@@ -19,18 +19,20 @@
           <transition
             :css="false"
 
-
-            @before-appear="() => {}"
+            @before-appear="beforeAppear"
             @appear="appear"
-            @after-appear="() => {}"
+            @after-appear="afterAppear"
+            @appear-cancelled="cancelledAppear"
 
             @before-enter="beforeEnter"
             @enter="enter"
             @after-enter="afterEnter"
-            @enter-cancelled="enterCancelled"
+            @enter-cancelled="cancelledEnter"
 
             @before-leave="beforeLeave"
             @leave="leave"
+            @after-leave="afterLeave"
+            @leave-cancelled="cancelledLeave"
           >
             <router-view
               :key="viewKey"
@@ -55,7 +57,7 @@
 <script>
 import Velocity from "velocity-animate";
 import colors from "@/utils/colors";
-import Animations from "@/utils/Animations";
+import { viewTransitions } from "@/utils/Animations";
 import { fitText } from "@/utils/fittext.js";
 
 // eslint-disable-next-line no-unused-vars
@@ -75,7 +77,11 @@ export default {
       prevRouteColor: [255, 255, 255],
       activeColorString: "rgb(255, 255, 255)",
       menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
-      startEnter: () => {}
+      startEnter: () => {},
+      prerenderColor: [255, 255, 255],
+      viewTransitions,
+      colors,
+      css
     };
   },
   computed: {
@@ -87,11 +93,7 @@ export default {
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
     currentRouteColor: function () {
       if (process.env.VUE_APP_BUILD_OPTION === "prerender") {
-        return [
-          255,
-          255,
-          255
-        ];
+        return this.prerenderColor;
       }
 
       const hue =
@@ -101,10 +103,10 @@ export default {
 
       const color =
         hue !== undefined
-          ? colors.getBackgroundColor(hue)
+          ? this.colors.getBackgroundColor(hue)
           : "rgb(255, 255, 255)";
 
-      const colorValues = colors.getRgbValuesFromString(color);
+      const colorValues = this.colors.getRgbValuesFromString(color);
 
       return colorValues;
     },
@@ -121,14 +123,6 @@ export default {
     }
   },
   methods: {
-    setActiveColorString(colorString) {
-      this.activeColorString = colorString;
-    },
-    enterCancelled() {
-      console.log("enter cancelled");
-      // If cancelled because router when backwards, reverse transition
-      // Otherwise, no difference
-    },
     handleLogoClick() {
       this.setMenuOpen(false);
     },
@@ -140,140 +134,21 @@ export default {
       if (typeof val !== "boolean") throw new Error("Incorrect value type.");
       this.menuOpen = val;
     },
-    beforeEnter(el) {
-      console.log('before enter');
-
-      el.style.opacity = 0; // Hides the view b/c it initially renders in center of viewport
-      el.getElementsByClassName("c-header-gradient")[0].style.opacity = 0;
+    setActiveColorString(colorString) {
+      this.activeColorString = colorString;
     },
-    appear(el, done) {
-      const prevRouteColor = this.prevRouteColor;
-      const nextRouteColor = this.currentRouteColor;
-
-      const rgbChannels = ["Red", "Green", "Blue"];
-      let rgbTransition = {};
-      rgbChannels.forEach((channel, index) => {
-        rgbTransition[`backgroundColor${channel}`] = [
-          nextRouteColor[index],
-          255
-        ]
-      });
-
-      Velocity(app, rgbTransition, {
-        duration: 500,
-        easing: "linear",
-        queue: false,
-        begin: undefined,
-        progress: undefined,
-        complete: () => {
-          console.log('tween complete');
-          console.log(nextRouteColor)
-          this.setActiveColorString(colors.serializeRgb(nextRouteColor));
-          done();
-        },
-        loop: false,
-        delay: false
-      });
-    },
-    enter(el, done) {
-      console.log('enter');
-      const app = this.$refs.app;
-      const papers = el.getElementsByClassName("paper");
-      console.log(papers);
-      const paper = papers[0];
-      const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
-
-      const transformPaper = Animations.slideIntoViewport(paper, {
-        xDistance: paper.offsetWidth + parseInt(css.lefterWidthValue) + 200 // 200 accomodates for rotation into the viewport
-      })
-
-      const fadeTitles = Animations.fadeIn(titles);
-
-      const gradients = el.getElementsByClassName("c-header-gradient");
-      console.log(gradients)
-      // TODO: tween mobile menu colors
-      const tweenGradients = Animations.tweenColor(gradients, {
-        prevRgb: this.prevRouteColor,
-        nextRgb: this.currentRouteColor,
-        properties: ["backgroundColor", "color"]
-      })
-
-      const tweenAppBg = Animations.tweenColor(app, {
-        prevRgb: this.prevRouteColor,
-        nextRgb: this.currentRouteColor
-      });
-
-
-      const animations = () => Promise.all([
-        tweenAppBg(),
-        tweenGradients(),
-        transformPaper(),
-        fadeTitles()
-      ]);
-
-      this.startEnter = () => {
-        console.log('start enter method called');
-        el.style.opacity = 1; // Previously hidden in beforeEnter, TODO: make dry with appear // RESET EL METHOD
-        animations().then(() => {
-          this.setActiveColorString(colors.serializeRgb(this.currentRouteColor));
-
-          console.log('enter animation finished');
-          done();
-        });
-      };
-    },
-    afterEnter(el) {
-      console.log('after enter')
-
-      if (el.style.opacity === 0) {
-        el.style.opacity = 1;
-      }
-      el.getElementsByClassName("c-header-gradient")[0].style.opacity = 1;
-    },
-
-    beforeLeave(el) {
-      el.style.position = "absolute";
-      el.style.top = "0";
-      el.style.left = "0";
-      console.log("before leave", el.style.position);
-      const gradients = el.getElementsByClassName("c-header-gradient");
-      gradients[0].style.opacity = 0; // TODO: the old gradient must remain in place
-      // TODO: if router history are to retain scroll position, and if transition is to occur mid-page
-      // the original gradient must remain while the old page slides out
-      // New page slides in simultaneously or delayed, and new name only shows after slide in.
-      // Old name hides immediately.
-    },
-
-    /**
-     * Tweens the application's background color through perceptually uniform color space.
-     * @param {Element} el Transitioning element.
-     * @param {Function} done Callback to declare that a transition has finished.
-     * @param {String} duration Transition duration in milliseconds
-     */
-    async leave(
-      el,
-      done,
-      duration = parseInt(css.routerTransitionDuration)
-    ) {
-      console.log("leave");
-      const papers = el.getElementsByClassName("paper");
-      const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
-
-      const transformPapers = Animations.slideOutOfViewport(papers, {
-        xDistance: "100vw"
-      });
-
-      const fadeTitles = Animations.fadeOut(titles);
-
-
-      const animations = () => Promise.all([
-        transformPapers(),
-        // tweenGradients(),
-        fadeTitles()
-      ]);
-
-      animations().then(() => done());
-    }
+    beforeAppear: viewTransitions.beforeAppear,
+    appear: viewTransitions.appear,
+    afterAppear: viewTransitions.afterAppear,
+    cancelledAppear: viewTransitions.cancelledAppear,
+    beforeEnter: viewTransitions.beforeEnter,
+    enter: viewTransitions.enter,
+    afterEnter: viewTransitions.afterEnter,
+    cancelledEnter: viewTransitions.cancelledEnter,
+    beforeLeave: viewTransitions.beforeLeave,
+    leave: viewTransitions.leave,
+    afterLeave: viewTransitions.afterLeave,
+    cancelledLeave: viewTransitions.cancelledLeave
   },
   created: async function () {
     fitText();
@@ -287,12 +162,6 @@ export default {
       resetScrollPosition(this.$refs.app);
       next();
     });
-  },
-  mounted: function () {
-    if (this.$route.name === "home") {
-      // Transition is naturally called if first visit is on non-home route
-      this.leave({}, () => {}, 300);
-    }
   }
 };
 </script>
@@ -389,109 +258,4 @@ export default {
   top: 0;
   left: 0;
 }
-
-// .router-view {
-//   // transition: transform 800ms ease-in-out;
-//   // /deep/ h1 {
-//   //   opacity: 1;
-
-//   //   // transition: opacity 300ms ease-out;
-//   // }
-
-//   /deep/ .paper {
-//     // transform: translate(0, 0);
-
-//     transition: transform 800ms ease-in-out;
-
-//     h1 {
-//       opacity: 1;
-//     }
-//   }
-// }
-
-// .view-enter {
-//   // transform: translate(-200vw, 100vh);
-
-//   // /deep/ h1 {
-//   //   opacity: 0;
-
-//   //   transition: opacity 300ms ease-out; // Fade in
-//   // }
-
-//   /deep/ .paper {
-//     transform: translate(-200vw, 40vh);
-
-//     transition: transform 800ms ease-out;
-
-
-//     h1 {
-//       opacity: 1;
-//     }
-//   }
-// }
-
-// .view-enter-active {
-//   // transition: transform 800ms ease-in-out;
-//   // /deep/ h1 {
-//   //   transition: opacity 300ms ease-out; // Fade in
-//   // }
-
-//   /deep/ .paper {
-//     transition: transform 800ms ease-in-out;
-//   }
-// }
-
-// .view-enter-to {
-//   // transform: translate(0, 0);
-
-//   // /deep/ h1 {
-//   //   // transform: translate(0, 0);
-//   //   opacity: 1;
-
-//   //   // transition: opacity 300ms ease-in;
-//   // }
-
-//   /deep/ .paper {
-//     transform: translate(0, 0);
-
-//     transition: transform 800ms ease-in-out;
-
-//     h1 {
-//       opacity: 1;
-//     }
-//   }
-// }
-
-// .view-leave-active {
-//   // transition: transform 800ms ease-in-out;
-// }
-
-// .view-leave-to {
-//   // transform: translate(200vw, -200vh);
-
-//   /deep/ h1 {
-//     opacity: 0;
-
-//     transition: opacity 300ms ease-in-out; // Fade out
-//   }
-
-//   /deep/ .paper {
-//     transform: translate(200vw, 40vh);
-
-//     transition: transform 800ms ease-in-out;
-
-//     h1 {
-//       opacity: 1;
-//     }
-//   }
-// }
-
-// .view-leave,
-// .view-leave-to,
-// .view-enter,
-// .view-enter-to {
-//   position: absolute;
-//   left: 0;
-//   top: 0;
-// }
 </style>

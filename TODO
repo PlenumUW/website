@@ -58,8 +58,8 @@ Styling:
             - leaveCancelled not called
         ✔ Add transition callback handling to all views @created(19-09-17 10:34) @started(19-09-17 12:38) @done(19-09-17 12:51) @lasted(13m47s)
         ✔ Change starting position of enter transition to be JUST OFF SCREEN, not -100vw @created(19-09-17 10:36) @done(19-09-17 12:08)
-        ☐ Move transition logic to seperate file @created(19-09-17 12:54) @started(19-09-17 12:54)
-        ☐ Tween header gradients with background, in all views @created(19-09-17 16:00)
+        ✔ Move transition logic to seperate file @created(19-09-17 12:54) @started(19-09-17 12:54) @done(19-09-18 12:55) @lasted(1d1m)
+        ✔ Tween header gradients with background, in all views @created(19-09-17 16:00) @done(19-09-18 12:55)
         ☐ Fix bug with coming soon view @created(19-09-17 16:03)
             - Page's not rendering correcty
 
@@ -78,3 +78,9 @@ Icons:
 Bugs:
     ☐ Class '.app--no-scroll', activated when menu is open in mobile, removes the scrollbar, which shifts the background text while the menu opens @created(19-09-14 21:18)
     ☐ Main content area should be visible if menu is forced open via mobile and then expanded to tablet/desktop @created(19-09-14 21:19)
+    View Transition:
+        - If scroll down while new page is loading off screen, after page loads and scroll positiong is mid-page
+            the h1 (section titles) lie behind the gradients. They should be in front of their header gradients.
+            1. Automatically scroll to top of page while view is transitioning in
+            2. Fix z-index interaction between sticky header and relative title
+                - Forcing new z-indexes after enter doesn't work

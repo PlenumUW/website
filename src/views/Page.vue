@@ -161,6 +161,7 @@ export default {
       width: 120%; // Extends gradient beyond the edge of the paper
 
       position: sticky;
+      z-index: 2; //TODO: use scss function
 
       @include header-offset(
         height
@@ -180,6 +181,7 @@ export default {
 
       position: relative;
       padding-left: $paper-padding;
+      z-index: 6; //TODO: use scss function // > 5, 5 is default z-index for stuck sticky els
 
       text-align: left;
 
@@ -225,6 +227,7 @@ export default {
 
     &__content {
       padding-bottom: 30px; // Helps hide the box-shadow when the paper scrolls under the gradient header // TODO: figure out how to bind this with paper box-shadows
+      z-index: 1; //TODO: use scss function
 
       @include font-size(1.1em);
 

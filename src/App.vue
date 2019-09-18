@@ -238,7 +238,10 @@ export default {
           queue: false,
           begin: undefined,
           progress: undefined,
-          complete: () => this.setActiveColorString(colors.serializeRgb(nextRouteColor)),
+          complete: () => {
+            this.setActiveColorString(colors.serializeRgb(nextRouteColor));
+            resolve();
+          },
           loop: false,
           delay: false
         });

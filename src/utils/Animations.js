@@ -56,7 +56,7 @@ class Animations {
           dir + `${xDistance}`
         ],
         translateY: [0, "20vh"], // TODO: randomize?
-        rotateZ: [0, dir + "20deg"],
+        rotateZ: [0, dir + "10deg"],
         translateZ: 0
       }, {
         duration: 650,
@@ -304,7 +304,12 @@ const viewTransitions = {
     el.style.position = "absolute";
     el.style.top = elOffset;
 
-    const firstPageGradient = el.getElementsByClassName("c-header-gradient")[0];
+    // Hide all gradients except for the first one, which is stuck to the top of the viewport
+    const gradients = el.getElementsByClassName("c-header-gradient");
+    const [first, ...unstuckGradients] = gradients;
+    for (let gradient of unstuckGradients) {
+      gradient.style.opacity = 0;
+    }
     // if (firstPageGradient) firstPageGradient.style.opacity = 0; // TODO: the old gradient must remain in place
 
     // TODO: if router history are to retain scroll position, and if transition is to occur mid-page

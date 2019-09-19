@@ -157,7 +157,7 @@ export default {
     &__header {
       display: none;
       top: 0;
-      width: 120%; // Extends gradient beyond the edge of the paper
+      width: 100%; // Extends gradient beyond the edge of the paper
 
       position: sticky;
       z-index: 2; //TODO: use scss function

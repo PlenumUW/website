@@ -87,7 +87,7 @@ class Animations {
         rotateZ: [dir + "20deg", 0],
         translateZ: 0
       }, {
-        duration: 800,
+        duration: 900,
         easing: "swing",
         queue: false,
         begin: undefined,
@@ -185,7 +185,7 @@ const viewTransitions = {
 
     const firstHeaderGradient = el.getElementsByClassName("c-header-gradient")[0];
     if (firstHeaderGradient) {
-      firstHeaderGradient.style.opacity = 0;
+      // firstHeaderGradient.style.opacity = 0;
     }
 
     const firstTitle = el.getElementsByTagName("h1")[0];
@@ -281,17 +281,24 @@ const viewTransitions = {
    * Positions exiting view to allow overlap of new and old; absolute positioning
    * must occur on exiting view--if on new view, footer is misplaced and flash occurs when set
    * back to relative to fix footer.
+   * Element is offset in order to create the illusion that the new view is
+   * transitioning into it's start position, while this element slides out from it's current position.
    * Header gradient hides to prevent disjunct color transitions.
    * @param {Element} el Transitioning element.
    */
   beforeLeave: function (el) {
     const app = this.$refs.app;
-    const scrollPos = app.scrollTop; // THIS IS BEING CALLED AFTER SCROLL IS RESET BY ROUTER
+    const scrollPosVal = app.scrollTop; // THIS IS BEING CALLED AFTER SCROLL IS RESET BY ROUTER
+    const scrollPos = `${scrollPosVal}px`;
+    const elOffset = "-" + scrollPos;
+
     app.scrollTop = 0;
     el.style.position = "absolute";
-    el.style.top = `-${scrollPos}px`;
+    el.style.top = elOffset;
+
     const firstPageGradient = el.getElementsByClassName("c-header-gradient")[0];
-    if (firstPageGradient) firstPageGradient.style.opacity = 0; // TODO: the old gradient must remain in place
+    // if (firstPageGradient) firstPageGradient.style.opacity = 0; // TODO: the old gradient must remain in place
+
     // TODO: if router history are to retain scroll position, and if transition is to occur mid-page
     // the original gradient must remain while the old page slides out
     // New page slides in simultaneously or delayed, and new name only shows after slide in.
@@ -311,7 +318,8 @@ const viewTransitions = {
     let transformPapers = () => new Promise(resolve => resolve());
     if (papers.length > 0) {
       transformPapers = Animations.slideOutOfViewport(papers, {
-        xDistance: "100vw"
+        // TODO: depending on how long papers get, transform origin might need to be set to rotate from minimum dist corner
+        xDistance: "120vw" // extra 20vw to accomodate for rotation displacement
       });
     }
 
@@ -330,7 +338,9 @@ const viewTransitions = {
       done()
     });
   },
-  afterLeave: function (el) {},
+  afterLeave: function (el) {
+    console.log('after leave')
+  },
   cancelledLeave: function (el) {}
 }
 

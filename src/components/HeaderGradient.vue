@@ -26,9 +26,9 @@ $header-height--desktop: $g-header-height--desktop;
 
   position: absolute;
   top: 0;
-  width: 100%;
+  width: 100vw;
   z-index: -1;
-  transform: translateX(calc(#{$g-home-right-padding} / -2));
+  transform: translateX(calc(-#{$g-home-right-padding}));
 
   @include for-size(tablet-landscape-up) {
     display: block;

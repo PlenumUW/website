@@ -47,8 +47,7 @@ export default {
   components: { HeaderGradient, RichText },
   data: function () {
     return {
-      items: _.range(0, 5, 1),
-      rawData: undefined
+      items: _.range(0, 5, 1)
     };
   },
   computed: {

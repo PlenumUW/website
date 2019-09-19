@@ -39,7 +39,7 @@ export default {
   props: {
     issue: {
       type: Object,
-      required: true
+      required: false
     },
     bgColor: {
       type: String,
@@ -63,7 +63,7 @@ export default {
       return this.issue.data.download_file.url;
     },
     loading: function () {
-      return Object.keys(this.issue).length === 0;
+      return !this.issue;
     },
     categories: function () {
       let categories = {};

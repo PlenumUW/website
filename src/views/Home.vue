@@ -3,7 +3,7 @@
     <issue-slice
       class="home-slice slice"
       :bgColor="color"
-      :issue="currentIssue || {}"
+      :issue="currentIssue"
     ></issue-slice>
     <atlas-slice class="home-slice slice" :bgColor="color"></atlas-slice>
   </div>

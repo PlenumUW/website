@@ -19,20 +19,20 @@
           <transition
             :css="false"
 
-            @before-appear="beforeAppear"
-            @appear="appear"
-            @after-appear="afterAppear"
-            @appear-cancelled="cancelledAppear"
+            @before-appear="viewBeforeAppear"
+            @appear="viewAppear"
+            @after-appear="viewAfterAppear"
+            @appear-cancelled="viewCancelledAppear"
 
-            @before-enter="beforeEnter"
-            @enter="enter"
-            @after-enter="afterEnter"
-            @enter-cancelled="cancelledEnter"
+            @before-enter="viewBeforeEnter"
+            @enter="viewEnter"
+            @after-enter="viewAfterEnter"
+            @enter-cancelled="viewCancelledEnter"
 
-            @before-leave="beforeLeave"
-            @leave="leave"
-            @after-leave="afterLeave"
-            @leave-cancelled="cancelledLeave"
+            @before-leave="viewBeforeLeave"
+            @leave="viewLeave"
+            @after-leave="viewAfterLeave"
+            @leave-cancelled="viewCancelledLeave"
           >
             <router-view
               :key="viewKey"
@@ -74,11 +74,11 @@ export default {
   data: function () {
     return {
       metadata: undefined,
-      prevRouteColor: [255, 255, 255],
+      prevRouteColor: _.fill(new Array(3), 255),
       activeColorString: "rgb(255, 255, 255)",
       menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
-      startEnter: () => {},
-      prerenderColor: [255, 255, 255],
+      startEnter: undefined,
+      prerenderColor: _.fill(new Array(3), 255), // The 'route' color for a prerendered site
       viewTransitions,
       colors,
       css
@@ -137,18 +137,18 @@ export default {
     setActiveColorString(colorString) {
       this.activeColorString = colorString;
     },
-    beforeAppear: viewTransitions.beforeAppear,
-    appear: viewTransitions.appear,
-    afterAppear: viewTransitions.afterAppear,
-    cancelledAppear: viewTransitions.cancelledAppear,
-    beforeEnter: viewTransitions.beforeEnter,
-    enter: viewTransitions.enter,
-    afterEnter: viewTransitions.afterEnter,
-    cancelledEnter: viewTransitions.cancelledEnter,
-    beforeLeave: viewTransitions.beforeLeave,
-    leave: viewTransitions.leave,
-    afterLeave: viewTransitions.afterLeave,
-    cancelledLeave: viewTransitions.cancelledLeave
+    viewBeforeAppear: viewTransitions.beforeAppear,
+    viewAppear: viewTransitions.appear,
+    viewAfterAppear: viewTransitions.afterAppear,
+    viewCancelledAppear: viewTransitions.cancelledAppear,
+    viewBeforeEnter: viewTransitions.beforeEnter,
+    viewEnter: viewTransitions.enter,
+    viewAfterEnter: viewTransitions.afterEnter,
+    viewCancelledEnter: viewTransitions.cancelledEnter,
+    viewBeforeLeave: viewTransitions.beforeLeave,
+    viewLeave: viewTransitions.leave,
+    viewAfterLeave: viewTransitions.afterLeave,
+    viewCancelledLeave: viewTransitions.cancelledLeave
   },
   created: async function () {
     fitText();

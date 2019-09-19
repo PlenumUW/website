@@ -37,6 +37,8 @@ export default {
       currentIssue.essays = await Promise.all(essayRequests);
 
       this.currentIssue = currentIssue;
+
+      return currentIssue;
     }
   }
 };

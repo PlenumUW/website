@@ -7,8 +7,8 @@ class Animations {
    *
    * @param {HtmlDocument(s)} el Element(s) to be animated.
    * @param {Object} settings
-   * @param {Object} settings
-   * @param {Object} settings
+   * @param {Object} prevRgb
+   * @param {Object} nextRgb
    *
    */
   static tweenColor(el, { prevRgb, nextRgb, properties = [
@@ -129,6 +129,7 @@ class Animations {
   }
 }
 
+// TODO: move each transition group to diff files?
 /**
  * Router view transitions.
  */
@@ -179,9 +180,19 @@ const viewTransitions = {
    * @param {Element} el Transitioning element.
    */
   beforeEnter: function (el) {
+    console.log('before enter');
     el.style.opacity = 0; // Hides the view b/c it initially renders in center of viewport
-    el.getElementsByClassName("c-header-gradient")[0].style.opacity = 0;
-    el.getElementsByTagName("h1")[0].style.opacity = 0;
+
+    const firstHeaderGradient = el.getElementsByClassName("c-header-gradient")[0];
+    if (firstHeaderGradient) {
+      firstHeaderGradient.style.opacity = 0;
+    }
+
+    const firstTitle = el.getElementsByTagName("h1")[0];
+    if (firstTitle) firstTitle.style.opacity = 0;
+
+    // el.getElementsByClassName("c-header-gradient")[0].style.opacity = 0;
+    // el.getElementsByTagName("h1")[0].style.opacity = 0;
   },
 
   /**
@@ -193,23 +204,32 @@ const viewTransitions = {
   * @param {Function} done Callback to declare that a transition has finished.
   */
   enter: function (el, done) {
+    console.log('enter');
+    const papers = el.getElementsByClassName("paper");
+    let slidePaperIntoViewport = () => {};
+    if (papers.length > 0) {
+      slidePaperIntoViewport = Animations.slideIntoViewport(papers, {
+        xDistance: papers[0].offsetWidth + parseInt(this.css.lefterWidthValue) + 200 // 200 accomodates for rotation into the viewport
+      });
+    }
+
+    const firstTitle = el.getElementsByTagName("h1")[0]; // TODO: exclude 'h1's in paper
+    let fadeInTitle = () => {};
+    if (firstTitle) {
+      fadeInTitle = Animations.fadeIn(firstTitle);
+    }
+
+    const firstGradient = el.getElementsByClassName("c-header-gradient")[0];
+    let tweenGradients = () => {};
+    if (firstGradient) {
+      tweenGradients = Animations.tweenColor(firstGradient, {
+        prevRgb: this.prevRouteColor,
+        nextRgb: this.currentRouteColor,
+        properties: ["backgroundColor", "color"]
+      })
+    }
+
     const app = this.$refs.app;
-    const paper = el.getElementsByClassName("paper")[0];
-    const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
-
-    const slidePaperIntoViewport = Animations.slideIntoViewport(paper, {
-      xDistance: paper.offsetWidth + parseInt(this.css.lefterWidthValue) + 200 // 200 accomodates for rotation into the viewport
-    })
-
-    const fadeInTitles = Animations.fadeIn(titles);
-
-    const gradients = el.getElementsByClassName("c-header-gradient");
-    const tweenGradients = Animations.tweenColor(gradients, {
-      prevRgb: this.prevRouteColor,
-      nextRgb: this.currentRouteColor,
-      properties: ["backgroundColor", "color"]
-    })
-
     const tweenAppBg = Animations.tweenColor(app, {
       prevRgb: this.prevRouteColor,
       nextRgb: this.currentRouteColor
@@ -223,10 +243,13 @@ const viewTransitions = {
     ]);
 
     this.startEnter = () => {
+      console.log('enter started')
       el.style.opacity = 1; // Previously hidden in beforeEnter, TODO: make dry with appear // RESET EL METHOD
       animations().then(() => {
+        console.log('enter animations finished');
         this.setActiveColorString(this.colors.serializeRgb(this.currentRouteColor));
-        fadeInTitles();
+        fadeInTitle();
+        this.startEnter = undefined;
         done();
       });
     };
@@ -238,6 +261,7 @@ const viewTransitions = {
    * @param {Element} el Transitioning element.
    */
   afterEnter: function (el) {
+    console.log('after enter');
     const firstPageGradient = el.getElementsByClassName("c-header-gradient")[0];
     Velocity(firstPageGradient, { opacity: [1, 0] });
   },
@@ -263,7 +287,7 @@ const viewTransitions = {
   beforeLeave: function (el) {
     el.style.position = "absolute";
     const firstPageGradient = el.getElementsByClassName("c-header-gradient")[0];
-    firstPageGradient.style.opacity = 0; // TODO: the old gradient must remain in place
+    if (firstPageGradient) firstPageGradient.style.opacity = 0; // TODO: the old gradient must remain in place
     // TODO: if router history are to retain scroll position, and if transition is to occur mid-page
     // the original gradient must remain while the old page slides out
     // New page slides in simultaneously or delayed, and new name only shows after slide in.
@@ -277,21 +301,30 @@ const viewTransitions = {
    * @param {Function} done Callback to declare that a transition has finished.
    */
   leave: function (el, done) {
+    console.log('leaving')
+
     const papers = el.getElementsByClassName("paper");
+    let transformPapers = () => new Promise(resolve => resolve());
+    if (papers.length > 0) {
+      transformPapers = Animations.slideOutOfViewport(papers, {
+        xDistance: "100vw"
+      });
+    }
+
     const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
-
-    const transformPapers = Animations.slideOutOfViewport(papers, {
-      xDistance: "100vw"
-    });
-
-    const fadeTitles = Animations.fadeOut(titles);
+    let fadeTitles = () => new Promise(resolve => resolve());
+    if (titles) {
+      fadeTitles = Animations.fadeOut(titles);
+    }
 
     const animations = () => Promise.all([
       transformPapers(),
       fadeTitles()
     ]);
 
-    animations().then(() => done());
+    animations().then(() => {
+      done()
+    });
   },
   afterLeave: function (el) {},
   cancelledLeave: function (el) {}

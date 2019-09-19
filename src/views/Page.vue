@@ -107,14 +107,16 @@ export default {
       const slugs = this.$route.path.split("/").filter(el => el.length > 0);
       const parentSlug = slugs[0];
 
-      this.rawData = await this.$api.fetchPageBySlug(parentSlug);
+      const page = await this.$api.fetchPageBySlug(parentSlug);
 
-      if (!this.docExists(this.rawData)) {
+      if (!this.docExists(page)) {
         return;
       }
+
+      return page;
     },
     getSectionTitle(slice) {
-      if (_.isEmpty(slice)) return "   ";
+      if (_.isEmpty(slice)) return "";
 
       return this.PrismicProcessor.getRawText(slice.primary.section_title);
     }
@@ -147,8 +149,6 @@ export default {
       width: calc(100% - 100px);
       margin-bottom: 50px;
       margin-right: auto;
-
-      // padding-left: 100px;
 
       &:last-of-type {
         margin-bottom: 0;

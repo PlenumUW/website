@@ -36,6 +36,8 @@ Components:
              ☐ I like the idea of generating vue components that match prismic types :) @created(19-09-14 22:33)
 
 Styling:
+    Handheld header:
+        ☐ Logo is at mobile size (smaller than hamburger) in tablet view @created(19-09-18 12:59)
     Background Colors:
         ☐ Add attribute to routes that declares whether or not it should be included in the array of colors
             - This will increase contrast between menu colors

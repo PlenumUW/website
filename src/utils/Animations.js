@@ -157,23 +157,37 @@ const viewTransitions = {
    * @param {Function} done Callback to declare that a transition has finished.
    */
   appear: function (el, done) {
-    const app = this.$refs.app;
-    const gradients = el.getElementsByClassName("c-header-gradient");
-
     const prevRgb = this.prerenderColor;
     const nextRgb = this.currentRouteColor
 
+    const app = this.$refs.app;
     const tweenAppBg = Animations.tweenColor(app, {
       prevRgb,
       nextRgb
     });
+
+    const gradients = el.getElementsByClassName("c-header-gradient");
     const tweenGradients = Animations.tweenColor(gradients, {
       prevRgb,
       nextRgb,
       properties: ["backgroundColor", "color"]
-    })
+    });
 
-    Promise.all([tweenAppBg(), tweenGradients()]).then(() => {
+    const siteHeader = document.getElementsByClassName("site-header");
+    let tweenSiteHeader = () => {};
+    if (siteHeader) {
+      tweenSiteHeader = Animations.tweenColor(siteHeader, {
+        prevRgb: this.prevRouteColor,
+        nextRgb: this.currentRouteColor,
+        properties: ["backgroundColor", "color"]
+      })
+    }
+
+    Promise.all([
+      tweenAppBg(),
+      tweenGradients(),
+      tweenSiteHeader()
+    ]).then(() => {
       this.setActiveColorString(this.colors.serializeRgb(nextRgb));
       done();
     });
@@ -229,10 +243,20 @@ const viewTransitions = {
       fadeInTitle = Animations.fadeIn(titles);
     }
 
-    const gradients = document.getElementsByClassName("c-header-gradient");
-    let tweenGradients = () => {};
-    if (gradients) {
-      tweenGradients = Animations.tweenColor(gradients, {
+    const headerGradients = document.getElementsByClassName("c-header-gradient");
+    let tweenHeaderGradients = () => {};
+    if (headerGradients) {
+      tweenHeaderGradients = Animations.tweenColor(headerGradients, {
+        prevRgb: this.prevRouteColor,
+        nextRgb: this.currentRouteColor,
+        properties: ["backgroundColor", "color"]
+      })
+    }
+
+    const siteHeader = document.getElementsByClassName("site-header");
+    let tweenSiteHeader = () => {};
+    if (siteHeader) {
+      tweenSiteHeader = Animations.tweenColor(siteHeader, {
         prevRgb: this.prevRouteColor,
         nextRgb: this.currentRouteColor,
         properties: ["backgroundColor", "color"]
@@ -248,7 +272,8 @@ const viewTransitions = {
 
     const animations = () => Promise.all([
       tweenAppBg(),
-      tweenGradients(),
+      tweenHeaderGradients(),
+      tweenSiteHeader(),
       slidePaperIntoViewport()
     ]);
 

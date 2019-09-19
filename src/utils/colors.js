@@ -50,6 +50,18 @@ class ColorFactory {
     this._paper = schemes.paper;
   }
 
+  get bgScheme() {
+    return this._bg;
+  }
+
+  get menuScheme() {
+    return this._menu;
+  }
+
+  get paperScheme() {
+    return this._paper;
+  }
+
   get colorSpace() {
     return this._colorSpace;
   }
@@ -70,17 +82,38 @@ class ColorFactory {
     return this.hueMax - this.hueMin;
   }
 
-  getBackgroundColor(h) {
-    return this._getRgbColorFromScheme(h, this._bg);
+
+  get _saturationChannel() {
+    const saturationChannels = ["saturation", "chroma"];
+    const saturationChannel = saturationChannels.find(satChannel => this._colorSpace.channel.some(channel => satChannel === channel));
+    if (!saturationChannel) throw new Error("No valid saturation channel...");
+
+    return saturationChannel;
   }
 
-  getMenuItemColor(h) {
-    let color = this._getRgbColorFromScheme(h, this._menu);
-    return color;
+  _desaturateScheme(scheme) {
+    scheme[this._saturationChannel] = 0;
   }
 
-  getPaperColor(h) {
-    return this._getRgbColorFromScheme(h, this._paper);
+  getBackgroundColor(h, desaturate = false) {
+    let scheme = this.bgScheme;
+    if (desaturate) this._desaturateScheme(scheme);
+
+    return this._getRgbColorFromScheme(h, scheme);
+  }
+
+  getMenuItemColor(h, desaturate = false) {
+    let scheme = _.clone(this.menuScheme);
+    if (desaturate) this._desaturateScheme(scheme);
+
+    return this._getRgbColorFromScheme(h, scheme);
+  }
+
+  getPaperColor(h, desaturate = false) {
+    let scheme = this.paperScheme;
+    if (desaturate) this._desaturateScheme(scheme);
+
+    return this._getRgbColorFromScheme(h, scheme);
   }
 
   getOppositeHueByRgbString(rgbString) {

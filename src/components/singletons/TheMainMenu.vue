@@ -9,10 +9,11 @@
       @mouseleave="handleMainMenuHover"
     >
       <li
-        v-for="{ path, name, meta } in menuItems"
+        v-for="{ path, name, meta, componentName } in menuItems"
         :key="`c-main-menu__item--${name}`"
         class="c-main-menu__item"
-        :style="{ 'background-color': getMenuItemColor(meta.hue) }"
+        :class="{'c-main-menu__item--disabled': isRouteDisabled(componentName)}"
+        :style="{ 'background-color': getMenuItemColor(meta.hue, isRouteDisabled(componentName))}"
       >
         <router-link
           :to="path"
@@ -48,14 +49,17 @@ export default {
     }
   },
   methods: {
+    isRouteDisabled(viewName) {
+      return viewName === 'ComingSoon';
+    },
     handleMenuItemClick() {
       this.resetMenu();
     },
     handleMainMenuHover(e) {
       this.menuHovered = e.type === "mouseenter";
     },
-    getMenuItemColor(hue) {
-      return colors.getMenuItemColor(hue);
+    getMenuItemColor(hue, desaturate = false) {
+      return colors.getMenuItemColor(hue, desaturate); // TODO: create parameter that returns a perceptually uniform grey value for disabled menu items
     },
     resetMenu() {
       document.activeElement.blur(); // Link activation retains focus, which would keep menu open otherwise
@@ -151,9 +155,9 @@ $menu-width--mobile: calc(
     // @include mdElevation(2, $inset: true);
     // @include mdElevationTransition(2);
 
-    // &:hover {
-    //   @include mdElevation(6, $inset: true);
-    // }
+    &:hover {
+      // @include mdElevation(6, $inset: true);
+    }
 
     &:last-of-type {
       margin-bottom: 0;
@@ -161,6 +165,11 @@ $menu-width--mobile: calc(
 
     @include for-size(tablet-landscape-up) {
       width: $menu-item-width--expanded;
+    }
+
+    &--disabled {
+      pointer-events: none;
+      cursor: not-allowed;
     }
 
     &-link {

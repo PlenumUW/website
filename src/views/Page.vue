@@ -205,7 +205,7 @@ export default {
 
       @include for-size(tablet-landscape-up) {
         width: calc(100% - 100px);
-        min-width: 800px;
+        min-width: calc(#{$g-viewport-tablet} - #{$g-lefter-width} - (17px * 2)); // 17px width of scrollbar
         margin-bottom: 75px;
 
         margin-left: auto;

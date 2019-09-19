@@ -193,6 +193,16 @@ const viewTransitions = {
 
     const firstTitle = el.getElementsByTagName("h1")[0];
     if (firstTitle) firstTitle.style.opacity = 0;
+
+    // Hide entering gradient to prevent covering up content near top of viewport, e.g. Home Header Titles
+    // Unhidden afterEnter
+    const gradients = el.getElementsByClassName("c-header-gradient");
+    for (let gradient of gradients) {
+      if (gradient.getBoundingClientRect().top === 0) {
+        gradient.style.opacity = 0;
+        break;
+      }
+    }
   },
 
   /**
@@ -264,6 +274,12 @@ const viewTransitions = {
    */
   afterEnter: function (el) {
     console.log('after enter');
+    const gradients = el.getElementsByClassName("c-header-gradient");
+    for (let gradient of gradients) {
+      if (gradient.style.opacity === 0 || gradient.getBoundingClientRect().top === 0) {
+        Velocity(gradient, { opacity: [1, 0] })
+      }
+    }
   },
 
   /**

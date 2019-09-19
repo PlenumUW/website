@@ -34,7 +34,7 @@ $header-height--desktop: $g-header-height--desktop;
     display: block;
     height: $header-height--desktop;
 
-    box-shadow: 0 13px 25px 9px;
+    box-shadow: 0 10px 15px 10px;
   }
 }
 </style>

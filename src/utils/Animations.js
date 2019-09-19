@@ -285,7 +285,11 @@ const viewTransitions = {
    * @param {Element} el Transitioning element.
    */
   beforeLeave: function (el) {
+    const app = this.$refs.app;
+    const scrollPos = app.scrollTop; // THIS IS BEING CALLED AFTER SCROLL IS RESET BY ROUTER
+    app.scrollTop = 0;
     el.style.position = "absolute";
+    el.style.top = `-${scrollPos}px`;
     const firstPageGradient = el.getElementsByClassName("c-header-gradient")[0];
     if (firstPageGradient) firstPageGradient.style.opacity = 0; // TODO: the old gradient must remain in place
     // TODO: if router history are to retain scroll position, and if transition is to occur mid-page

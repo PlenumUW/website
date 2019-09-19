@@ -154,14 +154,14 @@ export default {
     fitText();
 
     // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
-    this.$router.beforeEach((to, from, next) => {
-      const resetScrollPosition = (el) => {
-        if (el) el.scrollTop = 0;
-      };
+    // this.$router.beforeEach((to, from, next) => {
+    //   const resetScrollPosition = (el) => {
+    //     if (el) el.scrollTop = 0;
+    //   };
 
-      resetScrollPosition(this.$refs.app);
-      next();
-    });
+    //   resetScrollPosition(this.$refs.app);
+    //   next();
+    // });
   }
 };
 </script>

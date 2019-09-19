@@ -78,13 +78,21 @@ class Animations {
     const dir = reverse ? "-" : "";
 
     return () => new Promise((resolve) => {
+      const transformOrigin = (reverse ? "100%" : "0") + " 100%";
+      if (el.length !== undefined) {
+        for (let element of el) {
+          element.style.transformOrigin = transformOrigin;
+        }
+      } else {
+        el.style.transformOrigin = transformOrigin;
+      }
       Velocity(el, {
         translateX: [
           dir + `${xDistance}`,
           0
         ],
         translateY: ["20vh", 0],
-        rotateZ: [dir + "20deg", 0],
+        rotateZ: [dir + "5deg", 0],
         translateZ: 0
       }, {
         duration: 900,

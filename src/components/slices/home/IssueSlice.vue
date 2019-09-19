@@ -1,20 +1,20 @@
 <template>
   <home-slice
-    v-if="!loading"
+
     class="c-issue-slice"
     :hideBackground="true"
     :color="bgColor"
   >
     <template #title>
-      <router-link :to="issueSlug">{{ title | prismicRawText }}</router-link>
+      <router-link v-if="!loading" :to="issueSlug">{{ title | prismicRawText }}</router-link>
     </template>
 
     <template #content>
-      <paper v-if="imgSrc" :color="bgColor">
+      <paper v-if="!loading && imgSrc" :color="bgColor">
         <img class="c-issue-slice__cover-image" :src="imgSrc" :shadow="6" />
       </paper>
 
-      <paper class="c-issue-slice__toc" :color="bgColor" :shadow="12">
+      <paper v-if="!loading" class="c-issue-slice__toc" :color="bgColor" :shadow="12">
         <table-of-contents
           :contents="essays"
           :contentPath="essayPath"

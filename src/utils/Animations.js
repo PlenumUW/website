@@ -191,16 +191,8 @@ const viewTransitions = {
     console.log('before enter');
     el.style.opacity = 0; // Hides the view b/c it initially renders in center of viewport
 
-    const firstHeaderGradient = el.getElementsByClassName("c-header-gradient")[0];
-    if (firstHeaderGradient) {
-      // firstHeaderGradient.style.opacity = 0;
-    }
-
     const firstTitle = el.getElementsByTagName("h1")[0];
     if (firstTitle) firstTitle.style.opacity = 0;
-
-    // el.getElementsByClassName("c-header-gradient")[0].style.opacity = 0;
-    // el.getElementsByTagName("h1")[0].style.opacity = 0;
   },
 
   /**
@@ -221,16 +213,16 @@ const viewTransitions = {
       });
     }
 
-    const firstTitle = el.getElementsByTagName("h1")[0]; // TODO: exclude 'h1's in paper
+    const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
     let fadeInTitle = () => {};
-    if (firstTitle) {
-      fadeInTitle = Animations.fadeIn(firstTitle);
+    if (titles.length > 0) {
+      fadeInTitle = Animations.fadeIn(titles);
     }
 
-    const firstGradient = el.getElementsByClassName("c-header-gradient")[0];
+    const gradients = document.getElementsByClassName("c-header-gradient");
     let tweenGradients = () => {};
-    if (firstGradient) {
-      tweenGradients = Animations.tweenColor(firstGradient, {
+    if (gradients) {
+      tweenGradients = Animations.tweenColor(gradients, {
         prevRgb: this.prevRouteColor,
         nextRgb: this.currentRouteColor,
         properties: ["backgroundColor", "color"]
@@ -253,10 +245,12 @@ const viewTransitions = {
     this.startEnter = () => {
       console.log('enter started')
       el.style.opacity = 1; // Previously hidden in beforeEnter, TODO: make dry with appear // RESET EL METHOD
+
       animations().then(() => {
         console.log('enter animations finished');
-        this.setActiveColorString(this.colors.serializeRgb(this.currentRouteColor));
         fadeInTitle();
+
+        this.setActiveColorString(this.colors.serializeRgb(this.currentRouteColor));
         this.startEnter = undefined;
         done();
       });
@@ -270,8 +264,6 @@ const viewTransitions = {
    */
   afterEnter: function (el) {
     console.log('after enter');
-    const firstPageGradient = el.getElementsByClassName("c-header-gradient")[0];
-    Velocity(firstPageGradient, { opacity: [1, 0] });
   },
 
   /**
@@ -304,13 +296,13 @@ const viewTransitions = {
     el.style.position = "absolute";
     el.style.top = elOffset;
 
-    // Hide all gradients except for the first one, which is stuck to the top of the viewport
+    // Hide all gradients except if it's 'stuck' to top of viewport
     const gradients = el.getElementsByClassName("c-header-gradient");
-    const [first, ...unstuckGradients] = gradients;
-    for (let gradient of unstuckGradients) {
-      gradient.style.opacity = 0;
+    for (let gradient of gradients) {
+      if (gradient.getBoundingClientRect().top !== 0) {
+        gradient.style.opacity = 0;
+      }
     }
-    // if (firstPageGradient) firstPageGradient.style.opacity = 0; // TODO: the old gradient must remain in place
 
     // TODO: if router history are to retain scroll position, and if transition is to occur mid-page
     // the original gradient must remain while the old page slides out
@@ -331,7 +323,6 @@ const viewTransitions = {
     let transformPapers = () => new Promise(resolve => resolve());
     if (papers.length > 0) {
       transformPapers = Animations.slideOutOfViewport(papers, {
-        // TODO: depending on how long papers get, transform origin might need to be set to rotate from minimum dist corner
         xDistance: "120vw" // extra 20vw to accomodate for rotation displacement
       });
     }

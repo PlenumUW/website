@@ -29,9 +29,13 @@
 import _ from "lodash";
 import BaseView from "@/views/BaseView";
 
+import HeaderGradient from "@/components/HeaderGradient";
+
+
 export default {
   name: "ComingSoon",
   extends: BaseView,
+  components: { HeaderGradient },
   computed: {
     message: function () {
       return `${this.title} Coming Soon...`;

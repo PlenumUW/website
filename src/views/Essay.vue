@@ -69,6 +69,8 @@ export default {
         authors,
         image: metaImage
       };
+
+      return this.essay;
     }
   },
   meta() {

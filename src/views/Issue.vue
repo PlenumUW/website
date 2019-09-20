@@ -48,6 +48,8 @@ export default {
         description: this.PrismicProcessor.getRawText(issue.description),
         image: issue.cover_image.SocialMedia
       };
+
+      return this.issue;
     }
   },
   meta() {

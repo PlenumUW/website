@@ -101,6 +101,7 @@ export default {
       return sections;
     },
     metadata: function () {
+      // TODO: move into constructMetdata() method that gets called after API getter in BaseView, apply to all view
       return { title: this.title }
     }
   },

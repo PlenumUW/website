@@ -27,6 +27,8 @@ export default {
       };
 
       this.issues = await this.$api.fetchAllIssues();
+
+      return this.issues;
     }
   },
   meta() {

@@ -64,9 +64,9 @@ Styling:
         ✔ Move transition logic to seperate file @created(19-09-17 12:54) @started(19-09-17 12:54) @done(19-09-18 12:55) @lasted(1d1m)
         ✔ Tween header gradients with background, in all views @created(19-09-17 16:00) @done(19-09-18 12:55)
         ☐ Add loading background to application @created(19-09-18 19:01)
-        ☐ Opacity 0 all leaving gradients except for the first @created(19-09-18 21:13)
-        ☐ When transitioning gradient colors, transition out ALL gradients -> will fix color disjunct on transition @created(19-09-18 23:38)
-            ☐ Filter gradients by whether or not they are at the top of the viewport (stuck) -> hide all non-stuck gradients @created(19-09-18 23:39)
+        ✔ Opacity 0 all leaving gradients except for the first @created(19-09-18 21:13) @done(19-09-19 14:27)
+        ✔ When transitioning gradient colors, transition out ALL gradients -> will fix color disjunct on transition @created(19-09-18 23:38) @done(19-09-19 14:27)
+            ✔ Filter gradients by whether or not they are at the top of the viewport (stuck) -> hide all non-stuck gradients @created(19-09-18 23:39) @done(19-09-19 14:27)
 
 Efficiency:
     ☐ https://www.webpagetest.org @created(19-09-14 09:00)
@@ -84,6 +84,9 @@ Bugs:
     ☐ Class '.app--no-scroll', activated when menu is open in mobile, removes the scrollbar, which shifts the background text while the menu opens @created(19-09-14 21:18)
     ☐ Main content area should be visible if menu is forced open via mobile and then expanded to tablet/desktop @created(19-09-14 21:19)
     View Transition:
+        Firefox:
+            ☐ Home header gradient flashes in front of title @created(19-09-19 14:48)
+                - Try force setting the z-index before gradient transition
         - If scroll down while new page is loading off screen, after page loads and scroll positiong is mid-page
             the h1 (section titles) lie behind the gradients. They should be in front of their header gradients.
             1. Automatically scroll to top of page while view is transitioning in

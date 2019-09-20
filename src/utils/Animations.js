@@ -1,17 +1,21 @@
 import Velocity from "velocity-animate";
 
+/**
+ * Static class of frequent transitions.
+ */
 class Animations {
   constructor() {}
 
   /**
    *
-   * @param {HtmlDocument(s)} el Element(s) to be animated.
+   * @param {HtmlElement, HtmlCollection} el Element(s) to animate.
    * @param {Object} settings
-   * @param {Object} prevRgb
-   * @param {Object} nextRgb
-   *
+   * @param {Array} prevRgb RGB colors for the starting color.
+   * @param {Array} nextRgb RGB colors for the ending color.
+   * @param {Array} cssProps CSS color properties to tween.
+   * @return {Promise} Promise that resolves once the animation finishes.
    */
-  static tweenColor(el, { prevRgb, nextRgb, properties = [
+  static tweenColor(el, { prevRgb, nextRgb, cssProps = [
     "backgroundColor"
   ], complete = () => {} }) {
     const rgbTransition = [
@@ -19,7 +23,7 @@ class Animations {
       "Green",
       "Blue"
     ].reduce((transitions, channel, i) => {
-      properties.forEach((prop) => {
+      cssProps.forEach((prop) => {
         transitions[`${prop}${channel}`] = [
           nextRgb[i],
           prevRgb[i]
@@ -34,18 +38,26 @@ class Animations {
         duration: 500,
         easing: "linear",
         queue: false,
-        begin: undefined,
-        progress: undefined,
         complete: () => {
           complete();
           resolve();
         },
-        loop: false,
-        delay: false
+        loop: false
       });
     })
   }
 
+  /**
+   * Slides element(s) into the viewport from the left to right, ending at the element's
+   * position of (0,0). A slight rotation occurs to mimic tactile manipulation. Animation
+   * can be reversed.
+   * @param {HtmlElement, HtmlCollection} el Element(s) to animate.
+   * @param {Object} settings
+   * @param {String} xDistance X-axis distance to travel in CSS syntax.
+   * @param {Function} complete Callback function called after animation is complete.
+   * @param {Boolean} reverse Whether to run the animation from right to left.
+   * @return {Promise} Promise that resolves once the animation finishes.
+   */
   static slideIntoViewport(el, { xDistance, complete = () => {}, reverse = false }) {
     const dir = reverse ? "" : "-";
 
@@ -62,30 +74,38 @@ class Animations {
         duration: 650,
         easing: "swing",
         queue: false,
-        begin: undefined,
-        progress: undefined,
         complete: () => {
           complete();
           resolve();
-        },
-        loop: false,
-        delay: false
+        }
       });
     });
   }
 
+  /**
+   * Slides element(s) out of the viewport from the left to right, ending at the element's
+   * position of (0,0). A slight rotation occurs to mimic tactile manipulation. Animation
+   * can be reversed.
+   * @param {HtmlElement, HtmlCollection} el Element(s) to animate.
+   * @param {Object} settings
+   * @param {String} xDistance X-axis distance to travel in CSS syntax.
+   * @param {Function} complete Callback function called after animation is complete.
+   * @param {Boolean} reverse Whether to run the animation from right to left.
+   * @return {Promise} Promise that resolves once the animation finishes.
+   */
   static slideOutOfViewport(el, { xDistance, complete = () => {}, reverse = false }) {
     const dir = reverse ? "-" : "";
 
     return () => new Promise((resolve) => {
+      // Adjusting transform origin to a bottom corner of the element in order to ensure rotation
+      // doesn't reduce the x-distance at any point along the element to below the minimum that is
+      // the given xDistance.
       const transformOrigin = (reverse ? "100%" : "0") + " 100%";
-      if (el.length !== undefined) {
-        for (let element of el) {
-          element.style.transformOrigin = transformOrigin;
-        }
-      } else {
-        el.style.transformOrigin = transformOrigin;
+      if (el.length === undefined) el = (new Array(1)).push(el);
+      for (let element of el) {
+        element.style.transformOrigin = transformOrigin;
       }
+
       Velocity(el, {
         translateX: [
           dir + `${xDistance}`,
@@ -98,46 +118,59 @@ class Animations {
         duration: 900,
         easing: "swing",
         queue: false,
-        begin: undefined,
-        progress: undefined,
         complete: () => {
           complete();
           resolve();
-        },
-        loop: false,
-        delay: false
+        }
       })
     });
   }
 
+  /**
+   * Fades the given element(s) in or out, depending on the given direction.
+   * @param {HtmlElement, HtmlCollection} el Element(s) to animate.
+   * @param {Object} settings
+   * @param {Boolean} on Whether to fade in (on) or not.
+   * @param {Function} complete Callback function called after animation is complete.
+   * @return {Promise} Promise that resolves once the animation finishes.
+   */
   static _fade(el, on, complete = () => {}) {
     return () => new Promise((resolve) => {
       Velocity(el, { opacity: on ? [1, 0] : [0, 1] }, {
         duration: 500,
-        easing: "ease-out", // "swing",
+        easing: "ease-out",
         queue: "",
-        begin: undefined,
-        progress: undefined,
         complete: () => {
           complete();
           resolve();
-        },
-        loop: false,
-        delay: false
+        }
       });
     })
   }
 
+  /**
+   * Fades the given element(s) in, from transparent to opaque.
+   * @param {HtmlElement, HtmlCollection} el Element(s) to animate.
+   * @param {Object} settings
+   * @param {Function} complete Callback function called after animation is complete.
+   * @return {Promise} Promise that resolves once the animation finishes.
+   */
   static fadeIn(el, { complete } = {}) {
     return this._fade(el, true, complete);
   }
 
+  /**
+   * Fades the given element(s) out, from opaque to transparent.
+   * @param {HtmlElement, HtmlCollection} el Element(s) to animate.
+   * @param {Object} settings
+   * @param {Function} complete Callback function called after animation is complete.
+   * @return {Promise} Promise that resolves once the animation finishes.
+   */
   static fadeOut(el, { complete } = {}) {
     return this._fade(el, false, complete);
   }
 }
 
-// TODO: move each transition group to diff files?
 /**
  * Router view transitions.
  */

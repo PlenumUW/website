@@ -99,6 +99,9 @@ export default {
       }
 
       return sections;
+    },
+    metadata: function () {
+      return { title: this.title }
     }
   },
   methods: {
@@ -119,11 +122,6 @@ export default {
 
       return this.PrismicProcessor.getRawText(slice.primary.section_title);
     }
-  },
-  created: function () {
-    this.metadata = {
-      title: this.title
-    };
   },
   meta() {
     return this.MetadataManager.metaDefault(this.metadata, "website");

@@ -19,7 +19,7 @@ export default {
       metadata: undefined,
       MetadataManager,
       PrismicProcessor,
-      viewEntered: false,
+      viewEntered: false, // Whether or not the view as transitioned in
       rawData: undefined
     };
   },
@@ -53,9 +53,14 @@ export default {
       return true;
     },
     _handleViewReady() {
+      console.log('handle view ready')
       if (this.loadedCallback && this._rawDataIsValid && !this.viewEntered) {
-        this.loadedCallback();
-        this.viewEntered = true;
+        // EVERY VIEW SHOULD GET IN HERE WHEN RENDERED
+        this.loadedCallback().then(() => {
+          this.viewEntered = true;
+          document.dispatchEvent(new Event("page-rendered")); // TODO: might need to await loadedcallback
+          console.log("PAGE-RENDERED")
+        });
       }
     }
   },

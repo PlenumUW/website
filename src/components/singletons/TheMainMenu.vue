@@ -9,19 +9,19 @@
       @mouseleave="handleMainMenuHover"
     >
       <li
-        v-for="{ path, name, meta, componentName } in menuItems"
-        :key="`c-main-menu__item--${name}`"
+        v-for="menuItem in menuItems"
+        :key="`c-main-menu__item--${menuItem.name}`"
         class="c-main-menu__item"
-        :class="{'c-main-menu__item--disabled': isRouteDisabled(componentName)}"
-        :style="{ 'background-color': getMenuItemColor(meta.hue, isRouteDisabled(componentName))}"
+        :class="{'c-main-menu__item--disabled': isRouteDisabled(menuItem.componentName)}"
+        :style="{ 'background-color': getMenuItemColor(menuItem)}"
       >
         <router-link
-          :to="path"
+          :to="menuItem.path"
           class="c-main-menu__item-link"
           @click.native="handleMenuItemClick"
         >
           <div class="c-main-menu__item-content">
-            <div class="c-main-menu__item-content__name">{{ name }}</div>
+            <div class="c-main-menu__item-content__name">{{ menuItem.name }}</div>
           </div>
         </router-link>
       </li>
@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     isRouteDisabled(viewName) {
-      return viewName === 'ComingSoon';
+      return viewName === "ComingSoon" || viewName === "NotFound";
     },
     handleMenuItemClick() {
       this.resetMenu();
@@ -58,8 +58,8 @@ export default {
     handleMainMenuHover(e) {
       this.menuHovered = e.type === "mouseenter";
     },
-    getMenuItemColor(hue, desaturate = false) {
-      return colors.getMenuItemColor(hue, desaturate); // TODO: create parameter that returns a perceptually uniform grey value for disabled menu items
+    getMenuItemColor({ meta, componentName }) {
+      return colors.getMenuItemColor(meta.hue, this.isRouteDisabled(componentName));
     },
     resetMenu() {
       document.activeElement.blur(); // Link activation retains focus, which would keep menu open otherwise
@@ -169,7 +169,7 @@ $menu-width--mobile: calc(
 
     &--disabled {
       pointer-events: none;
-      cursor: not-allowed;
+      text-decoration: line-through;
     }
 
     &-link {

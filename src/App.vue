@@ -58,7 +58,7 @@
 import Velocity from "velocity-animate";
 import colors from "@/utils/colors";
 import { viewTransitions } from "@/utils/Animations";
-import { fitText } from "@/utils/fittext.js";
+// import { fitText } from "@/utils/fittext.js";
 
 // eslint-disable-next-line no-unused-vars
 import whatInput from "what-input";
@@ -92,10 +92,6 @@ export default {
     // TODO: Put currentRouteColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
     currentRouteColor: function () {
-      if (process.env.VUE_APP_BUILD_OPTION === "prerender") {
-        return this.prerenderColor;
-      }
-
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -151,7 +147,7 @@ export default {
     viewCancelledLeave: viewTransitions.cancelledLeave
   },
   created: async function () {
-    fitText();
+    // fitText();
 
     // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
     // this.$router.beforeEach((to, from, next) => {

@@ -200,11 +200,14 @@ const viewTransitions = {
     });
 
     const gradients = el.getElementsByClassName("c-header-gradient");
-    const tweenGradients = Animations.tweenColor(gradients, {
-      prevRgb,
-      nextRgb,
-      properties: ["backgroundColor", "color"]
-    });
+    let tweenGradients = () => {};
+    if (gradients && gradients.length > 0) {
+      tweenGradients = Animations.tweenColor(gradients, {
+        prevRgb,
+        nextRgb,
+        properties: ["backgroundColor", "color"]
+      });
+    }
 
     const siteHeader = document.getElementsByClassName("site-header");
     let tweenSiteHeader = () => {};
@@ -216,15 +219,37 @@ const viewTransitions = {
       })
     }
 
-    Promise.all([
+    const animations = () => Promise.all([
       tweenAppBg(),
       tweenGradients(),
       tweenSiteHeader()
-    ]).then(() => {
-      this.setActiveColorString(this.colors.serializeRgb(nextRgb));
-      done();
+    ]);
+
+    // TODO: Make dry with enter()
+    this.startEnter = () => new Promise((resolve) => {
+      console.log('appear started')
+
+      animations().then(() => {
+        console.log('appear animations finished');
+
+        this.setActiveColorString(this.colors.serializeRgb(nextRgb));
+        this.startEnter = undefined;
+        done();
+        resolve();
+      });
     });
+
+
+    // Promise.all([
+    //   tweenAppBg(),
+    //   tweenGradients(),
+    //   tweenSiteHeader()
+    // ]).then(() => {
+    //   this.setActiveColorString(this.colors.serializeRgb(nextRgb));
+    //   done();
+    // });
   },
+
   afterAppear: function (el) {},
   cancelledAppear: function (el) {},
 
@@ -310,7 +335,7 @@ const viewTransitions = {
       slidePaperIntoViewport()
     ]);
 
-    this.startEnter = () => {
+    this.startEnter = () => new Promise((resolve) => {
       console.log('enter started')
       el.style.opacity = 1; // Previously hidden in beforeEnter, TODO: make dry with appear // RESET EL METHOD
 
@@ -321,8 +346,9 @@ const viewTransitions = {
         this.setActiveColorString(this.colors.serializeRgb(this.currentRouteColor));
         this.startEnter = undefined;
         done();
+        resolve();
       });
-    };
+    });
   },
 
   /**

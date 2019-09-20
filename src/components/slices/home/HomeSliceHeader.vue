@@ -1,7 +1,7 @@
 <template>
   <header class="c-home-slice-header">
     <header-gradient :color="color"></header-gradient>
-    <h1 ref="fit-text" class="c-home-slice-header__title">
+    <h1 ref="fit-text" class="c-home-slice-header__title fit-text">
       <slot></slot>
     </h1>
   </header>
@@ -20,7 +20,7 @@ export default {
     }
   },
   mounted: function () {
-    window.fitText(this.$refs["fit-text"], 0.9);
+    // window.fitText(this.$refs["fit-text"], 0.9);
   }
 };
 </script>

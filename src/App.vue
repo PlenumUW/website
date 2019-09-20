@@ -3,12 +3,11 @@
     id="app"
     ref="app"
     class="app"
-    :style="{ 'background-color': bgColor }"
     :class="{ 'app--no-scroll': hideMainContent }"
   >
     <div class="app__horizontal-wrapper">
       <the-site-header
-        :color="bgColor"
+        :color="activeColorString"
         :hamburgerOpen.sync="menuOpen"
         @logoClick="handleLogoClick"
       ></the-site-header>
@@ -17,11 +16,31 @@
         <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
 
         <main class="main" :class="{ 'main--hidden': hideMainContent }">
-          <transition name="view" @leave="backgroundTransitionLeave">
+          <transition
+            :css="false"
+
+            @before-appear="viewBeforeAppear"
+            @appear="viewAppear"
+            @after-appear="viewAfterAppear"
+            @appear-cancelled="viewCancelledAppear"
+
+            @before-enter="viewBeforeEnter"
+            @enter="viewEnter"
+            @after-enter="viewAfterEnter"
+            @enter-cancelled="viewCancelledEnter"
+
+            @before-leave="viewBeforeLeave"
+            @leave="viewLeave"
+            @after-leave="viewAfterLeave"
+            @leave-cancelled="viewCancelledLeave"
+          >
             <router-view
               :key="viewKey"
+              :id="viewKey"
               class="router-view"
-              :color="bgColor"
+
+              :color="activeColorString"
+              :loadedCallback="startEnter"
             ></router-view>
           </transition>
         </main>
@@ -29,15 +48,16 @@
     </div>
 
     <site-footer
-      :color="bgColor"
+      :color="activeColorString"
       :class="{ 'site-footer--hidden': hideMainContent }"
     ></site-footer>
   </div>
 </template>
 
 <script>
-import sweep from "@/utils/sweep";
+import Velocity from "velocity-animate";
 import colors from "@/utils/colors";
+import { viewTransitions } from "@/utils/Animations";
 import { fitText } from "@/utils/fittext.js";
 
 // eslint-disable-next-line no-unused-vars
@@ -54,8 +74,14 @@ export default {
   data: function () {
     return {
       metadata: undefined,
-      prevBgColor: undefined,
-      menuOpen: false // TODO: Find better name, or clarify difference between expanded and open
+      prevRouteColor: _.fill(new Array(3), 255),
+      activeColorString: "rgb(255, 255, 255)",
+      menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
+      startEnter: undefined,
+      prerenderColor: _.fill(new Array(3), 255), // The 'route' color for a prerendered site
+      viewTransitions,
+      colors,
+      css
     };
   },
   computed: {
@@ -63,9 +89,13 @@ export default {
     /**
      * The background color of the application.
      */
-    // TODO: Put bgColor in global store
+    // TODO: Put currentRouteColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
-    bgColor: function () {
+    currentRouteColor: function () {
+      if (process.env.VUE_APP_BUILD_OPTION === "prerender") {
+        return this.prerenderColor;
+      }
+
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -73,13 +103,14 @@ export default {
 
       const color =
         hue !== undefined
-          ? colors.getBackgroundColor(hue)
+          ? this.colors.getBackgroundColor(hue)
           : "rgb(255, 255, 255)";
 
-      return color;
+      const colorValues = this.colors.getRgbValuesFromString(color);
+
+      return colorValues;
     },
     viewKey: function () {
-      console.log(this.$route.name);
       return this.$route.name;
     },
     hideMainContent: function () {
@@ -87,8 +118,8 @@ export default {
     }
   },
   watch: {
-    bgColor: function (newVal, oldVal) {
-      this.prevBgColor = oldVal;
+    currentRouteColor: function (newVal, oldVal) {
+      this.prevRouteColor = oldVal;
     }
   },
   methods: {
@@ -103,52 +134,34 @@ export default {
       if (typeof val !== "boolean") throw new Error("Incorrect value type.");
       this.menuOpen = val;
     },
-
-    /**
-     * Tweens the application's background color through perceptually uniform color space.
-     * @param {Element} el Transitioning element.
-     * @param {Function} done Callback to declare that a transition has finished.
-     * @param {String} duration Transition duration in milliseconds
-     */
-    backgroundTransitionLeave(
-      el,
-      done,
-      duration = parseInt(css.routerTransitionDuration)
-    ) {
-      const defaultColor = "rgb(255, 255, 255)";
-
-      const prevColor = this.prevBgColor || defaultColor;
-      const nextColor = this.bgColor || defaultColor;
-
-      // TODO: determine direction of sweep w/
-      // direction = [absolute value of (fromHue - toHue)] > 180 ? counter-clockwise(-1) : clockwise(1)
-      // This will prevent strange flashes during transitions
-      sweep(this.$refs.app, "backgroundColor", prevColor, nextColor, {
-        duration,
-        // TODO: fork sweep.js to build an lchab sweep, hsluv & hsl flash bright yellow b/w orange and green
-        space: "RGB",
-        callback: () => done()
-      });
-    }
+    setActiveColorString(colorString) {
+      this.activeColorString = colorString;
+    },
+    viewBeforeAppear: viewTransitions.beforeAppear,
+    viewAppear: viewTransitions.appear,
+    viewAfterAppear: viewTransitions.afterAppear,
+    viewCancelledAppear: viewTransitions.cancelledAppear,
+    viewBeforeEnter: viewTransitions.beforeEnter,
+    viewEnter: viewTransitions.enter,
+    viewAfterEnter: viewTransitions.afterEnter,
+    viewCancelledEnter: viewTransitions.cancelledEnter,
+    viewBeforeLeave: viewTransitions.beforeLeave,
+    viewLeave: viewTransitions.leave,
+    viewAfterLeave: viewTransitions.afterLeave,
+    viewCancelledLeave: viewTransitions.cancelledLeave
   },
   created: async function () {
     fitText();
 
     // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
-    this.$router.beforeEach((to, from, next) => {
-      const resetScrollPosition = (el) => {
-        if (el) el.scrollTop = 0;
-      };
+    // this.$router.beforeEach((to, from, next) => {
+    //   const resetScrollPosition = (el) => {
+    //     if (el) el.scrollTop = 0;
+    //   };
 
-      resetScrollPosition(this.$refs.app);
-      next();
-    });
-  },
-  mounted: function () {
-    if (this.$route.name === "home") {
-      // Transition is naturally called if first visit is on non-home route
-      this.backgroundTransitionLeave({}, () => {}, 300);
-    }
+    //   resetScrollPosition(this.$refs.app);
+    //   next();
+    // });
   }
 };
 </script>
@@ -241,11 +254,9 @@ export default {
   @include hidden();
 }
 
-.view-leave,
-.view-leave-active,
-.view-leave-to {
-  position: absolute;
-  left: 0;
+.router-view {
   top: 0;
+  left: 0;
+  width: 100%;
 }
 </style>

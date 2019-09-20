@@ -31,22 +31,26 @@ export default {
       return this.issue.cover_image;
     }
   },
-  created: async function () {
-    const issue = await this.$api.fetchIssueBySlug(
-      this.$route.params.issueSlug
-    );
+  methods: {
+    async fetchData() {
+      const issue = await this.$api.fetchIssueBySlug(
+        this.$route.params.issueSlug
+      );
 
-    if (!this.docExists(issue)) {
-      return;
+      if (!this.docExists(issue)) {
+        return;
+      }
+
+      this.issue = issue;
+
+      this.metadata = {
+        title: this.title,
+        description: this.PrismicProcessor.getRawText(issue.description),
+        image: issue.cover_image.SocialMedia
+      };
+
+      return this.issue;
     }
-
-    this.issue = issue;
-
-    this.metadata = {
-      title: this.title,
-      description: this.PrismicProcessor.getRawText(issue.description),
-      image: issue.cover_image.SocialMedia
-    };
   },
   meta() {
     return this.MetadataManager.metaDefault(this.metadata, "book");

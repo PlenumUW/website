@@ -73,5 +73,5 @@ API.init().then(() => {
         titleTemplate: false
       });
     }
-  }).$mount("#app");
+  }).$mount("#app", true);
 });

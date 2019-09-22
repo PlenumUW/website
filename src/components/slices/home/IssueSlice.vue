@@ -1,10 +1,5 @@
 <template>
-  <home-slice
-
-    class="c-issue-slice"
-    :hideBackground="true"
-    :color="bgColor"
-  >
+  <home-slice class="c-issue-slice" :hideBackground="true" :color="bgColor">
     <template #title>
       <router-link v-if="!loading" :to="issueSlug">{{ title | prismicRawText }}</router-link>
     </template>
@@ -15,11 +10,7 @@
       </paper>
 
       <paper v-if="!loading" class="c-issue-slice__toc" :color="bgColor" :shadow="12">
-        <table-of-contents
-          :contents="essays"
-          :contentPath="essayPath"
-          :downloadUrl="issueDownloadLink"
-        ></table-of-contents>
+        <table-of-contents :contents="essays" :contentPath="essayPath" :downloadUrl="issueDownloadLink"></table-of-contents>
       </paper>
     </template>
   </home-slice>

@@ -1,5 +1,5 @@
 <template>
-  <div class="c-page">
+  <div v-if="!loading" class="c-page">
     <section v-for="([titleSlice, ...slices], index) in sections" :key="`${index}`" class="c-page__section">
       <header class="c-page__section__header">
         <header-gradient class="c-page__section__gradient" :color="color"></header-gradient>
@@ -15,7 +15,7 @@
           <div>
             <rich-text v-for="({ primary, slice_type }, sliceIndex) in slices" :key="`section-${index}_slice-${sliceIndex}`" :body="primary[slice_type]"></rich-text>
           </div>
-          <div v-if="loading" class="c-page__section__paper__placeholder" aria-hidden="true"></div>
+          <!-- <div v-if="loading" class="c-page__section__paper__placeholder" aria-hidden="true"></div> -->
         </paper>
       </div>
     </section>

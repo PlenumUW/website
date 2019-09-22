@@ -39,6 +39,7 @@ export default new Vuex.Store({
   actions: {
     initPreloadedData: ({ state, commit, dispatch }, data) => {
       if (data) {
+        console.log("PRELOADING DATA", data);
         dispatch("addRouteData", data);
       }
     },

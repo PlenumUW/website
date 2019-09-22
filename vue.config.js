@@ -6,7 +6,10 @@ const _ = require("lodash");
 const cheerio = require("cheerio");
 
 const { routes } = require("./src/router/routes");
-let [staticRoutes, dynamicRoutes] = _.partition(routes, route => !route.path.includes(":"));
+let [staticRoutes, dynamicRoutes] = _.partition(
+  routes,
+  route => !route.path.includes(":")
+);
 staticRoutes = staticRoutes.filter(route => route.path !== "*");
 const staticRoutePaths = staticRoutes.map(route => route.path);
 
@@ -68,12 +71,23 @@ module.exports = {
             postProcess(renderedRoute) {
               const $ = cheerio.load(renderedRoute.html);
 
-              $("#app, .c-header-gradient").css("background-color", "rgb(249,249,249)"); // TODO: use colors file to get desaturated colors
+              $("#app, .c-header-gradient").css(
+                "background-color",
+                "rgb(249,249,249)"
+              ); // TODO: use colors file to get desaturated colors
               $(".c-header-gradient").css("color", "rgb(249,249,249)"); // TODO: use colors file to get desaturated colors
-              $(".c-main-menu__item").css("background-color", "rgb(226,226,226)");
+              $(".c-main-menu__item").css(
+                "background-color",
+                "rgb(226,226,226)"
+              );
               $(".paper").css("background-color", "rgb(252,252,252)");
 
               renderedRoute.html = $.html();
+
+              renderedRoute.html = renderedRoute.html.replace(
+                'id="app"',
+                'id="app" data-server-rendered="true"'
+              );
               return renderedRoute;
             }
           })

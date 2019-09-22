@@ -3,11 +3,7 @@
     <paper :color="color">
       <header>
         <h1>{{ combinedTitle }}</h1>
-        <div
-          v-for="(author, index) in authors"
-          :key="`author-${index}`"
-          class="author"
-        >
+        <div v-for="(author, index) in authors" :key="`author-${index}`" class="author">
           {{ author }}
         </div>
       </header>
@@ -26,7 +22,9 @@ export default {
       title: undefined,
       subtitle: undefined,
       authors: undefined,
-      image: undefined
+      image: undefined,
+      description: undefined,
+      metaImage: undefined
     };
   },
   computed: {
@@ -39,17 +37,18 @@ export default {
     }
   },
   methods: {
-    async fetchData() {
-      const essaySlug = this.$route.params.essaySlug;
-      const issueSlug = this.$route.params.issueSlug;
-      const essay = await this.$api.fetchEssayBySlugs(issueSlug, essaySlug);
+    buildMetadata() {
+      if (!this.rawData) return {};
 
-      if (!this.docExists(essay)) {
-        return;
-      }
-
-      this.essay = essay;
-
+      this.metadata = {
+        title: this.combinedTitle,
+        description: this.description,
+        authors: this.authors,
+        image: this.metaImage
+      };
+    },
+    initData(rawData) {
+      const essay = rawData;
       const rawTextOf = this.PrismicProcessor.getRawText;
 
       const title = rawTextOf(essay.title);
@@ -58,19 +57,13 @@ export default {
       const description = rawTextOf(essay.description);
       const { metaImage, ...heroImage } = essay.hero_image;
 
+      // TODO: move this elsewhere, most likely in fetch data
       this.title = title;
       this.subtitle = subtitle;
       this.authors = authors;
       this.image = heroImage;
-
-      this.metadata = {
-        title: this.combinedTitle,
-        description: description,
-        authors,
-        image: metaImage
-      };
-
-      return this.essay;
+      this.description = description;
+      this.metaImage = metaImage;
     }
   },
   meta() {

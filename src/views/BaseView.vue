@@ -23,11 +23,6 @@ export default {
       rawData: undefined
     };
   },
-  computed: {
-    _rawDataIsValid: function () {
-      return this.rawData !== undefined;
-    }
-  },
   watch: {
     loadedCallback: function (newCallback) {
       if (newCallback) {
@@ -35,17 +30,21 @@ export default {
       }
     },
     rawData: function () {
-      if (this._rawDataIsValid) {
+      if (this._isDataValid(this.rawData)) {
         this._handleViewReady();
       }
     }
   },
   methods: {
+    _isDataValid(data) {
+      return !_.isUndefined(data);
+    },
     _handleDocNotFound(path) {
       this.$router.presets.docNotFound(path);
     },
-    docExists(doc) {
-      if (!doc) {
+    _docExists(doc) {
+      if (!this._isDataValid(doc)) {
+        // Non API views will return null, not undefined
         this._handleDocNotFound(this.$route.path);
         return false;
       }
@@ -53,19 +52,39 @@ export default {
       return true;
     },
     _handleViewReady() {
-      console.log('handle view ready')
-      if (this.loadedCallback && this._rawDataIsValid && !this.viewEntered) {
-        // EVERY VIEW SHOULD GET IN HERE WHEN RENDERED
+      if (
+        this.loadedCallback &&
+        this._isDataValid(this.rawData) &&
+        !this.viewEntered
+      ) {
+        this.viewEntered = true;
+
+        // EVERY VIEW SHOULD GET IN HERE WHEN READY TO RENDER
         this.loadedCallback().then(() => {
-          this.viewEntered = true;
           document.dispatchEvent(new Event("page-rendered")); // TODO: might need to await loadedcallback
-          console.log("PAGE-RENDERED")
+          console.log("PAGE-RENDERED");
         });
       }
     }
   },
+  // 1. Check if store has data
+  // 2. If store does not have data, fetch data and put in store
+  // 3. Use data to build metadata
   created: async function () {
-    this.rawData = this.fetchData ? await this.fetchData() : null;
+    let routeData = this.$store.getters.currentRouteData;
+
+    console.log(routeData);
+
+    if (!this._isDataValid(routeData)) {
+      await this.$store.dispatch("fetchRouteData", this.rawData);
+      routeData = this.$store.getters.currentRouteData;
+    }
+
+    if (!this._docExists(routeData)) return;
+
+    this.rawData = routeData;
+
+    if (this.buildMetadata) this.buildMetadata();
   },
   updated: function () {
     this._handleViewReady();

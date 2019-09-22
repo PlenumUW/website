@@ -1,15 +1,8 @@
 <template>
   <div class="c-page">
-    <section
-      v-for="([titleSlice, ...slices], index) in sections"
-      :key="`${index}`"
-      class="c-page__section"
-    >
+    <section v-for="([titleSlice, ...slices], index) in sections" :key="`${index}`" class="c-page__section">
       <header class="c-page__section__header">
-        <header-gradient
-          class="c-page__section__gradient"
-          :color="color"
-        ></header-gradient>
+        <header-gradient class="c-page__section__gradient" :color="color"></header-gradient>
       </header>
 
       <!-- This design is highly coupled, so much so that can always use h1 instead of rich-text -->
@@ -20,11 +13,7 @@
       <div class="c-page__section__content">
         <paper class="c-page__section__paper" :color="color">
           <div>
-            <rich-text
-            v-for="({ primary, slice_type }, sliceIndex) in slices"
-            :key="`section-${index}_slice-${sliceIndex}`"
-            :body="primary[slice_type]"
-            ></rich-text>
+            <rich-text v-for="({ primary, slice_type }, sliceIndex) in slices" :key="`section-${index}_slice-${sliceIndex}`" :body="primary[slice_type]"></rich-text>
           </div>
           <div v-if="loading" class="c-page__section__paper__placeholder" aria-hidden="true"></div>
         </paper>
@@ -57,7 +46,7 @@ export default {
     title: function () {
       if (this.loading) return "";
 
-      return this.PrismicProcessor.getRawText(this.rawData["page_title"])
+      return this.PrismicProcessor.getRawText(this.rawData["page_title"]);
     },
     slices: function () {
       if (this.loading) return [];
@@ -99,24 +88,11 @@ export default {
       }
 
       return sections;
-    },
-    metadata: function () {
-      // TODO: move into constructMetdata() method that gets called after API getter in BaseView, apply to all view
-      return { title: this.title }
     }
   },
   methods: {
-    async fetchData() {
-      const slugs = this.$route.path.split("/").filter(el => el.length > 0);
-      const parentSlug = slugs[0];
-
-      const page = await this.$api.fetchPageBySlug(parentSlug);
-
-      if (!this.docExists(page)) {
-        return;
-      }
-
-      return page;
+    buildMetadata() {
+      return { title: this.title };
     },
     getSectionTitle(slice) {
       if (_.isEmpty(slice)) return "";
@@ -204,7 +180,9 @@ export default {
 
       @include for-size(tablet-landscape-up) {
         width: calc(100% - 100px);
-        min-width: calc(#{$g-viewport-tablet} - #{$g-lefter-width} - (17px * 2)); // 17px width of scrollbar
+        min-width: calc(
+          #{$g-viewport-tablet} - #{$g-lefter-width} - (17px * 2)
+        ); // 17px width of scrollbar
         margin-bottom: 75px;
 
         margin-left: auto;

@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router/router";
 import store from "./store";
+import { sync } from "vuex-router-sync";
 
 import VueMeta from "vue-meta";
 
@@ -10,6 +11,8 @@ import MetadataManager from "@/utils/MetadataManager";
 import PrismicProcessor from "@/utils/PrismicProcessor";
 
 import Paper from "@/components/Paper";
+
+const unsync = sync(store, router);
 
 Vue.config.productionTip = false;
 
@@ -26,6 +29,7 @@ Vue.filter("prismicRawText", function (arr) {
 
 API.init().then(() => {
   Vue.prototype.$api = API;
+  store.dispatch("setApi", API);
 
   new Vue({
     router,

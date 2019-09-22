@@ -31,28 +31,12 @@ export default {
       return this.issue.cover_image;
     }
   },
-  methods: {
-    async fetchData() {
-      const issue = await this.$api.fetchIssueBySlug(
-        this.$route.params.issueSlug
-      );
-
-      if (!this.docExists(issue)) {
-        return;
-      }
-
-      this.issue = issue;
-
-      this.metadata = {
-        title: this.title,
-        description: this.PrismicProcessor.getRawText(issue.description),
-        image: issue.cover_image.SocialMedia
-      };
-
-      return this.issue;
-    }
-  },
   meta() {
+    // this.metadata = {
+    //     title: this.title,
+    //     description: this.PrismicProcessor.getRawText(issue.description),
+    //     image: issue.cover_image.SocialMedia
+    //   };
     return this.MetadataManager.metaDefault(this.metadata, "book");
   }
 };

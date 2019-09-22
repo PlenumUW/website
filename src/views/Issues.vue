@@ -1,10 +1,6 @@
 <template>
   <div>
-    <paper
-      v-for="(issue, index) in issues"
-      :key="`issue-${index}`"
-      :color="color"
-    >
+    <paper v-for="(issue, index) in issues" :key="`issue-${index}`" :color="color">
       {{ issue.data.title[0].text }}
     </paper>
   </div>
@@ -20,18 +16,8 @@ export default {
       issues: []
     };
   },
-  methods: {
-    async fetchData() {
-      this.metadata = {
-        title: "Issue Catalogue"
-      };
-
-      this.issues = await this.$api.fetchAllIssues();
-
-      return this.issues;
-    }
-  },
   meta() {
+    // title: "Issue Catalogue"
     return this.MetadataManager.metaDefault(this.metadata, "website");
   }
 };

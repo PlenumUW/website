@@ -112,6 +112,15 @@ const routes = [
       hue: undefined,
       menuItem: false
     }
+  },
+  {
+    path: "*",
+    name: "* not found",
+    componentName: "NotFound",
+    meta: {
+      hue: undefined,
+      menuItem: false
+    }
   }
 ];
 

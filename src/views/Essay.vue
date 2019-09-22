@@ -1,7 +1,7 @@
 <template>
   <article>
     <paper :color="color">
-      <header>
+      <header v-if="essay">
         <h1>{{ combinedTitle }}</h1>
         <div v-for="(author, index) in authors" :key="`author-${index}`" class="author">
           {{ author }}
@@ -16,17 +16,6 @@ import BaseView from "./BaseView";
 export default {
   name: "Essay",
   extends: BaseView,
-  data: function () {
-    return {
-      essay: undefined,
-      title: undefined,
-      subtitle: undefined,
-      authors: undefined,
-      image: undefined,
-      description: undefined,
-      metaImage: undefined
-    };
-  },
   computed: {
     combinedTitle: function () {
       if (!this.title || !this.subtitle) return "";
@@ -34,36 +23,41 @@ export default {
       let title = this.title;
       if (this.subtitle) title += ": " + this.subtitle;
       return title;
+    },
+    title: function () {
+      return this.PrismicProcessor.getRawText(this.essay.title);
+    },
+    subtitle: function () {
+      return this.PrismicProcessor.getRawText(this.essay.subtitle);
+    },
+    authors: function () {
+      return this.essay.authors.map(({ author }) =>
+        this.PrismicProcessor.getRawText(author)
+      );
+    },
+    image: function () {
+      const { metaImage, ...heroImage } = this.essay.hero_image;
+      return heroImage;
+    },
+    description: function () {
+      return this.PrismicProcessor.getRawText(this.essay.description);
+    },
+    metaImage: function () {
+      const { metaImage, ...heroImage } = this.essay.hero_image;
+      return metaImage;
+    },
+    essay: function () {
+      return this.rawData;
     }
   },
   methods: {
     buildMetadata() {
-      if (!this.rawData) return {};
-
-      this.metadata = {
+      return {
         title: this.combinedTitle,
         description: this.description,
         authors: this.authors,
         image: this.metaImage
       };
-    },
-    initData(rawData) {
-      const essay = rawData;
-      const rawTextOf = this.PrismicProcessor.getRawText;
-
-      const title = rawTextOf(essay.title);
-      const subtitle = rawTextOf(essay.subtitle);
-      const authors = essay.authors.map(({ author }) => rawTextOf(author));
-      const description = rawTextOf(essay.description);
-      const { metaImage, ...heroImage } = essay.hero_image;
-
-      // TODO: move this elsewhere, most likely in fetch data
-      this.title = title;
-      this.subtitle = subtitle;
-      this.authors = authors;
-      this.image = heroImage;
-      this.description = description;
-      this.metaImage = metaImage;
     }
   },
   meta() {

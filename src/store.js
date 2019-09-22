@@ -88,7 +88,7 @@ export default new Vuex.Store({
     },
     fetchEssay: async ({ state, commit }) => {
       const { issueSlug, essaySlug } = state.route.params;
-      const essay = await state.api.fetchEssayBySlugs(issueSlug, essaySlug);
+      let essay = await state.api.fetchEssayBySlugs(issueSlug, essaySlug);
 
       return essay;
     },

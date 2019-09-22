@@ -73,8 +73,6 @@ export default {
   created: async function () {
     let routeData = this.$store.getters.currentRouteData;
 
-    console.log(routeData);
-
     if (!this._isDataValid(routeData)) {
       await this.$store.dispatch("fetchRouteData", this.rawData);
       routeData = this.$store.getters.currentRouteData;
@@ -84,7 +82,7 @@ export default {
 
     this.rawData = routeData;
 
-    if (this.buildMetadata) this.buildMetadata();
+    if (this.buildMetadata) this.metadata = this.buildMetadata();
   },
   updated: function () {
     this._handleViewReady();

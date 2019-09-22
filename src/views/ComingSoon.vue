@@ -2,10 +2,7 @@
   <div class="c-coming-soon">
     <section class="c-coming-soon__section">
       <header class="c-coming-soon__section__header">
-        <header-gradient
-          class="c-coming-soon__section__gradient"
-          :color="color"
-        ></header-gradient>
+        <header-gradient class="c-coming-soon__section__gradient" :color="color"></header-gradient>
       </header>
 
       <h1 class="c-coming-soon__section__title">
@@ -21,7 +18,6 @@
       </div>
     </section>
 
-
   </div>
 </template>
 
@@ -31,31 +27,33 @@ import BaseView from "@/views/BaseView";
 
 import HeaderGradient from "@/components/HeaderGradient";
 
-
 export default {
   name: "ComingSoon",
   extends: BaseView,
   components: { HeaderGradient },
   computed: {
-    message: function () {
+    message: function() {
       return `${this.title} Coming Soon...`;
     },
-    title: function () {
-      return _.capitalize(this.$route.name)
+    title: function() {
+      return _.capitalize(this.$route.name);
     }
   },
-  created: function () {
+  created: function() {
     this.metadata = {
       title: this.title
-    }
+    };
   },
   meta() {
     // TODO: make DRY with NotFound
-    let meta = this.MetadataManager.metaDefault(this.metadata);
+    let meta = this.MetadataManager.metaDefault(
+      this.metadata,
+      this.scriptMetadata
+    );
     meta = this.MetadataManager.addNoIndexing(meta);
     return meta;
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -159,7 +157,7 @@ export default {
       padding-bottom: 30px; // Helps hide the box-shadow when the paper scrolls under the gradient header // TODO: figure out how to bind this with paper box-shadows
       z-index: 1; //TODO: use scss function
 
-       @include font-size(1.1em);
+      @include font-size(1.1em);
 
       @include for-size(tablet-portrait-up) {
         @include font-size(1.4em);

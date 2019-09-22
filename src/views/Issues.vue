@@ -11,14 +11,18 @@ import BaseView from "./BaseView";
 export default {
   name: "Issues",
   extends: BaseView,
-  data: function () {
+  data: function() {
     return {
       issues: []
     };
   },
   meta() {
     // title: "Issue Catalogue"
-    return this.MetadataManager.metaDefault(this.metadata, "website");
+    return this.MetadataManager.metaDefault(
+      this.metadata,
+      this.scriptMetadata,
+      "website"
+    );
   }
 };
 </script>

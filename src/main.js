@@ -31,6 +31,16 @@ API.init().then(() => {
   Vue.prototype.$api = API;
   store.dispatch("setApi", API);
 
+  // Load route's page data
+  const preloadedJsonScriptEl = document.getElementById("preloaded-store-json");
+  let preloadedJsonString;
+  if (preloadedJsonScriptEl) {
+    preloadedJsonString = preloadedJsonScriptEl.innerHTML;
+  }
+  if (preloadedJsonString) {
+    store.dispatch("initPreloadedData", JSON.parse(preloadedJsonString));
+  }
+
   new Vue({
     router,
     store,
@@ -59,7 +69,7 @@ API.init().then(() => {
       console.log("render event");
     },
     meta() {
-      return MetadataManager.metaDefault(this.metadata, "website", {
+      return MetadataManager.metaDefault(this.metadata, {}, "website", {
         titleTemplate: false
       });
     }

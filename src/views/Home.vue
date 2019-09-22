@@ -14,6 +14,13 @@ import AtlasSlice from "@/components/slices/home/AtlasSlice";
 export default {
   name: "Home",
   extends: BaseView,
-  components: { IssueSlice, AtlasSlice }
+  components: { IssueSlice, AtlasSlice },
+  meta() {
+    return this.MetadataManager.metaDefault(
+      this.metadata,
+      this.scriptMetadata,
+      "website"
+    );
+  }
 };
 </script>

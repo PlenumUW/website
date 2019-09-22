@@ -32,12 +32,11 @@ export default {
     }
   },
   meta() {
-    // this.metadata = {
-    //     title: this.title,
-    //     description: this.PrismicProcessor.getRawText(issue.description),
-    //     image: issue.cover_image.SocialMedia
-    //   };
-    return this.MetadataManager.metaDefault(this.metadata, "book");
+    return this.MetadataManager.metaDefault(
+      this.metadata,
+      this.scriptMetadata,
+      "book"
+    );
   }
 };
 </script>

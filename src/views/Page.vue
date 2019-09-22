@@ -101,7 +101,11 @@ export default {
     }
   },
   meta() {
-    return this.MetadataManager.metaDefault(this.metadata, "website");
+    return this.MetadataManager.metaDefault(
+      this.metadata,
+      this.scriptMetadata,
+      "website"
+    );
   }
 };
 </script>

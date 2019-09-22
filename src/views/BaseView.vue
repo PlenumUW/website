@@ -14,9 +14,10 @@ export default {
       required: false
     }
   },
-  data: function () {
+  data: function() {
     return {
-      metadata: undefined,
+      metadata: undefined, // Route specific metadata to be injected in meta tags in the head tag
+      scriptMetadata: undefined, // Route specific data to be embedded in prerendered HTML
       MetadataManager,
       PrismicProcessor,
       viewEntered: false, // Whether or not the view as transitioned in
@@ -24,12 +25,12 @@ export default {
     };
   },
   watch: {
-    loadedCallback: function (newCallback) {
+    loadedCallback: function(newCallback) {
       if (newCallback) {
         this._handleViewReady();
       }
     },
-    rawData: function () {
+    rawData: function() {
       if (this._isDataValid(this.rawData)) {
         this._handleViewReady();
       }
@@ -70,7 +71,7 @@ export default {
   // 1. Check if store has data
   // 2. If store does not have data, fetch data and put in store
   // 3. Use data to build metadata
-  created: async function () {
+  created: async function() {
     let routeData = this.$store.getters.currentRouteData;
 
     if (!this._isDataValid(routeData)) {
@@ -82,9 +83,16 @@ export default {
 
     this.rawData = routeData;
 
-    if (this.buildMetadata) this.metadata = this.buildMetadata();
+    this.scriptMetadata = {
+      type: "application/json",
+      json: this.rawData,
+      id: "preloaded-store-json",
+      vmid: "preloaded-store-json"
+    };
+
+    this.metadata = this.buildMetadata ? this.buildMetadata() : {};
   },
-  updated: function () {
+  updated: function() {
     this._handleViewReady();
   }
 };

@@ -67,11 +67,13 @@ class MetadataManager {
       authors = typeof authors === "string" ? [authors] : authors;
 
       metadata.push(
-        ...authors.map((author, index) => this._getOpenGraphMetaTag(
-          "author",
-          author,
-          "author" + (index === 0 ? "" : index)
-        ))
+        ...authors.map((author, index) =>
+          this._getOpenGraphMetaTag(
+            "author",
+            author,
+            "author" + (index === 0 ? "" : index)
+          )
+        )
       );
     }
 
@@ -109,7 +111,12 @@ class MetadataManager {
     return metadata;
   }
 
-  static metaDefault(metadata, type = "website", overrides = {}) {
+  static metaDefault(
+    metadata,
+    scriptMetadata,
+    type = "website",
+    overrides = {}
+  ) {
     if (!metadata) return {};
 
     const titleVar = "%s";
@@ -127,6 +134,8 @@ class MetadataManager {
       authors
     };
 
+    console.log(scriptMetadata);
+
     return {
       title: overrides.title || title,
       titleTemplate:
@@ -137,7 +146,8 @@ class MetadataManager {
         meta || [],
         this.getPrimaryMetadata(data),
         this.getOpenGraphMetadata(data)
-      )
+      ),
+      script: [scriptMetadata]
     };
   }
 }

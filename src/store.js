@@ -37,6 +37,11 @@ export default new Vuex.Store({
     SET_API: (state, payload) => (state.api = payload)
   },
   actions: {
+    initPreloadedData: ({ state, commit, dispatch }, data) => {
+      if (data) {
+        dispatch("addRouteData", data);
+      }
+    },
     setApi: ({ state, commit }, api) => {
       commit("SET_API", api);
     },

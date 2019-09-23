@@ -73,9 +73,10 @@ export default {
   // 3. Use data to build metadata
   created: async function () {
     let routeData = this.$store.getters.currentRouteData;
+    console.log("CURRENT ROUTE DATA: ", routeData, this.$store.state);
 
     if (!this._isDataValid(routeData)) {
-      await this.$store.dispatch("fetchRouteData", this.rawData);
+      // await this.$store.dispatch("fetchRouteData");
       routeData = this.$store.getters.currentRouteData;
     }
 

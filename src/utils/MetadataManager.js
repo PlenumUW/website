@@ -134,8 +134,6 @@ class MetadataManager {
       authors
     };
 
-    console.log(scriptMetadata);
-
     return {
       title: overrides.title || title,
       titleTemplate:

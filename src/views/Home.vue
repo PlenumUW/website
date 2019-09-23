@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <issue-slice class="home-slice slice" :bgColor="color" :issue="rawData"></issue-slice>
+    <issue-slice class="home-slice slice" :bgColor="color" :issue="currentIssue"></issue-slice>
     <atlas-slice class="home-slice slice" :bgColor="color"></atlas-slice>
   </div>
 </template>
@@ -15,6 +15,11 @@ export default {
   name: "Home",
   extends: BaseView,
   components: { IssueSlice, AtlasSlice },
+  computed: {
+    currentIssue: function () {
+      return this.rawData ? this.rawData.issue : undefined;
+    }
+  },
   meta() {
     return this.MetadataManager.metaDefault(
       this.metadata,

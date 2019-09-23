@@ -29,38 +29,69 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     routeData: {},
-    api: undefined
+    api: undefined,
+    nextRoute: undefined,
+    isLoading: false
   },
   mutations: {
-    ADD_ROUTE_DATA: (state, { routePath, data }) =>
-      Vue.set(state.routeData, routePath, data),
-    SET_API: (state, payload) => (state.api = payload)
+    ADD_ROUTE_DATA: (state, { routePath, data }) => {
+      Vue.set(state.routeData, routePath, data);
+    },
+    SET_API: (state, payload) => (state.api = payload),
+    SET_NEXT_ROUTE: (state, payload) => (state.nextRoute = payload),
+    SET_LOADING: (state, payload) => (state.isLoading = payload)
   },
   actions: {
-    initPreloadedData: ({ state, commit, dispatch }, data) => {
-      if (data) {
-        console.log("PRELOADING DATA", data);
-        dispatch("addRouteData", data);
+    setNextRoute: ({ commit }, nextRoute) => {
+      commit("SET_NEXT_ROUTE", nextRoute);
+    },
+    initPreloadedData: async ({ state, commit, dispatch }) => {
+      const preloadedJsonScriptEl = document.getElementById(
+        "preloaded-store-json"
+      );
+      let preloadedJsonString;
+      if (preloadedJsonScriptEl) {
+        preloadedJsonString = preloadedJsonScriptEl.innerHTML;
+      }
+
+      if (preloadedJsonString) {
+        dispatch("addRouteData", {
+          data: JSON.parse(preloadedJsonString),
+          path
+        });
+      } else {
+        await dispatch("fetchRouteData");
       }
     },
     setApi: ({ state, commit }, api) => {
       commit("SET_API", api);
     },
     fetchRouteData: async ({ state, commit, dispatch }) => {
-      const { name } = state.route;
-      const data = await dispatch("fetch" + [getRouteComponentName(name)]);
-      dispatch("addRouteData", data);
+      const { path, name } = state.nextRoute;
+      let data = state.routeData[path];
+      if (data) {
+        return data;
+      }
+
+      commit("SET_LOADING", true);
+
+      data = await dispatch("fetch" + getRouteComponentName(name));
+      const routePath = path || state.route.path;
+      dispatch("addRouteData", { data, path: routePath });
+
+      commit("SET_LOADING", false);
+
+      return data;
     },
-    addRouteData: ({ state, commit }, data) => {
-      const currentRoute = state.route.path;
+    addRouteData: ({ state, commit }, { data, path }) => {
+      const currentRoute = path;
       if (state.routeData[currentRoute]) {
-        throw new Warning("Route data already initialized.");
+        console.warn("Route data already initialized for: " + path);
       }
 
       commit("ADD_ROUTE_DATA", { routePath: currentRoute, data });
     },
     fetchHome: async ({ state, commit }) => {
-      // TODO: add all home data fetches
       let issue = await state.api.fetchCurrentIssue();
 
       let essayRequests = [];
@@ -71,10 +102,10 @@ export default new Vuex.Store({
       );
       issue.essays = await Promise.all(essayRequests);
 
-      return issue;
+      return { issue };
     },
     fetchPage: async ({ state, commit }) => {
-      const slugs = state.route.path.split("/").filter(el => el.length > 0);
+      const slugs = state.nextRoute.path.split("/").filter(el => el.length > 0);
       const parentSlug = slugs[0];
 
       const page = await state.api.fetchPageBySlug(parentSlug);
@@ -83,7 +114,7 @@ export default new Vuex.Store({
     },
     fetchIssue: async ({ state, commit }) => {
       const issue = await state.api.fetchIssueBySlug(
-        state.route.params.issueSlug
+        state.nextRoute.params.issueSlug
       );
 
       return issue;
@@ -93,7 +124,7 @@ export default new Vuex.Store({
       return issues;
     },
     fetchEssay: async ({ state, commit }) => {
-      const { issueSlug, essaySlug } = state.route.params;
+      const { issueSlug, essaySlug } = state.nextRoute.params;
       let essay = await state.api.fetchEssayBySlugs(issueSlug, essaySlug);
 
       return essay;
@@ -102,6 +133,6 @@ export default new Vuex.Store({
     fetchNotFound: ({ state, commit }) => null
   },
   getters: {
-    currentRouteData: state => state.routeData[state.route.path]
+    currentRouteData: state => state.routeData[state.route.path] // state.nextRoute.path
   }
 });

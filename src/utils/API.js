@@ -1,9 +1,9 @@
 import prismicJS from "prismic-javascript";
 
 /**
-   * Constructs an interface to interact with the Prismic API.
-   * @param {Object} prismic Prismic javascript object.
-   */
+ * Constructs an interface to interact with the Prismic API.
+ * @param {Object} prismic Prismic javascript object.
+ */
 class Api {
   constructor(endpoint, options) {
     this.endpoint = endpoint;
@@ -18,7 +18,7 @@ class Api {
     try {
       this.api = await prismicJS.api(this.endpoint, this.options);
       this.predicates = prismicJS.Predicates;
-      console.log(await this.api.query("")); // Initializes the API
+      await this.api.query(""); // Initializes the API
       this.initialized = true;
     } catch (err) {
       throw err;
@@ -85,6 +85,7 @@ class Api {
    * @return {undefined} If document of type with given slug does not exist.
    */
   async getTypedDocumentBySlug(type, slug) {
+    console.log(type, slug);
     try {
       const results = (await this.api.query(
         this.predicates.at(`my.${type}.uid`, slug)

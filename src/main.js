@@ -12,7 +12,7 @@ import PrismicProcessor from "@/utils/PrismicProcessor";
 
 import Paper from "@/components/Paper";
 
-const unsync = sync(store, router);
+const unsyncRouterWithStore = sync(store, router);
 
 Vue.config.productionTip = false;
 
@@ -31,15 +31,20 @@ API.init().then(() => {
   Vue.prototype.$api = API;
   store.dispatch("setApi", API);
 
-  // Load route's page data
-  const preloadedJsonScriptEl = document.getElementById("preloaded-store-json");
-  let preloadedJsonString;
-  if (preloadedJsonScriptEl) {
-    preloadedJsonString = preloadedJsonScriptEl.innerHTML;
-  }
-  if (preloadedJsonString) {
-    store.dispatch("initPreloadedData", JSON.parse(preloadedJsonString));
-  }
+  // Fetch data associated with next route
+  router.beforeEach(async (to, from, next) => {
+    // Navigation resolution is finished BEFORE the view transition initiates
+    store.dispatch("setNextRoute", to);
+    if (from.name === null) {
+      // If first visit to site
+      // Load static page's embedded data
+      await store.dispatch("initPreloadedData");
+    } else {
+      await store.dispatch("fetchRouteData");
+    }
+
+    next();
+  });
 
   new Vue({
     router,
@@ -62,11 +67,6 @@ API.init().then(() => {
         image,
         meta: MetadataManager.getTwitterMetadata(true, true)
       };
-    },
-    mounted() {
-      // You'll need this for renderAfterDocumentEvent.
-      document.dispatchEvent(new Event("render-event"));
-      console.log("render event");
     },
     meta() {
       return MetadataManager.metaDefault(this.metadata, {}, "website", {

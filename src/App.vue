@@ -74,11 +74,10 @@ export default {
   data: function () {
     return {
       metadata: undefined,
-      prevRouteColor: _.fill(new Array(3), 255),
+      prevBackgroundColor: colors.getRgbValuesFromString(colors.getBackgroundColor(0, true)), // Hue is arbitrary if desaturated
       activeColorString: "rgb(255, 255, 255)",
       menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
       startEnter: undefined,
-      prerenderColor: _.fill(new Array(3), 255), // The 'route' color for a prerendered site
       viewTransitions,
       colors,
       css
@@ -89,9 +88,9 @@ export default {
     /**
      * The background color of the application.
      */
-    // TODO: Put currentRouteColor in global store
+    // TODO: Put currentBackgroundColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
-    currentRouteColor: function () {
+    currentBackgroundColor: function () {
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -100,7 +99,7 @@ export default {
       const color =
         hue !== undefined
           ? this.colors.getBackgroundColor(hue)
-          : "rgb(255, 255, 255)";
+          : this.colors.getBackgroundColor(0, true); // Hue is arbitrary if desaturated
 
       const colorValues = this.colors.getRgbValuesFromString(color);
 
@@ -111,11 +110,14 @@ export default {
     },
     hideMainContent: function () {
       return this.menuOpen;
+    },
+    initialLoad: function() {
+      return this.$store.state.initialLoad;
     }
   },
   watch: {
-    currentRouteColor: function (newVal, oldVal) {
-      this.prevRouteColor = oldVal;
+    currentBackgroundColor: function (newVal, oldVal) {
+      this.prevBackgroundColor = oldVal;
     }
   },
   methods: {
@@ -145,19 +147,6 @@ export default {
     viewLeave: viewTransitions.leave,
     viewAfterLeave: viewTransitions.afterLeave,
     viewCancelledLeave: viewTransitions.cancelledLeave
-  },
-  created: async function () {
-    // fitText();
-
-    // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
-    // this.$router.beforeEach((to, from, next) => {
-    //   const resetScrollPosition = (el) => {
-    //     if (el) el.scrollTop = 0;
-    //   };
-
-    //   resetScrollPosition(this.$refs.app);
-    //   next();
-    // });
   }
 };
 </script>

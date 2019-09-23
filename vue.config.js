@@ -64,7 +64,7 @@ module.exports = {
               inject: {
                 foo: "bar"
               },
-              headless: false,
+              headless: true,
               maxConcurrentRoutes: 1,
               renderAfterDocumentEvent: "page-rendered"
             }),

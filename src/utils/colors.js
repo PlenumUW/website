@@ -25,7 +25,7 @@ const schemes = {
   lchab: {
     bg: {
       lightness: 98,
-      chroma: 3
+      chroma: 3 
     },
     menu: {
       lightness: 90,
@@ -96,7 +96,7 @@ class ColorFactory {
   }
 
   getBackgroundColor(h, desaturate = false) {
-    let scheme = this.bgScheme;
+    let scheme = _.clone(this.bgScheme);
     if (desaturate) this._desaturateScheme(scheme);
 
     return this._getRgbColorFromScheme(h, scheme);
@@ -104,13 +104,13 @@ class ColorFactory {
 
   getMenuItemColor(h, desaturate = false) {
     let scheme = _.clone(this.menuScheme);
-    if (desaturate) this._desaturateScheme(scheme);
+    if (desaturate) this._desaturateScheme(scheme); // TODO: If desaturate, Hue is irrelevant, make this apparent in logic
 
     return this._getRgbColorFromScheme(h, scheme);
   }
 
   getPaperColor(h, desaturate = false) {
-    let scheme = this.paperScheme;
+    let scheme = _.clone(this.paperScheme);
     if (desaturate) this._desaturateScheme(scheme);
 
     return this._getRgbColorFromScheme(h, scheme);
@@ -148,7 +148,7 @@ class ColorFactory {
    * @param {Number} num The number of hues to return.
    */
   getEquidistantHues(num) {
-    const colorSpace = this.colorSpace;
+    const colorSpace = _.clone(this.colorSpace);
     const whiteHueBuffer = 20; // For color spaces that produce white along the hues
     const min = colorSpace.min[this.hueChannelIndex];
     const max = colorSpace.max[this.hueChannelIndex];

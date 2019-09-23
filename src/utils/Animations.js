@@ -145,7 +145,7 @@ class Animations {
    * @param {Function} complete Callback function called after animation is complete.
    * @return {Promise} Promise that resolves once the animation finishes.
    */
-  static _fade(el, on, complete = () => {}, queue = false) {
+  static _fade(el, on, complete = () => {}) {
     return () =>
       new Promise((resolve) => {
         Velocity(
@@ -154,7 +154,7 @@ class Animations {
           {
             duration: 500,
             easing: "ease-out",
-            queue,
+            queue: false,
             complete: () => {
               complete();
               resolve();
@@ -171,8 +171,8 @@ class Animations {
    * @param {Function} complete Callback function called after animation is complete.
    * @return {Promise} Promise that resolves once the animation finishes.
    */
-  static fadeIn(el, { complete, queue } = {}) {
-    return this._fade(el, true, complete, queue);
+  static fadeIn(el, { complete } = {}) {
+    return this._fade(el, true, complete);
   }
 
   /**
@@ -206,8 +206,8 @@ const viewTransitions = {
    * @param {Function} done Callback to declare that a transition has finished.
    */
   appear: function (el, done) {
-    const prevRgb = this.prerenderColor;
-    const nextRgb = this.currentRouteColor;
+    const prevRgb = this.prevBackgroundColor;
+    const nextRgb = this.currentBackgroundColor;
 
     const app = this.$refs.app;
     const tweenAppBg = Animations.tweenColor(app, {
@@ -221,7 +221,7 @@ const viewTransitions = {
       tweenGradients = Animations.tweenColor(gradients, {
         prevRgb,
         nextRgb,
-        properties: ["backgroundColor", "color"]
+        cssProps: ["backgroundColor", "color"]
       });
     }
 
@@ -229,9 +229,9 @@ const viewTransitions = {
     let tweenSiteHeaders = () => {};
     if (!_.isEmpty(siteHeaders)) {
       tweenSiteHeaders = Animations.tweenColor(siteHeaders, {
-        prevRgb: this.prevRouteColor,
-        nextRgb: this.currentRouteColor,
-        properties: ["backgroundColor", "color"]
+        prevRgb: this.prevBackgroundColor,
+        nextRgb: this.currentBackgroundColor,
+        cssProps: ["backgroundColor", "color"]
       });
     }
 
@@ -265,6 +265,8 @@ const viewTransitions = {
    */
   beforeEnter: function (el) {
     if (DEBUG) console.log("before enter");
+    if (this.initialLoad) return;
+
     el.style.opacity = 0; // Hides the view b/c it initially renders in center of viewport
 
     const firstTitle = el.getElementsByTagName("h1")[0];
@@ -291,9 +293,10 @@ const viewTransitions = {
    */
   enter: function (el, done) {
     if (DEBUG) console.log("enter");
+    
     const papers = el.getElementsByClassName("paper");
     let slidePapersIntoViewport = () => new Promise(resolve => resolve());
-    if (!_.isEmpty(papers)) {
+    if (!this.initialLoad && !_.isEmpty(papers)) {
       slidePapersIntoViewport = Animations.slideIntoViewport(papers, {
         xDistance:
           papers[0].offsetWidth + parseInt(this.css.lefterWidthValue) + 200 // 200 accomodates for rotation into the viewport
@@ -303,13 +306,12 @@ const viewTransitions = {
     const headerGradients = document.getElementsByClassName(
       "c-header-gradient"
     );
-
     let tweenHeaderGradients = () => new Promise(resolve => resolve());
-    if (!_.isEmpty(tweenHeaderGradients)) {
+    if (!_.isEmpty(headerGradients)) {
       tweenHeaderGradients = Animations.tweenColor(headerGradients, {
-        prevRgb: this.prevRouteColor,
-        nextRgb: this.currentRouteColor,
-        properties: ["backgroundColor", "color"]
+        prevRgb: this.prevBackgroundColor,
+        nextRgb: this.currentBackgroundColor,
+        cssProps: ["backgroundColor", "color"]
       });
     }
 
@@ -317,21 +319,21 @@ const viewTransitions = {
     let tweenSiteHeaders = () => new Promise(resolve => resolve());
     if (!_.isEmpty(siteHeaders)) {
       tweenSiteHeaders = Animations.tweenColor(siteHeaders, {
-        prevRgb: this.prevRouteColor,
-        nextRgb: this.currentRouteColor,
-        properties: ["backgroundColor", "color"]
+        prevRgb: this.prevBackgroundColor,
+        nextRgb: this.currentBackgroundColor,
+        cssProps: ["backgroundColor", "color"]
       });
     }
 
     const app = this.$refs.app;
     const tweenAppBg = Animations.tweenColor(app, {
-      prevRgb: this.prevRouteColor,
-      nextRgb: this.currentRouteColor
+      prevRgb: this.prevBackgroundColor,
+      nextRgb: this.currentBackgroundColor
     });
 
     const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
     let fadeInTitles = () => new Promise(resolve => resolve());
-    if (!_.isEmpty(titles)) {
+    if (!this.initialLoad && !_.isEmpty(titles)) {
       fadeInTitles = Animations.fadeIn(titles);
     }
 
@@ -355,10 +357,9 @@ const viewTransitions = {
 
         animations().then(() => {
           if (DEBUG) console.log("enter animations finished");
-          // fadeInTitles();
 
           this.setActiveColorString(
-            this.colors.serializeRgb(this.currentRouteColor)
+            this.colors.serializeRgb(this.currentBackgroundColor)
           );
           this.startEnter = undefined;
           done();
@@ -374,6 +375,8 @@ const viewTransitions = {
    */
   afterEnter: function (el) {
     if (DEBUG) console.log("after enter");
+    if (this.initialLoad) return;
+
     const gradients = el.getElementsByClassName("c-header-gradient");
     for (let gradient of gradients) {
       if (

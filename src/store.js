@@ -31,7 +31,8 @@ export default new Vuex.Store({
     routeData: {},
     api: undefined,
     nextRoute: undefined,
-    isLoading: false
+    isLoading: false,
+    initialLoad: true
   },
   mutations: {
     ADD_ROUTE_DATA: (state, { routePath, data }) => {
@@ -39,7 +40,8 @@ export default new Vuex.Store({
     },
     SET_API: (state, payload) => (state.api = payload),
     SET_NEXT_ROUTE: (state, payload) => (state.nextRoute = payload),
-    SET_LOADING: (state, payload) => (state.isLoading = payload)
+    SET_LOADING: (state, payload) => (state.isLoading = payload),
+    SET_INITIAL_LOAD: (state, payload) => (state.initialLoad = payload)
   },
   actions: {
     setNextRoute: ({ commit }, nextRoute) => {
@@ -82,6 +84,8 @@ export default new Vuex.Store({
       dispatch("addRouteData", { data, path: routePath });
 
       commit("SET_LOADING", false);
+
+      if (state.route.name !== null && state.initialLoad) commit("SET_INITIAL_LOAD", false);
 
       return data;
     },

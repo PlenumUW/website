@@ -54,6 +54,8 @@ export default new Vuex.Store({
         preloadedJsonString = preloadedJsonScriptEl.innerHTML;
       }
 
+      const path = state.nextRoute.path || state.route.path; // TODO: make as getter, make DRY
+
       if (preloadedJsonString) {
         dispatch("addRouteData", {
           data: JSON.parse(preloadedJsonString),

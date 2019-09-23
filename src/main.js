@@ -27,6 +27,8 @@ Vue.filter("prismicRawText", function (arr) {
   return PrismicProcessor.getRawText(arr);
 });
 
+const DEBUG = true;
+
 API.init().then(() => {
   Vue.prototype.$api = API;
   store.dispatch("setApi", API);
@@ -39,7 +41,9 @@ API.init().then(() => {
       // If first visit to site
       // Load static page's embedded data
       await store.dispatch("initPreloadedData");
+      if (DEBUG) console.log("dispatch init preloaded data");
     } else {
+      if (DEBUG) console.log("dispatch fetch route data");
       await store.dispatch("fetchRouteData");
     }
 

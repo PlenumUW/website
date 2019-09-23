@@ -1,7 +1,7 @@
 import Velocity from "velocity-animate";
 import _ from "lodash";
 
-const DEBUG = false;
+const DEBUG = true;
 
 /**
  * Static class of frequent transitions.
@@ -145,7 +145,7 @@ class Animations {
    * @param {Function} complete Callback function called after animation is complete.
    * @return {Promise} Promise that resolves once the animation finishes.
    */
-  static _fade(el, on, complete = () => {}) {
+  static _fade(el, on, complete = () => {}, queue = false) {
     return () =>
       new Promise((resolve) => {
         Velocity(
@@ -154,7 +154,7 @@ class Animations {
           {
             duration: 500,
             easing: "ease-out",
-            queue: "",
+            queue,
             complete: () => {
               complete();
               resolve();
@@ -171,8 +171,8 @@ class Animations {
    * @param {Function} complete Callback function called after animation is complete.
    * @return {Promise} Promise that resolves once the animation finishes.
    */
-  static fadeIn(el, { complete } = {}) {
-    return this._fade(el, true, complete);
+  static fadeIn(el, { complete, queue } = {}) {
+    return this._fade(el, true, complete, queue);
   }
 
   /**
@@ -300,12 +300,6 @@ const viewTransitions = {
       });
     }
 
-    const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
-    let fadeInTitle = () => new Promise(resolve => resolve());
-    if (!_.isEmpty(titles)) {
-      fadeInTitle = Animations.fadeIn(titles);
-    }
-
     const headerGradients = document.getElementsByClassName(
       "c-header-gradient"
     );
@@ -335,13 +329,24 @@ const viewTransitions = {
       nextRgb: this.currentRouteColor
     });
 
+    const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
+    let fadeInTitles = () => new Promise(resolve => resolve());
+    if (!_.isEmpty(titles)) {
+      fadeInTitles = Animations.fadeIn(titles);
+    }
+
+    // TODO: clean this promise hell up
     const animations = () =>
-      Promise.all([
-        tweenAppBg(),
-        tweenHeaderGradients(),
-        tweenSiteHeaders(),
-        slidePapersIntoViewport()
-      ]);
+      new Promise((resolve) => {
+        Promise.all([
+          tweenAppBg(),
+          tweenHeaderGradients(),
+          tweenSiteHeaders(),
+          slidePapersIntoViewport()
+        ]).then(() => {
+          fadeInTitles().then(() => resolve());
+        });
+      });
 
     this.startEnter = () =>
       new Promise((resolve) => {
@@ -350,7 +355,7 @@ const viewTransitions = {
 
         animations().then(() => {
           if (DEBUG) console.log("enter animations finished");
-          fadeInTitle();
+          // fadeInTitles();
 
           this.setActiveColorString(
             this.colors.serializeRgb(this.currentRouteColor)

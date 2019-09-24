@@ -125,7 +125,7 @@ export default {
 
     @include for-size(tablet-landscape-up) {
       width: calc(100% - 100px);
-      margin-bottom: 50px;
+      // margin-bottom: 50px;
       margin-right: auto;
 
       &:last-of-type {
@@ -134,30 +134,38 @@ export default {
     }
 
     &__header {
-      display: none;
       top: 0;
       width: 100%; // Extends gradient beyond the edge of the paper
+      margin-bottom: 7px; // Optically attractive positioning for title with no gradient cover up on load
 
       position: sticky;
       z-index: 2; //TODO: use scss function
 
-      @include header-offset(
-        height
-      ); // TODO: change all header mixins to this responsive one
+      opacity: 0;
 
       @include for-size(tablet-landscape-up) {
         display: block;
+        margin-bottom: 35px; // TODO: figure out why 35px aligns title with logo position
+
+        opacity: 1;
+
+        @include header-offset(
+          height
+        ); // TODO: change all header mixins to this responsive one
       }
     }
 
     $paper-padding: 1.2em;
     &__title {
+      position: sticky;
+      top: 10px;
+
       --font-size: 2em;
       margin-bottom: 15px;
       line-height: 1em;
       min-height: 1em;
 
-      position: relative;
+      // position: relative;
       padding-left: $paper-padding;
       z-index: 6; //TODO: use scss function // > 5, 5 is default z-index for stuck sticky els
 
@@ -206,7 +214,7 @@ export default {
     }
 
     &__content {
-      padding-bottom: 30px; // Helps hide the box-shadow when the paper scrolls under the gradient header // TODO: figure out how to bind this with paper box-shadows
+      padding-bottom: 60px; // Helps hide the box-shadow when the paper scrolls under the gradient header // TODO: figure out how to bind this with paper box-shadows
       z-index: 1; //TODO: use scss function
 
       @include font-size(1.1em);

@@ -37,7 +37,7 @@ export default {
       required: true
     }
   },
-  data: function() {
+  data: function () {
     return {
       description: undefined,
       privacy: undefined,
@@ -48,7 +48,7 @@ export default {
       twitter: undefined
     };
   },
-  created: async function() {
+  created: async function () {
     const rawData = await this.$api.fetchSiteFooter();
 
     this.description = PrismicProcessor.getRawText(rawData.description);
@@ -84,7 +84,7 @@ $lefter-width: $g-lefter-width;
 
   font-family: $font-titling--subtitle;
 
-  border-top: 1px solid black;
+  border-top: 1px solid rgb(122, 122, 122);
 
   &__info-container {
     display: block;

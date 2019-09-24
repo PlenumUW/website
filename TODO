@@ -46,6 +46,7 @@ Styling:
         ☐ Push lefter up @created(19-09-16 11:59)
 
     View transitions:
+        Transition page colors
         ✔ Add slide off animation @created(19-09-13 19:44) @done(19-09-17 09:29)
         ✔ Add slide on animation @created(19-09-13 19:44) @done(19-09-17 09:29)
         ☐ Change direction if pulling from browser history @created(19-09-17 09:30)
@@ -79,6 +80,10 @@ Icons:
         ☐ Link @created(19-09-15 12:04)
     ☐ Create merge transitions for the logo @created(19-09-15 12:05)
         ☐ On hover of a file download element, transition the logo to download icon, etc @created(19-09-15 12:05)
+
+Performance:
+    Animation lags if loading from API
+        - Paper transition into viewport jitters
 
 Bugs:
     ☐ Class '.app--no-scroll', activated when menu is open in mobile, removes the scrollbar, which shifts the background text while the menu opens @created(19-09-14 21:18)

@@ -32,7 +32,8 @@ export default new Vuex.Store({
     api: undefined,
     nextRoute: undefined,
     isLoading: false,
-    initialLoad: true
+    initialLoad: true,
+    pageLoadingError: false
   },
   mutations: {
     ADD_ROUTE_DATA: (state, { routePath, data }) => {
@@ -41,9 +42,14 @@ export default new Vuex.Store({
     SET_API: (state, payload) => (state.api = payload),
     SET_NEXT_ROUTE: (state, payload) => (state.nextRoute = payload),
     SET_LOADING: (state, payload) => (state.isLoading = payload),
-    SET_INITIAL_LOAD: (state, payload) => (state.initialLoad = payload)
+    SET_INITIAL_LOAD: (state, payload) => (state.initialLoad = payload),
+    SET_PAGE_LOADING_ERROR: (state, payload) =>
+      (state.pageLoadingError = payload)
   },
   actions: {
+    resetPageLoadingError({ commit }) {
+      commit("SET_PAGE_LOADING_ERROR", false);
+    },
     setNextRoute: ({ commit }, nextRoute) => {
       commit("SET_NEXT_ROUTE", nextRoute);
     },
@@ -79,13 +85,21 @@ export default new Vuex.Store({
 
       commit("SET_LOADING", true);
 
-      data = await dispatch("fetch" + getRouteComponentName(name));
+      try {
+        data = await dispatch("fetch" + getRouteComponentName(name));
+      } catch (err) {
+        commit("SET_PAGE_LOADING_ERROR", true);
+        commit("SET_LOADING", false);
+        throw err;
+      }
       const routePath = path || state.route.path;
       dispatch("addRouteData", { data, path: routePath });
 
       commit("SET_LOADING", false);
 
-      if (state.route.name !== null && state.initialLoad) commit("SET_INITIAL_LOAD", false);
+      if (state.route.name !== null && state.initialLoad) {
+        commit("SET_INITIAL_LOAD", false);
+      }
 
       return data;
     },

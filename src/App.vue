@@ -14,7 +14,8 @@
       </div>
     </div>
 
-    <div class="loading"></div>
+    <div class="loading" :class="{'loading--error': pageLoadingError}"></div>
+    <div v-if="pageLoadingError" class="error" :style="{'background-color': activeColorString}" @click="handleErrorClick">Your internet is bein' silly.<br />Try refreshing the site.</div>
 
     <site-footer :color="activeColorString" :class="{ 'site-footer--hidden': hideMainContent }"></site-footer>
   </div>
@@ -28,7 +29,6 @@ import {
   loadingTransitions,
   Animations
 } from "@/utils/Animations";
-// import { fitText } from "@/utils/fittext.js";
 
 // eslint-disable-next-line no-unused-vars
 import whatInput from "what-input";
@@ -90,6 +90,9 @@ export default {
     },
     pageLoading: function () {
       return this.$store.state.isLoading;
+    },
+    pageLoadingError: function () {
+      return this.$store.state.pageLoadingError;
     }
   },
   watch: {
@@ -97,10 +100,7 @@ export default {
       this.prevBackgroundColor = oldVal;
     },
     pageLoading: function (newVal, oldVal) {
-      console.log(newVal);
       if (newVal) {
-        console.log("starting loading animation");
-        // this.startLoadingAnimation();
         this.loadingTransitionActive = true;
         this.startLoadingAnimation().then(() => {
           console.log("looping loading animation");
@@ -113,6 +113,9 @@ export default {
     }
   },
   methods: {
+    handleErrorClick() {
+      this.$store.dispatch("resetPageLoadingError");
+    },
     startLoadingAnimation() {
       const el = document.getElementsByClassName("loading")[0];
 
@@ -203,11 +206,6 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  // position: fixed;
-  // top: 0;
-  // bottom: 0;
-  // left: 0;
-  // right: 0;
 
   display: flex;
   flex-direction: column;
@@ -252,6 +250,10 @@ export default {
   @include for-size(tablet-landscape-up) {
     --outline-width: 10px;
   }
+
+  &--error {
+    outline-color: red !important;
+  }
 }
 
 @mixin hidden() {
@@ -261,6 +263,31 @@ export default {
     pointer-events: none;
 
     transition: opacity 200ms ease-out;
+  }
+}
+
+.error {
+  --outline-width: 5px;
+
+  position: fixed;
+  max-width: 60%;
+  top: 0;
+  outline: var(--outline-width) solid red;
+  width: fit-content;
+  transform: translateX(-50%);
+  left: 50%;
+
+  padding: 20px;
+  z-index: 999;
+
+  font-family: $font-sans;
+  font-size: 1.5em;
+
+  cursor: pointer;
+
+  @include for-size(tablet-landscape-up) {
+    --outline-width: 10px;
+    font-size: 4em;
   }
 }
 

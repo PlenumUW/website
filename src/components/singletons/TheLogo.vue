@@ -57,6 +57,7 @@ $padding: 10px;
     display: block;
     width: fit-content;
     height: 100%;
+    margin: auto;
 
     position: relative;
 

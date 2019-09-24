@@ -310,7 +310,7 @@ export default {
     @include for-size(tablet-landscape-up) {
       width: unset;
       height: unset;
-      top: 265px;
+      top: 260px;
     }
   }
 

@@ -103,13 +103,13 @@ class Animations {
           el,
           {
             translateX: [0, dir + `${xDistance}`],
-            translateY: [0, "20vh"], // TODO: randomize?
+            translateY: [0, "20vh"],
             rotateZ: [0, dir + "10deg"],
             translateZ: 0
           },
           {
-            duration: 650,
-            easing: "swing",
+            duration: 700,
+            easing: [1200, 54],
             queue: false,
             complete: () => {
               complete();
@@ -157,8 +157,8 @@ class Animations {
             translateZ: 0
           },
           {
-            duration: 900,
-            easing: "swing",
+            duration: 750,
+            easing: "ease-in",
             queue: false,
             complete: () => {
               complete();

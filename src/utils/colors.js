@@ -25,7 +25,7 @@ const schemes = {
   lchab: {
     bg: {
       lightness: 98,
-      chroma: 3 
+      chroma: 3
     },
     menu: {
       lightness: 90,
@@ -34,6 +34,10 @@ const schemes = {
     paper: {
       lightness: 99,
       chroma: 2
+    },
+    loading: {
+      lightness: 63,
+      chroma: 36
     }
   }
 };
@@ -48,6 +52,7 @@ class ColorFactory {
     this._bg = schemes.bg;
     this._menu = schemes.menu;
     this._paper = schemes.paper;
+    this._loading = schemes.loading;
   }
 
   get bgScheme() {
@@ -60,6 +65,10 @@ class ColorFactory {
 
   get paperScheme() {
     return this._paper;
+  }
+
+  get loadingScheme() {
+    return this._loading;
   }
 
   get colorSpace() {
@@ -82,10 +91,11 @@ class ColorFactory {
     return this.hueMax - this.hueMin;
   }
 
-
   get _saturationChannel() {
     const saturationChannels = ["saturation", "chroma"];
-    const saturationChannel = saturationChannels.find(satChannel => this._colorSpace.channel.some(channel => satChannel === channel));
+    const saturationChannel = saturationChannels.find(satChannel =>
+      this._colorSpace.channel.some(channel => satChannel === channel)
+    );
     if (!saturationChannel) throw new Error("No valid saturation channel...");
 
     return saturationChannel;
@@ -93,6 +103,13 @@ class ColorFactory {
 
   _desaturateScheme(scheme) {
     scheme[this._saturationChannel] = 0;
+  }
+
+  getLoadingColor(h, desaturate = false) {
+    let scheme = _.clone(this.loadingScheme);
+    if (desaturate) this._desaturateScheme(scheme);
+
+    return this._getRgbColorFromScheme(h, scheme);
   }
 
   getBackgroundColor(h, desaturate = false) {

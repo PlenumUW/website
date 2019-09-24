@@ -13,19 +13,44 @@ class Animations {
    *
    * @param {HtmlElement, HtmlCollection} el Element(s) to animate.
    * @param {Object} settings
-   * @param {Array} prevRgb RGB colors for the starting color.
+   * @param {Array} prevRgb RGB colors for the starting color. If "current", color tweens from current DOM state.
    * @param {Array} nextRgb RGB colors for the ending color.
    * @param {Array} cssProps CSS color properties to tween.
    * @return {Promise} Promise that resolves once the animation finishes.
    */
   static tweenColor(
     el,
-    { prevRgb, nextRgb, cssProps = ["backgroundColor"], complete = () => {} }
+    {
+      prevRgb,
+      nextRgb,
+      cssProps = ["backgroundColor"],
+      complete = () => {},
+      loop = false,
+      duration = 500
+    }
   ) {
-    const rgbTransition = ["Red", "Green", "Blue"].reduce(
+    const currentState = prevRgb === "current";
+    const prevTransparent = prevRgb === "transparent";
+    const nextTransparent = nextRgb === "transparent";
+
+    let rgbTransition = ["Red", "Green", "Blue", "Alpha"].reduce(
       (transitions, channel, i) => {
         cssProps.forEach((prop) => {
-          transitions[`${prop}${channel}`] = [nextRgb[i], prevRgb[i]];
+          let value;
+          let prevVal;
+          let nextVal;
+
+          if (channel === "Alpha") {
+            prevVal = prevTransparent ? 0 : 1;
+            nextVal = nextTransparent ? 0 : 1;
+          } else {
+            prevVal = prevTransparent ? nextRgb[i] : prevRgb[i];
+            nextVal = nextTransparent ? prevRgb[i] : nextRgb[i];
+          }
+
+          transitions[`${prop}${channel}`] = currentState
+            ? nextVal
+            : [nextVal, prevVal];
         });
 
         return transitions;
@@ -33,17 +58,24 @@ class Animations {
       {}
     );
 
+    if (currentState && nextTransparent) {
+      rgbTransition = {};
+      cssProps.forEach((prop) => {
+        rgbTransition[`${prop}Alpha`] = 0;
+      });
+    }
+
     return () =>
       new Promise((resolve) => {
         Velocity(el, rgbTransition, {
-          duration: 500,
+          duration,
           easing: "linear",
-          queue: false,
+          queue: loop ? "" : false,
+          loop,
           complete: () => {
             complete();
             resolve();
-          },
-          loop: false
+          }
         });
       });
   }
@@ -187,6 +219,61 @@ class Animations {
   }
 }
 
+const loadingTransitions = {
+  startLoadingAnimation: () => {
+    const el = document.getElementsByClassName("loading")[0];
+
+    const prevRgb = this.currentBackgroundColor;
+    const nextRgb = this.colors.getRgbValuesFromString(
+      this.colors.getLoadingColor(0)
+    );
+    const cssProps = ["outline"];
+
+    return Animations.tweenColor(el, {
+      prevRgb,
+      nextRgb,
+      cssProps
+    })(); // TODO: tween from BG color to saturated version of hue
+  },
+  loadingAnimationLoop: () => {
+    const el = document.getElementsByClassName("loading")[0];
+
+    const prevRgb = this.colors.getRgbValuesFromString(
+      this.colors.getLoadingColor(0)
+    );
+    const nextRgb = this.colors.getRgbValuesFromString(
+      this.colors.getLoadingColor(180)
+    );
+    const cssProps = ["outline"];
+
+    return Animations.tweenColor(el, {
+      prevRgb,
+      nextRgb,
+      cssProps,
+      loop: true
+    })(); // TODO: tween from BG color to saturated version of hue
+
+    // TODO: constantly tween across hue spectrum at saturated level
+  },
+  exitLoadingAnimation: () => {
+    const el = document.getElementsByClassName("loading")[0];
+    // Animations.tweenColor(el, {prevRgb, nextRgb, cssProps: ["outline"]}) // TODO: tween from current saturated color to new BGcolor
+    const prevRgb = this.colors.getRgbValuesFromString(
+      this.colors.getLoadingColor(180)
+    );
+    const nextRgb = this.currentBackgroundColor;
+    const cssProps = ["outline"];
+
+    Velocity("finish");
+    return Animations.tweenColor(el, {
+      prevRgb,
+      nextRgb,
+      cssProps
+    })();
+    // el.style.outlineColor = "transparent"; // newBgColor
+  }
+};
+
 /**
  * Router view transitions.
  */
@@ -293,7 +380,7 @@ const viewTransitions = {
    */
   enter: function (el, done) {
     if (DEBUG) console.log("enter");
-    
+
     const papers = el.getElementsByClassName("paper");
     let slidePapersIntoViewport = () => new Promise(resolve => resolve());
     if (!this.initialLoad && !_.isEmpty(papers)) {
@@ -467,4 +554,4 @@ const viewTransitions = {
   cancelledLeave: function (el) {}
 };
 
-export { Animations, viewTransitions };
+export { Animations, viewTransitions, loadingTransitions };

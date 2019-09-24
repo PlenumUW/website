@@ -1,63 +1,33 @@
 <template>
-  <div
-    id="app"
-    ref="app"
-    class="app"
-    :class="{ 'app--no-scroll': hideMainContent }"
-  >
+  <div id="app" ref="app" class="app" :class="{ 'app--no-scroll': hideMainContent }">
     <div class="app__horizontal-wrapper">
-      <the-site-header
-        :color="activeColorString"
-        :hamburgerOpen.sync="menuOpen"
-        @logoClick="handleLogoClick"
-      ></the-site-header>
+      <the-site-header :color="activeColorString" :hamburgerOpen.sync="menuOpen" @logoClick="handleLogoClick"></the-site-header>
 
       <div class="main-content-container">
         <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
 
         <main class="main" :class="{ 'main--hidden': hideMainContent }">
-          <transition
-            :css="false"
-
-            @before-appear="viewBeforeAppear"
-            @appear="viewAppear"
-            @after-appear="viewAfterAppear"
-            @appear-cancelled="viewCancelledAppear"
-
-            @before-enter="viewBeforeEnter"
-            @enter="viewEnter"
-            @after-enter="viewAfterEnter"
-            @enter-cancelled="viewCancelledEnter"
-
-            @before-leave="viewBeforeLeave"
-            @leave="viewLeave"
-            @after-leave="viewAfterLeave"
-            @leave-cancelled="viewCancelledLeave"
-          >
-            <router-view
-              :key="viewKey"
-              :id="viewKey"
-              class="router-view"
-
-              :color="activeColorString"
-              :loadedCallback="startEnter"
-            ></router-view>
+          <transition :css="false" @before-appear="viewBeforeAppear" @appear="viewAppear" @after-appear="viewAfterAppear" @appear-cancelled="viewCancelledAppear" @before-enter="viewBeforeEnter" @enter="viewEnter" @after-enter="viewAfterEnter" @enter-cancelled="viewCancelledEnter" @before-leave="viewBeforeLeave" @leave="viewLeave" @after-leave="viewAfterLeave" @leave-cancelled="viewCancelledLeave">
+            <router-view :key="viewKey" :id="viewKey" class="router-view" :color="activeColorString" :loadedCallback="startEnter"></router-view>
           </transition>
         </main>
       </div>
     </div>
 
-    <site-footer
-      :color="activeColorString"
-      :class="{ 'site-footer--hidden': hideMainContent }"
-    ></site-footer>
+    <div class="loading"></div>
+
+    <site-footer :color="activeColorString" :class="{ 'site-footer--hidden': hideMainContent }"></site-footer>
   </div>
 </template>
 
 <script>
 import Velocity from "velocity-animate";
 import colors from "@/utils/colors";
-import { viewTransitions } from "@/utils/Animations";
+import {
+  viewTransitions,
+  loadingTransitions,
+  Animations
+} from "@/utils/Animations";
 // import { fitText } from "@/utils/fittext.js";
 
 // eslint-disable-next-line no-unused-vars
@@ -74,11 +44,15 @@ export default {
   data: function () {
     return {
       metadata: undefined,
-      prevBackgroundColor: colors.getRgbValuesFromString(colors.getBackgroundColor(0, true)), // Hue is arbitrary if desaturated
+      prevBackgroundColor: colors.getRgbValuesFromString(
+        colors.getBackgroundColor(0, true)
+      ), // Hue is arbitrary if desaturated
       activeColorString: "rgb(255, 255, 255)",
       menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
       startEnter: undefined,
       viewTransitions,
+      loadingTransitions,
+      loadingTransitionActive: false,
       colors,
       css
     };
@@ -111,16 +85,86 @@ export default {
     hideMainContent: function () {
       return this.menuOpen;
     },
-    initialLoad: function() {
+    initialLoad: function () {
       return this.$store.state.initialLoad;
+    },
+    pageLoading: function () {
+      return this.$store.state.isLoading;
     }
   },
   watch: {
     currentBackgroundColor: function (newVal, oldVal) {
       this.prevBackgroundColor = oldVal;
+    },
+    pageLoading: function (newVal, oldVal) {
+      console.log(newVal);
+      if (newVal) {
+        console.log("starting loading animation");
+        // this.startLoadingAnimation();
+        this.loadingTransitionActive = true;
+        this.startLoadingAnimation().then(() => {
+          console.log("looping loading animation");
+          this.loadingAnimationLoop().then(() => console.log("loop done"));
+        });
+      } else {
+        this.exitLoadingAnimation();
+        this.loadingTransitionActive = false;
+      }
     }
   },
   methods: {
+    startLoadingAnimation() {
+      const el = document.getElementsByClassName("loading")[0];
+
+      const prevRgb = "transparent";
+      const nextRgb = this.colors.getRgbValuesFromString(
+        this.colors.getLoadingColor(0)
+      );
+      const cssProps = ["outlineColor"];
+
+      return Animations.tweenColor(el, {
+        prevRgb,
+        nextRgb,
+        cssProps,
+        duration: 200
+      })();
+    },
+    loadingAnimationLoop() {
+      const el = document.getElementsByClassName("loading")[0];
+
+      const prevRgb = this.colors.getRgbValuesFromString(
+        this.colors.getLoadingColor(0)
+      );
+      const nextRgb = this.colors.getRgbValuesFromString(
+        this.colors.getLoadingColor(180)
+      );
+      const cssProps = ["outlineColor"];
+
+      return Animations.tweenColor(el, {
+        prevRgb,
+        nextRgb,
+        cssProps,
+        loop: true,
+        duration: 1000
+      })();
+    },
+    exitLoadingAnimation() {
+      if (!this.loadingTransitionActive) return;
+
+      const el = document.getElementsByClassName("loading")[0];
+
+      const prevRgb = "current";
+      const nextRgb = "transparent";
+      const cssProps = ["outlineColor"];
+
+      Velocity(el, "stop");
+      Animations.tweenColor(el, {
+        prevRgb,
+        nextRgb,
+        cssProps,
+        duration: 200
+      })();
+    },
     handleLogoClick() {
       this.setMenuOpen(false);
     },
@@ -156,11 +200,14 @@ export default {
 @import "./styles/app.scss";
 
 .app {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  // position: fixed;
+  // top: 0;
+  // bottom: 0;
+  // left: 0;
+  // right: 0;
 
   display: flex;
   flex-direction: column;
@@ -178,10 +225,32 @@ export default {
 
   &__horizontal-wrapper {
     display: flex;
-  flex-direction: column;
-  @include for-size(tablet-landscape-up) {
-    flex-direction: row;
+    flex-direction: column;
+
+    @include for-size(tablet-landscape-up) {
+      flex-direction: row;
+    }
   }
+}
+
+.loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+
+  z-index: 999;
+
+  pointer-events: none;
+
+  --outline-width: 5px;
+
+  outline-style: solid;
+  outline-color: transparent;
+  outline-width: var(--outline-width);
+  outline-offset: calc(-1 * var(--outline-width));
+
+  @include for-size(tablet-landscape-up) {
+    --outline-width: 10px;
   }
 }
 

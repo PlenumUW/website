@@ -9,50 +9,47 @@
 $bluu-next-path: "~assets/fonts/BluuNext";
 // TODO: Add bluu next copyright notice/license to copyright view/page, retrieve via download : https://velvetyne.fr/fonts/bluu/download/
 @font-face {
-  font-family: 'Bluu';
-  src: url($bluu-next-path + '/bluunext-bold-webfont.woff2') format('woff2'),
-       url($bluu-next-path + '/bluunext-bold-webfont.woff') format('woff'),
-       url($bluu-next-path + '/bluunext-bold.ttf') format('truetype'),
-       url($bluu-next-path + '/bluunext-bold-webfont.svg#bluu_nextbold') format('svg');
+  font-family: "Bluu";
+  src: url($bluu-next-path+"/bluunext-bold-webfont.woff2") format("woff2"),
+    url($bluu-next-path+"/bluunext-bold-webfont.woff") format("woff"),
+    url($bluu-next-path+"/bluunext-bold.ttf") format("truetype"),
+    url($bluu-next-path+"/bluunext-bold-webfont.svg#bluu_nextbold")
+      format("svg");
   font-weight: normal;
   font-style: normal;
-
 }
 
 @font-face {
-  font-family: 'Bluu';
-  src: url($bluu-next-path + '/bluunext-bolditalic-webfont.woff2') format('woff2'),
-       url($bluu-next-path + '/bluunext-bolditalic-webfont.woff') format('woff'),
-       url($bluu-next-path + '/bluunext-bolditalic.ttf') format('truetype'),
-       url($bluu-next-path + '/bluunext-bolditalic-webfont.svg#bluu_nextbold_italic') format('svg');
+  font-family: "Bluu";
+  src: url($bluu-next-path+"/bluunext-bolditalic-webfont.woff2") format("woff2"),
+    url($bluu-next-path+"/bluunext-bolditalic-webfont.woff") format("woff"),
+    url($bluu-next-path+"/bluunext-bolditalic.ttf") format("truetype"),
+    url($bluu-next-path+"/bluunext-bolditalic-webfont.svg#bluu_nextbold_italic")
+      format("svg");
   font-weight: normal;
   font-style: italic;
-
 }
 
-
 @font-face {
-  font-family: 'Bluu Titling';
-  src: url($bluu-next-path + '/BluuNext-Titling.ttf') format('truetype'),
-      url($bluu-next-path + '/bluunext-titling.woff2') format('woff2'),
-      url($bluu-next-path + '/bluunext-titling.woff') format('woff');
+  font-family: "Bluu Titling";
+  src: url($bluu-next-path+"/BluuNext-Titling.ttf") format("truetype"),
+    url($bluu-next-path+"/bluunext-titling.woff2") format("woff2"),
+    url($bluu-next-path+"/bluunext-titling.woff") format("woff");
   font-weight: normal;
   font-style: normal;
-
 }
 
 @import "_settings";
 @import "_mixins";
 @import "globals";
 
-
 // Z-index positions of major elements, from high to low
 // Necessary for z-index mixin
 $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
 
 * {
-    color: $text-color;
-    -webkit-font-smoothing: subpixel-antialiased;
+  color: $text-color;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 a {
@@ -61,6 +58,93 @@ a {
   }
 }
 
+/*
+  GRADIENT HEADER
+*/
+.o-header {
+  top: 0;
+  width: 100%; // Extends gradient beyond the edge of the paper
+  margin-bottom: 7px; // Optically attractive positioning for title with no gradient cover up on load
+
+  position: sticky;
+  z-index: 2; //TODO: use scss function
+
+  // opacity: 0;
+
+  @include header-offset();
+
+  @include for-size(tablet-landscape-up) {
+    display: block;
+    margin-bottom: 35px; // TODO: figure out why 35px aligns title with logo position
+
+    opacity: 1;
+
+    @include header-offset(
+      height
+    ); // TODO: change all header mixins to this responsive one
+  }
+
+  &__gradient {
+  }
+}
+
+$paper-padding: 1.2em;
+.o-header-title {
+  position: sticky;
+  width: fit-content;
+  margin-bottom: 15px;
+  margin-left: auto;
+
+  padding-right: 10px;
+  line-height: 1em;
+  min-height: 1em;
+
+  padding-left: $paper-padding;
+  z-index: 6; //TODO: use scss function // > 5, 5 is default z-index for stuck sticky els
+
+  white-space: nowrap;
+  text-align: left;
+
+  @include header-offset();
+  @include font-size(3em);
+
+  @include for-size(tablet-portrait-up) {
+    margin-bottom: 65px;
+
+    padding-left: 50px;
+
+    @include font-size(5em);
+  }
+
+  @include for-size(tablet-landscape-up) {
+    top: 10px;
+  }
+
+  @include for-size(desktop-up) {
+    @include font-size(7em);
+  }
+  @include for-size(big-desktop-up) {
+    @include font-size(10em);
+  }
+
+  > a {
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+      outline: 0;
+    }
+
+    &:active {
+      text-decoration: line-through;
+    }
+  }
+}
+/*
+  GRADIENT HEADER END
+*/
+
 @include headings();
 
 /*
@@ -68,10 +152,10 @@ a {
  */
 
 /* suppress focus ring on form controls for mouse users */
-[data-whatintent='mouse'] *:focus, [data-whatintent='touch'] *:focus  {
+[data-whatintent="mouse"] *:focus,
+[data-whatintent="touch"] *:focus {
   outline: none !important;
 }
-
 
 /*
     Global Transitions

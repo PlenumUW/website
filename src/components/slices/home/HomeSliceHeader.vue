@@ -1,7 +1,7 @@
 <template>
-  <header class="c-home-slice-header">
-    <header-gradient :color="color"></header-gradient>
-    <h1 ref="fit-text" class="c-home-slice-header__title fit-text">
+  <header class="c-home-slice-header o-header">
+    <header-gradient class="o-header__gradient" :color="color"></header-gradient>
+    <h1 ref="fit-text" class="c-home-slice-header__title o-header-title">
       <slot></slot>
     </h1>
   </header>
@@ -18,9 +18,6 @@ export default {
       type: String,
       required: true
     }
-  },
-  mounted: function () {
-    // window.fitText(this.$refs["fit-text"], 0.9);
   }
 };
 </script>

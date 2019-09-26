@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="c-header-gradient"
-    :style="{ color: color, 'background-color': color }"
-    aria-hidden="true"
-  ></div>
+  <div class="c-header-gradient" :style="{ color: color, 'background-color': color }" aria-hidden="true"></div>
 </template>
 
 <script>
@@ -26,7 +22,7 @@ $header-height--desktop: $g-header-height--desktop;
 
   position: absolute;
   top: 0;
-  width: 100vw;
+  width: 120vw;
   z-index: -1;
   transform: translateX(calc(-#{$g-home-right-padding}));
 

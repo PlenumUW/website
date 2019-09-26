@@ -33,7 +33,8 @@ export default new Vuex.Store({
     nextRoute: undefined,
     isLoading: false,
     initialLoad: true,
-    pageLoadingError: false
+    pageLoadingError: false,
+    generalError: false
   },
   mutations: {
     ADD_ROUTE_DATA: (state, { routePath, data }) => {
@@ -44,11 +45,13 @@ export default new Vuex.Store({
     SET_LOADING: (state, payload) => (state.isLoading = payload),
     SET_INITIAL_LOAD: (state, payload) => (state.initialLoad = payload),
     SET_PAGE_LOADING_ERROR: (state, payload) =>
-      (state.pageLoadingError = payload)
+      (state.pageLoadingError = payload),
+    SET_GENERAL_ERROR: (state, payload) => (state.generalError = payload)
   },
   actions: {
-    resetPageLoadingError({ commit }) {
+    resetErrors({ commit }) {
       commit("SET_PAGE_LOADING_ERROR", false);
+      commit("SET_GENERAL_ERROR", false);
     },
     setNextRoute: ({ commit }, nextRoute) => {
       commit("SET_NEXT_ROUTE", nextRoute);
@@ -88,7 +91,12 @@ export default new Vuex.Store({
       try {
         data = await dispatch("fetch" + getRouteComponentName(name));
       } catch (err) {
-        commit("SET_PAGE_LOADING_ERROR", true);
+        if (err.message.includes("fetch")) {
+          commit("SET_PAGE_LOADING_ERROR", true);
+        } else {
+          commit("SET_GENERAL_ERROR", true);
+        }
+
         commit("SET_LOADING", false);
         throw err;
       }
@@ -112,29 +120,20 @@ export default new Vuex.Store({
       commit("ADD_ROUTE_DATA", { routePath: currentRoute, data });
     },
     fetchHome: async ({ state, commit }) => {
-      let issue = await state.api.fetchCurrentIssue();
-
-      let essayRequests = [];
-      essayRequests = issue.data.essays.map(({ essay }) =>
-        state.api.getById(essay.id, {
-          fetchLinks: ["category.name", "category.list_position"]
-        })
-      );
-      issue.essays = await Promise.all(essayRequests);
-
+      let issue = await state.api.fetchCurrentIssue({ includeEssays: true });
       return { issue };
     },
     fetchPage: async ({ state, commit }) => {
       const slugs = state.nextRoute.path.split("/").filter(el => el.length > 0);
       const parentSlug = slugs[0];
 
-      const page = await state.api.fetchPageBySlug(parentSlug);
-
-      return page;
+      const pageDoc = await state.api.fetchPageBySlug(parentSlug);
+      return pageDoc.data;
     },
     fetchIssue: async ({ state, commit }) => {
-      const issue = await state.api.fetchIssueBySlug(
-        state.nextRoute.params.issueSlug
+      let issue = await state.api.fetchIssueBySlug(
+        state.nextRoute.params.issueSlug,
+        { includeEssays: true }
       );
 
       return issue;
@@ -145,9 +144,9 @@ export default new Vuex.Store({
     },
     fetchEssay: async ({ state, commit }) => {
       const { issueSlug, essaySlug } = state.nextRoute.params;
-      let essay = await state.api.fetchEssayBySlugs(issueSlug, essaySlug);
+      let essayDoc = await state.api.fetchEssayBySlugs(issueSlug, essaySlug);
 
-      return essay;
+      return essayDoc.data;
     },
     fetchComingSoon: ({ state, commit }) => null,
     fetchNotFound: ({ state, commit }) => null

@@ -14,8 +14,11 @@
       </div>
     </div>
 
-    <div class="loading" :class="{'loading--error': pageLoadingError}"></div>
-    <div v-if="pageLoadingError" class="error" :style="{'background-color': activeColorString}" @click="handleErrorClick">Your internet is bein' silly.<br />Try refreshing the site.</div>
+    <div class="loading" :class="{'loading--error': error}"></div>
+    <div v-if="error" class="error" :style="{'background-color': activeColorString}" @click="handleErrorClick">
+      <div v-if="pageLoadingError">Your internet is bein' silly.<br />Try refreshing the site.</div>
+      <div v-if="generalError">Something's gone wrong!<br />Try refreshing the site.</div>
+    </div>
 
     <site-footer :color="activeColorString" :class="{ 'site-footer--hidden': hideMainContent }"></site-footer>
   </div>
@@ -41,7 +44,7 @@ import SiteFooter from "@/components/singletons/TheSiteFooter";
 
 export default {
   components: { TheSiteHeader, TheMainMenu, SiteFooter },
-  data: function () {
+  data: function() {
     return {
       metadata: undefined,
       prevBackgroundColor: colors.getRgbValuesFromString(
@@ -58,13 +61,12 @@ export default {
     };
   },
   computed: {
-
     /**
      * The background color of the application.
      */
     // TODO: Put currentBackgroundColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
-    currentBackgroundColor: function () {
+    currentBackgroundColor: function() {
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -79,27 +81,33 @@ export default {
 
       return colorValues;
     },
-    viewKey: function () {
+    viewKey: function() {
       return this.$route.name;
     },
-    hideMainContent: function () {
+    hideMainContent: function() {
       return this.menuOpen;
     },
-    initialLoad: function () {
+    initialLoad: function() {
       return this.$store.state.initialLoad;
     },
-    pageLoading: function () {
+    pageLoading: function() {
       return this.$store.state.isLoading;
     },
-    pageLoadingError: function () {
+    error: function() {
+      return this.pageLoadingError || this.generalError;
+    },
+    pageLoadingError: function() {
       return this.$store.state.pageLoadingError;
+    },
+    generalError: function() {
+      return this.$store.state.generalError;
     }
   },
   watch: {
-    currentBackgroundColor: function (newVal, oldVal) {
+    currentBackgroundColor: function(newVal, oldVal) {
       this.prevBackgroundColor = oldVal;
     },
-    pageLoading: function (newVal, oldVal) {
+    pageLoading: function(newVal, oldVal) {
       if (newVal) {
         this.loadingTransitionActive = true;
         this.startLoadingAnimation().then(() => {
@@ -114,7 +122,7 @@ export default {
   },
   methods: {
     handleErrorClick() {
-      this.$store.dispatch("resetPageLoadingError");
+      this.$store.dispatch("resetErrors");
     },
     startLoadingAnimation() {
       const el = document.getElementsByClassName("loading")[0];
@@ -202,17 +210,19 @@ export default {
 @import "~backpack.css";
 @import "./styles/app.scss";
 
+html {
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; // Required for momentum scrolling in iOS
+}
+
 .app {
-  position: absolute;
   width: 100%;
   height: 100%;
 
   display: flex;
   flex-direction: column;
-
-  overflow-x: hidden;
-  overflow-y: scroll; // Scroll required for momentum scrolling in iOS
-  -webkit-overflow-scrolling: touch; // Required for momentum scrolling in iOS
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

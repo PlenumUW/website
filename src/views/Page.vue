@@ -1,12 +1,12 @@
 <template>
   <div v-if="!loading" class="c-page">
     <section v-for="([titleSlice, ...slices], index) in sections" :key="`${index}`" class="c-page__section">
-      <header class="c-page__section__header">
-        <header-gradient class="c-page__section__gradient" :color="color"></header-gradient>
+      <header class="c-page__section__header o-header">
+        <header-gradient class="c-page__section__gradient o-header__gradient" :color="color"></header-gradient>
       </header>
 
       <!-- This design is highly coupled, so much so that can always use h1 instead of rich-text -->
-      <h1 class="c-page__section__title">
+      <h1 class="c-page__section__title o-header-title">
         {{ getSectionTitle(titleSlice) }}
       </h1>
 
@@ -119,13 +119,11 @@ export default {
 
   &__section {
     width: 100%;
-    max-width: 1100px;
 
     padding-right: 20px;
 
     @include for-size(tablet-landscape-up) {
-      width: calc(100% - 100px);
-      // margin-bottom: 50px;
+      // width: calc(100% - 100px);
       margin-right: auto;
 
       &:last-of-type {
@@ -133,71 +131,24 @@ export default {
       }
     }
 
-    &__header {
-      top: 0;
-      width: 100%; // Extends gradient beyond the edge of the paper
-      margin-bottom: 7px; // Optically attractive positioning for title with no gradient cover up on load
-
-      position: sticky;
-      z-index: 2; //TODO: use scss function
-
-      opacity: 0;
-
-      @include for-size(tablet-landscape-up) {
-        display: block;
-        margin-bottom: 35px; // TODO: figure out why 35px aligns title with logo position
-
-        opacity: 1;
-
-        @include header-offset(
-          height
-        ); // TODO: change all header mixins to this responsive one
-      }
-    }
-
-    $paper-padding: 1.2em;
-    &__title {
-      position: sticky;
-      top: 10px;
-
-      --font-size: 2em;
-      margin-bottom: 15px;
-      line-height: 1em;
-      min-height: 1em;
-
-      // position: relative;
-      padding-left: $paper-padding;
-      z-index: 6; //TODO: use scss function // > 5, 5 is default z-index for stuck sticky els
-
-      text-align: left;
-
-      @include font-size(var(--font-size));
-
-      @include for-size(tablet-landscape-up) {
-        --font-size: 5em;
-        margin-bottom: 65px;
-
-        padding-left: 50px;
-
-        @include font-size(var(--font-size));
-      }
-    }
-
     &__paper {
+      max-width: 1100px;
+      margin-right: auto;
+
+      $paper-padding: 1.2em;
       padding: $paper-padding;
 
       @include for-size(tablet-portrait-up) {
+        width: calc(100% - 100px);
         padding: 2em;
       }
 
       @include for-size(tablet-landscape-up) {
-        width: calc(100% - 100px);
+        width: calc(100% - 200px);
         min-width: calc(
           #{$g-viewport-tablet} - #{$g-lefter-width} - (17px * 2)
         ); // 17px width of scrollbar
         margin-bottom: 75px;
-
-        margin-left: auto;
 
         padding: 70px 80px;
 
@@ -207,7 +158,6 @@ export default {
       }
 
       &__placeholder {
-        // position: absolute;
         min-height: 100vh;
         width: 100%;
       }

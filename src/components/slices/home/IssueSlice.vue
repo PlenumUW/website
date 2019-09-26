@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     essays: function () {
-      return this.issue.essays;
+      return this.issue.data.essays;
     },
     imgSrc: function () {
       return this.issue.data.cover_image.url;

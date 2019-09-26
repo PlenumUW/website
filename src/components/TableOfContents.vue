@@ -5,29 +5,21 @@
       <a v-if="downloadUrl" :href="downloadUrl">Download</a>
     </header>
 
-      <ul class="toc__body">
-        <li
-          v-for="(entry, index) in contents"
-          :key="`item-${index}`"
-          class="toc__body__list-item"
-        >
-          <router-link :to="getPath(entry.uid)" class="toc__body__list-item__link">
-            <span class="toc__body__list-item__bullet">&#9702;</span>
-            <span class="toc__body__list-item__content">
-              <!-- eslint-disable-next-line -->
-              <span class="toc__body__list-item__title">{{entry.data.title | prismicRawText}}
-                <span
-                  class="toc__body__list-item__subtitle"
-                >{{ entry.data.subtitle | prismicRawText }}</span>
-              </span>
-              <span
-                v-if="entry.data.authors.length < 3"
-                class="toc__body__list-item__authors"
-              >&#32;({{ getListedAuthors(entry.data.authors) }})</span>
+    <ul class="toc__body">
+      <li v-for="(entry, index) in contents" :key="`item-${index}`" class="toc__body__list-item">
+        <router-link :to="getPath(entry.uid)" class="toc__body__list-item__link">
+          <span class="toc__body__list-item__bullet">&#9702;</span>
+          <span class="toc__body__list-item__content">
+            <!-- eslint-disable-next-line -->
+            <span class="toc__body__list-item__title">{{entry.data.title | prismicRawText}}
+              <span class="toc__body__list-item__subtitle">{{ entry.data.subtitle | prismicRawText }}</span>
             </span>
-          </router-link>
-        </li>
-      </ul>
+            <span v-if="entry.data.authors.length < 3" class="toc__body__list-item__authors">&#32;({{ getListedAuthors(entry.data.authors) }})</span>
+          </span>
+          <!-- Adds non-linked white space between entries -->
+        </router-link>&nbsp;&nbsp;
+      </li>
+    </ul>
   </section>
 </template>
 <script>
@@ -91,7 +83,6 @@ $toc_padding: 20px;
   }
 }
 
-
 .toc__header {
   top: 0;
   width: 100%;
@@ -117,12 +108,10 @@ $toc_padding: 20px;
   }
 }
 
-
 .toc__body {
   position: relative;
 
   font-variant: discretionary-ligatures;
-
 
   &:focus-within {
     > *:not(:focus-within) {
@@ -132,13 +121,6 @@ $toc_padding: 20px;
 
   &__list-item {
     display: inline;
-
-    &:not(:first-of-type) {
-      &:before {
-        content: "";
-        padding-left: 0.5em;
-      }
-    }
 
     @include for-size(tablet-portrait-up) {
       margin-bottom: 42px;
@@ -165,7 +147,6 @@ $toc_padding: 20px;
     }
 
     &__content {
-
     }
 
     &__title {
@@ -173,7 +154,7 @@ $toc_padding: 20px;
 
       text-transform: capitalize;
 
-       font-weight: 200;
+      font-weight: 200;
       grid-row: 1;
       grid-column: 2;
 
@@ -194,7 +175,5 @@ $toc_padding: 20px;
       font-variant: unicase;
     }
   }
-
-
 }
 </style>

@@ -47,6 +47,30 @@ $bluu-next-path: "~assets/fonts/BluuNext";
 // Necessary for z-index mixin
 $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
 
+/**
+  Alternate selection colors across a small spectrum of perceptually uniform colors
+**/
+@mixin selection($n, $color) {
+  *:nth-child(#{$n}n) {
+    &::selection {
+      background: $color;
+    }
+
+    &::-moz-selection {
+      background: $color;
+    }
+  }
+}
+$selectionColors: #fbb4ae, #b3cde3, #ccebc5, #decbe4, #fed9a6, #ffffcc;
+@for $i from 1 through length($selectionColors) {
+  $color: nth($selectionColors, $i);
+
+  @include selection($i, $color);
+}
+/**
+  End alternate selection colors across a small spectrum of perceptually uniform colors
+**/
+
 * {
   color: $text-color;
   -webkit-font-smoothing: subpixel-antialiased;

@@ -8,27 +8,91 @@ export default {
     color: {
       type: String,
       required: true
+    },
+    loadedCallback: {
+      type: Function,
+      required: false
     }
   },
   data: function () {
     return {
-      metadata: undefined,
+      metadata: undefined, // Route specific metadata to be injected in meta tags in the head tag
+      scriptMetadata: undefined, // Route specific data to be embedded in prerendered HTML
       MetadataManager,
-      PrismicProcessor
+      PrismicProcessor,
+      viewEntered: false, // Whether or not the view as transitioned in
+      rawData: undefined
     };
   },
+  watch: {
+    loadedCallback: function (newCallback) {
+      if (newCallback) {
+        this._handleViewReady();
+      }
+    },
+    rawData: function () {
+      if (this._isDataValid(this.rawData)) {
+        this._handleViewReady();
+      }
+    }
+  },
   methods: {
-    handleDocNotFound(path) {
+    _isDataValid(data) {
+      return !_.isUndefined(data);
+    },
+    _handleDocNotFound(path) {
       this.$router.presets.docNotFound(path);
     },
-    docExists(doc) {
-      if (!doc) {
-        this.handleDocNotFound(this.$route.path);
+    _docExists(doc) {
+      if (!this._isDataValid(doc)) {
+        // Non API views will return null, not undefined
+        this._handleDocNotFound(this.$route.path);
         return false;
       }
 
       return true;
+    },
+    _handleViewReady() {
+      if (
+        this.loadedCallback &&
+        this._isDataValid(this.rawData) &&
+        !this.viewEntered
+      ) {
+        this.viewEntered = true;
+
+        // EVERY VIEW SHOULD GET IN HERE WHEN READY TO RENDER
+        this.loadedCallback().then(() => {
+          document.dispatchEvent(new Event("page-rendered")); // TODO: might need to await loadedcallback
+          console.log("PAGE-RENDERED");
+        });
+      }
     }
+  },
+  // 1. Check if store has data
+  // 2. If store does not have data, fetch data and put in store
+  // 3. Use data to build metadata
+  created: async function () {
+    let routeData = this.$store.getters.currentRouteData;
+
+    if (!this._isDataValid(routeData)) {
+      routeData = this.$store.getters.currentRouteData;
+    }
+
+    if (!this._docExists(routeData)) return;
+
+    this.rawData = routeData;
+
+    this.scriptMetadata = {
+      type: "application/json",
+      json: this.rawData,
+      id: "preloaded-store-json",
+      vmid: "preloaded-store-json"
+    };
+
+    this.metadata = this.buildMetadata ? this.buildMetadata() : {};
+  },
+  updated: function () {
+    this._handleViewReady();
   }
 };
 </script>

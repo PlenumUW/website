@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="c-header-gradient"
-    :style="{ color: color, 'background-color': color }"
-    aria-hidden="true"
-  ></div>
+  <div class="c-header-gradient" :style="{ color: color, 'background-color': color }" aria-hidden="true"></div>
 </template>
 
 <script>
@@ -26,15 +22,15 @@ $header-height--desktop: $g-header-height--desktop;
 
   position: absolute;
   top: 0;
-  width: 100%;
+  width: 120vw;
   z-index: -1;
-  transform: translateX(calc(#{$g-home-right-padding} / -2));
+  transform: translateX(calc(-#{$g-home-right-padding}));
 
   @include for-size(tablet-landscape-up) {
     display: block;
     height: $header-height--desktop;
 
-    box-shadow: 0 13px 25px 9px;
+    box-shadow: 0 10px 15px 10px;
   }
 }
 </style>

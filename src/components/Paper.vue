@@ -1,6 +1,6 @@
 <template>
   <div
-    class="c-paper"
+    class="c-paper paper"
     :class="shadowClass"
     :style="{ 'background-color': paperColor }"
   >

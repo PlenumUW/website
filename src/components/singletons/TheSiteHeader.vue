@@ -110,7 +110,7 @@ $header-shadow-spread: $g-header-shadow-spread;
     @include for-size(tablet-landscape-up) {
       width: fit-content;
       left: 0;
-      top: $g-header-height--desktop / 2;
+      top: $g-header-height--desktop * 1.5; // 120px
       margin: auto;
     }
   }

@@ -4,11 +4,11 @@
       <slot name="title"></slot>
     </home-slice-header>
 
-    <div class="c-home-slice__paper-wrapper">
+    <div class="c-home-slice__content">
       <paper v-if="!hideBackground" :color="color" :shadow="12">
         <slot name="content"></slot>
       </paper>
-      <slot v-else name="content"></slot>
+      <slot v-else  name="content"></slot>
     </div>
 
     <home-slice-header
@@ -50,7 +50,10 @@ export default {
     z-index: 1;
   }
 
-  &__paper-wrapper {
+
+  &__content {
+    max-width: 2000px;
+
     position: relative;
     z-index: 0;
     padding-right: 20px;
@@ -60,7 +63,12 @@ export default {
       padding-left: 0px;
       padding-right: $g-home-right-padding;
     }
+
+    > * {
+      max-width: 1400px;
+    }
   }
+
 
   &__bottom-padding {
     opacity: 0;

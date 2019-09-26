@@ -36,6 +36,8 @@ Components:
              ☐ I like the idea of generating vue components that match prismic types :) @created(19-09-14 22:33)
 
 Styling:
+    Handheld header:
+        ☐ Logo is at mobile size (smaller than hamburger) in tablet view @created(19-09-18 12:59)
     Background Colors:
         ☐ Add attribute to routes that declares whether or not it should be included in the array of colors
             - This will increase contrast between menu colors
@@ -44,8 +46,28 @@ Styling:
         ☐ Push lefter up @created(19-09-16 11:59)
 
     View transitions:
-        ☐ Add slide off animation @created(19-09-13 19:44)
-        ☐ Add slide on animation @created(19-09-13 19:44)
+        Transition page colors
+        ✔ Add slide off animation @created(19-09-13 19:44) @done(19-09-17 09:29)
+        ✔ Add slide on animation @created(19-09-13 19:44) @done(19-09-17 09:29)
+        ☐ Change direction if pulling from browser history @created(19-09-17 09:30)
+        ☐ Maintain scroll pos history of visited routes, currently ignores previous scroll positions @created(19-09-18 21:02)
+        ✔ Move scroll top to transition's control @created(19-09-17 09:30) @done(19-09-18 21:02)
+            - Enter:
+                - El is positioned relative to viewport, as if at the top of the page.
+                - Leaving el is positioned how it was on route leave (e.g mid-page)
+                - Scroll up while the two are positioned relative to the screen.
+                    - Scroll up will be hidden because nothing will move
+        ☐ Add cancel transitions @created(19-09-17 10:31)
+            - enterCancelled called if browser history is pushed back while new page is waiting for api
+            - leaveCancelled not called
+        ✔ Add transition callback handling to all views @created(19-09-17 10:34) @started(19-09-17 12:38) @done(19-09-17 12:51) @lasted(13m47s)
+        ✔ Change starting position of enter transition to be JUST OFF SCREEN, not -100vw @created(19-09-17 10:36) @done(19-09-17 12:08)
+        ✔ Move transition logic to seperate file @created(19-09-17 12:54) @started(19-09-17 12:54) @done(19-09-18 12:55) @lasted(1d1m)
+        ✔ Tween header gradients with background, in all views @created(19-09-17 16:00) @done(19-09-18 12:55)
+        ☐ Add loading background to application @created(19-09-18 19:01)
+        ✔ Opacity 0 all leaving gradients except for the first @created(19-09-18 21:13) @done(19-09-19 14:27)
+        ✔ When transitioning gradient colors, transition out ALL gradients -> will fix color disjunct on transition @created(19-09-18 23:38) @done(19-09-19 14:27)
+            ✔ Filter gradients by whether or not they are at the top of the viewport (stuck) -> hide all non-stuck gradients @created(19-09-18 23:39) @done(19-09-19 14:27)
 
 Efficiency:
     ☐ https://www.webpagetest.org @created(19-09-14 09:00)
@@ -59,6 +81,24 @@ Icons:
     ☐ Create merge transitions for the logo @created(19-09-15 12:05)
         ☐ On hover of a file download element, transition the logo to download icon, etc @created(19-09-15 12:05)
 
+Performance:
+    Animation lags if loading from API
+        - Paper transition into viewport jitters
+
 Bugs:
     ☐ Class '.app--no-scroll', activated when menu is open in mobile, removes the scrollbar, which shifts the background text while the menu opens @created(19-09-14 21:18)
     ☐ Main content area should be visible if menu is forced open via mobile and then expanded to tablet/desktop @created(19-09-14 21:19)
+    View Transition:
+        Firefox:
+            ☐ Home header gradient flashes in front of title @created(19-09-19 14:48)
+                - Try force setting the z-index before gradient transition
+        - If scroll down while new page is loading off screen, after page loads and scroll positiong is mid-page
+            the h1 (section titles) lie behind the gradients. They should be in front of their header gradients.
+            1. Automatically scroll to top of page while view is transitioning in
+            2. Fix z-index interaction between sticky header and relative title
+                - Forcing new z-indexes after enter doesn't work
+    ☐ Page header gradient flashes over title when hover over main menu @created(19-09-18 21:17)
+        - Open About
+        - Scroll to second title
+        - Hover over main menu
+        - Observe gradient revealing itself

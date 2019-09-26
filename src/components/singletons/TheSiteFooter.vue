@@ -84,6 +84,8 @@ $lefter-width: $g-lefter-width;
 
   font-family: $font-titling--subtitle;
 
+  border-top: 1px solid rgb(122, 122, 122);
+
   &__info-container {
     display: block;
     flex-direction: row;

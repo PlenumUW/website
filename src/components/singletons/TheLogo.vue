@@ -51,18 +51,24 @@ $padding: 10px;
 
 .the-logo {
   width: 100%;
-  height: 100%;
+
+  @include for-size(tablet-landscape-up) {
+      height: 100%;
+    }
 
   &__link {
     display: block;
     width: fit-content;
     height: 100%;
+    margin: unset; // Keeps logo in corner for hand-held layouts
 
     position: relative;
 
     transform: rotate(0);
 
     transition: transform 200ms ease-in;
+
+    
 
     &:focus {
       @include focus(0);

@@ -1,9 +1,9 @@
 import prismicJS from "prismic-javascript";
 
 /**
-   * Constructs an interface to interact with the Prismic API.
-   * @param {Object} prismic Prismic javascript object.
-   */
+ * Constructs an interface to interact with the Prismic API.
+ * @param {Object} prismic Prismic javascript object.
+ */
 class Api {
   constructor(endpoint, options) {
     this.endpoint = endpoint;
@@ -18,7 +18,7 @@ class Api {
     try {
       this.api = await prismicJS.api(this.endpoint, this.options);
       this.predicates = prismicJS.Predicates;
-      console.log(await this.api.query("")); // Initializes the API
+      await this.api.query(""); // Initializes the API
       this.initialized = true;
     } catch (err) {
       throw err;
@@ -57,7 +57,7 @@ class Api {
   /**
    * @returns {Object} The most recently published issue.
    */
-  async fetchCurrentIssue() {
+  async fetchCurrentIssue({ includeEssays = false }) {
     const response = await this.api.query(
       this.predicates.at("document.type", "issue"),
       {
@@ -66,7 +66,23 @@ class Api {
     );
 
     const issues = response.results;
-    return issues[0];
+    let currentIssue = issues[0];
+
+    if (includeEssays) {
+      currentIssue = await this.addEssaysToIssue(currentIssue);
+    }
+
+    return currentIssue;
+  }
+
+  /**
+   * Adds fetched essays to an issue, and returns the issue.
+   * @param {Object} issueDoc Prismic API object of an issue.
+   * @return {Object} The given issue with essays attached.
+   */
+  async addEssaysToIssue(issueDoc) {
+    issueDoc.data.essays = await this.fetchEssaysByIssue(issueDoc);
+    return issueDoc;
   }
 
   /**
@@ -88,8 +104,35 @@ class Api {
    * @param {String} slug A URL slug of a document.
    * @returns {Object} Returns a 'Page' document with a UID that matches the given slug.
    */
-  async fetchIssueBySlug(slug) {
-    return this.getTypedDocumentBySlug("issue", slug);
+  async fetchIssueBySlug(slug, { includeEssays = false }) {
+    let issueDoc = await this.getTypedDocumentBySlug("issue", slug);
+
+    if (includeEssays) {
+      issueDoc = await this.addEssaysToIssue(issueDoc);
+    }
+
+    return issueDoc;
+  }
+
+  /**
+   * Returns an array of essays from the given issue.
+   * @param {Object} issue Prismic API response for an issue.
+   */
+  async fetchEssaysByIssue(issue) {
+    console.log(issue);
+    if (issue.type.toLowerCase() !== "issue") {
+      throw new Error("Prismic document of type 'Issue' required.");
+    }
+
+    let essayRequests = [];
+    let essay;
+    essayRequests = issue.data.essays.map(({ essay }) =>
+      this.getById(essay.id, {
+        fetchLinks: ["category.name", "category.list_position"]
+      })
+    );
+    let essays = await Promise.all(essayRequests);
+    return essays;
   }
 
   /**
@@ -99,6 +142,7 @@ class Api {
    * @return {Object} Prismic document that matches the given slug.
    * @return {undefined} If document of type with given slug does not exist.
    */
+  // TODO: return the entire document, not just data. some cases require slugs, uids, types, etc.
   async getTypedDocumentBySlug(type, slug) {
     try {
       const results = (await this.api.query(
@@ -109,12 +153,16 @@ class Api {
         return undefined;
       }
 
+      console.log(results);
+
       const result = results[0];
+      return result;
 
-      let data = result.data;
-      data.id = result.id;
+      // let data = result.data;
+      // data.id = result.id;
+      // data.type = result.type;
 
-      return data;
+      // return data;
     } catch (err) {
       throw err;
     }
@@ -150,7 +198,7 @@ class Api {
     let essay = await this.fetchEssayBySlug(essaySlug);
     if (!essay) return undefined;
 
-    const issueContainsEssay = issue.essays.find(
+    const issueContainsEssay = issue.data.essays.find(
       essayObj => essayObj.essay.id === essay.id
     );
 

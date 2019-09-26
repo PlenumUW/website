@@ -1,10 +1,6 @@
 <template>
   <div>
-    <paper
-      v-for="(issue, index) in issues"
-      :key="`issue-${index}`"
-      :color="color"
-    >
+    <paper v-for="(issue, index) in issues" :key="`issue-${index}`" :color="color">
       {{ issue.data.title[0].text }}
     </paper>
   </div>
@@ -15,20 +11,18 @@ import BaseView from "./BaseView";
 export default {
   name: "Issues",
   extends: BaseView,
-  data: function () {
+  data: function() {
     return {
       issues: []
     };
   },
-  created: async function () {
-    this.metadata = {
-      title: "Issue Catalogue"
-    };
-
-    this.issues = await this.$api.fetchAllIssues();
-  },
   meta() {
-    return this.MetadataManager.metaDefault(this.metadata, "website");
+    // title: "Issue Catalogue"
+    return this.MetadataManager.metaDefault(
+      this.metadata,
+      this.scriptMetadata,
+      "website"
+    );
   }
 };
 </script>

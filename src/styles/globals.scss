@@ -35,10 +35,11 @@ $load-typesetted: true; // True is the default value
     Layout
 */
 $g-home-right-padding: 130px;
-$g-lefter-width: 124px;
+$g-lefter-width-value: 100;
+$g-lefter-width: #{$g-lefter-width-value}px;
 $g-header-height: 46px;
 $g-header-height--tablet: 62px;
-$g-header-height--desktop: 82px; // 62px + header button padding * 2
+$g-header-height--desktop: 72px; // 62px + header button padding * 2
 $g-header-shadow-y: -2px;
 $g-header-shadow-spread: 9px;
 $g-header-shadow-height: $g-header-shadow-y + $g-header-shadow-spread;

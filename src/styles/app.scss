@@ -120,8 +120,6 @@ $paper-padding: 1.2em;
   margin-left: auto;
 
   padding-right: 10px;
-  line-height: 1em;
-  min-height: 1em;
 
   padding-left: $paper-padding;
   z-index: 6; //TODO: use scss function // > 5, 5 is default z-index for stuck sticky els
@@ -130,25 +128,16 @@ $paper-padding: 1.2em;
   text-align: left;
 
   @include header-offset();
-  @include font-size(3em);
+  @include responsiveTitling();
 
   @include for-size(tablet-portrait-up) {
     margin-bottom: 65px;
 
     padding-left: 50px;
-
-    @include font-size(5em);
   }
 
   @include for-size(tablet-landscape-up) {
     top: 10px;
-  }
-
-  @include for-size(desktop-up) {
-    @include font-size(7em);
-  }
-  @include for-size(big-desktop-up) {
-    @include font-size(10em);
   }
 
   > a {

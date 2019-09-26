@@ -14,10 +14,10 @@
 /*
 Settings for Typesettings
 */
-$font-sans: 'Montserrat', sans-serif;
-$font-serif: 'Spectral', serif;
-$font-titling: 'Bluu Titling', serif;
-$font-titling--subtitle: 'Bluu', serif;
+$font-sans: "Montserrat", sans-serif;
+$font-serif: "Spectral", serif;
+$font-titling: "Bluu Titling", serif;
+$font-titling--subtitle: "Bluu", serif;
 $font-mono: monospace;
 $text-color: black;
 $base-vertical-unit: 6px;
@@ -44,18 +44,18 @@ $g-header-shadow-y: -2px;
 $g-header-shadow-spread: 9px;
 $g-header-shadow-height: $g-header-shadow-y + $g-header-shadow-spread;
 @mixin header-height($media: hand-held, $property: height) {
-    @if $media == hand-held {
-        #{$property}: $g-header-height;
-    } @else if $media == tablet {
-      #{$property}: $g-header-height--tablet;
-    } @else if $media == desktop {
-        #{$property}: $g-header-height--desktop;
-    }
+  @if $media == hand-held {
+    #{$property}: $g-header-height;
+  } @else if $media == tablet {
+    #{$property}: $g-header-height--tablet;
+  } @else if $media == desktop {
+    #{$property}: $g-header-height--desktop;
+  }
 }
 
 @mixin header-offset($property: top) {
   #{$property}: $g-header-height + $g-header-shadow-height;
-  
+
   @include for-size(tablet-portrait-up) {
     #{$property}: $g-header-height--tablet + $g-header-shadow-height;
   }
@@ -65,13 +65,13 @@ $g-header-shadow-height: $g-header-shadow-y + $g-header-shadow-spread;
   }
 }
 
-    /*
+/*
         Responsive Layout
     */
-    $g-viewport-phone: 600px;
-    $g-viewport-tablet: 900px;
-    $g-viewport-desktop: 1200px;
-    $g-viewport-desktop--big: 1800px;
+$g-viewport-phone: 600px;
+$g-viewport-tablet: 900px;
+$g-viewport-desktop: 1200px;
+$g-viewport-desktop--big: 1800px;
 
 /*
     Transitions
@@ -82,18 +82,15 @@ $g-transition-router-duration: 500; // in ms
     Color
 */
 
-
-    /*
+/*
         High Contrast
     */
 
-
-    /*
+/*
         Color Schemes
         TODO: implement for 'prefer-color-schemes' media query of OS preference
                 prolly just invert the colors...
     */
-
 
 /*
     Focus
@@ -103,7 +100,6 @@ $g-focus-outline: 3px solid black;
 /* 
     Project Specific Mixins
 */
-
 
 /*
     Cursor
@@ -129,7 +125,12 @@ $g-focus-outline: 3px solid black;
 }
 
 @mixin headings($font-family: $font-titling) {
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: $font-family;
   }
 
@@ -138,6 +139,22 @@ $g-focus-outline: 3px solid black;
     #{$header} {
       @include heading($i);
     }
+  }
+}
+
+@mixin responsiveTitling() {
+  line-height: 1em;
+  min-height: 1em;
+  @include font-size(3em);
+  @include for-size(tablet-portrait-up) {
+    @include font-size(5em);
+  }
+  @include for-size(desktop-up) {
+    @include font-size(7em);
+  }
+
+  @include for-size(big-desktop-up) {
+    @include font-size(10em);
   }
 }
 

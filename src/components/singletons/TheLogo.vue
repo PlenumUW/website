@@ -1,10 +1,7 @@
 <template>
   <div class="the-logo">
     <router-link to="/" class="the-logo__link" @click.native="handleClick">
-      <logo
-        class="the-logo__link__icon"
-        :style="{ width: width ? `${width}px` : null }"
-      ></logo>
+      <logo class="the-logo__link__icon" :style="{ width: width ? `${width}px` : null }"></logo>
     </router-link>
   </div>
 </template>
@@ -53,8 +50,8 @@ $padding: 10px;
   width: 100%;
 
   @include for-size(tablet-landscape-up) {
-      height: 100%;
-    }
+    height: 100%;
+  }
 
   &__link {
     display: block;
@@ -65,10 +62,9 @@ $padding: 10px;
     position: relative;
 
     transform: rotate(0);
+    transform-origin: center;
 
     transition: transform 200ms ease-in;
-
-    
 
     &:focus {
       @include focus(0);

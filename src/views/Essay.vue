@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    buildMetadata() {
+    getMetadata() {
       return {
         title: this.combinedTitle,
         description: this.description,

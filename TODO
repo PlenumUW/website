@@ -37,7 +37,7 @@ Components:
 
 Styling:
     Handheld header:
-        ☐ Logo is at mobile size (smaller than hamburger) in tablet view @created(19-09-18 12:59)
+        ✔ Logo is at mobile size (smaller than hamburger) in tablet view @created(19-09-25 23:27) @done(19-09-25 23:27)
     Background Colors:
         ☐ Add attribute to routes that declares whether or not it should be included in the array of colors
             - This will increase contrast between menu colors
@@ -80,6 +80,8 @@ Icons:
         ☐ Link @created(19-09-15 12:04)
     ☐ Create merge transitions for the logo @created(19-09-15 12:05)
         ☐ On hover of a file download element, transition the logo to download icon, etc @created(19-09-15 12:05)
+    Bug:
+        If change between responsive layouts in same session, logo width (technical, not visual) shrinks, in turn chaning the transform origin when rotating 
 
 Performance:
     Animation lags if loading from API

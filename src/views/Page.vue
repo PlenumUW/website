@@ -91,7 +91,7 @@ export default {
     }
   },
   methods: {
-    buildMetadata() {
+    getMetadata() {
       return { title: this.title };
     },
     getSectionTitle(slice) {

@@ -99,6 +99,11 @@ export default {
         }
       });
       return authorsListed;
+    },
+    getMetadata() {
+      return {
+        title: this.title
+      };
     }
   },
   meta() {

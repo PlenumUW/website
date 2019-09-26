@@ -139,7 +139,10 @@ export default new Vuex.Store({
       return issue;
     },
     fetchIssues: async ({ state, commit }) => {
-      const issues = await state.api.fetchAllIssues();
+      const issues = await state.api.fetchAllIssues({
+        includeEssays: true,
+        sortByNew: true
+      });
       return issues;
     },
     fetchEssay: async ({ state, commit }) => {

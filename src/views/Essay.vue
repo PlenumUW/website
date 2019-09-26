@@ -17,44 +17,46 @@ export default {
   name: "Essay",
   extends: BaseView,
   computed: {
-    combinedTitle: function() {
+    combinedTitle: function () {
       if (!this.title || !this.subtitle) return "";
 
       let title = this.title;
       if (this.subtitle) title += ": " + this.subtitle;
       return title;
     },
-    title: function() {
+    title: function () {
       return this.PrismicProcessor.getRawText(this.essay.title);
     },
-    subtitle: function() {
+    subtitle: function () {
       return this.PrismicProcessor.getRawText(this.essay.subtitle);
     },
-    authors: function() {
+    authors: function () {
       return this.essay.authors.map(({ author }) =>
         this.PrismicProcessor.getRawText(author)
       );
     },
-    image: function() {
-      const { metaImage, ...heroImage } = this.essay.hero_image;
+    image: function () {
+      const { SocialMedia, ...heroImage } = this.essay.hero_image;
       return heroImage;
     },
-    description: function() {
+    description: function () {
       return this.PrismicProcessor.getRawText(this.essay.description);
     },
-    metaImage: function() {
-      const { metaImage, ...heroImage } = this.essay.hero_image;
-      return metaImage;
+    metaImage: function () {
+      return this.essay.hero_image.SocialMedia;
     },
-    essay: function() {
+    essay: function () {
       return this.rawData;
+    },
+    abstract: function () {
+      return this.PrismicProcessor.getRawText(this.essay.abstract);
     }
   },
   methods: {
     getMetadata() {
       return {
         title: this.combinedTitle,
-        description: this.description,
+        description: this.description || this.abstract,
         authors: this.authors,
         image: this.metaImage
       };

@@ -59,7 +59,7 @@ class MetadataManager {
 
     if (type) metadata.push(this._getOpenGraphMetaTag("type", type));
 
-    if (image) {
+    if (!_.isEmpty(image)) {
       Array.prototype.push.apply(metadata, this._getOpenGraphImageData(image));
     }
 

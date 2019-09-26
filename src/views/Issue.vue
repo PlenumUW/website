@@ -77,6 +77,32 @@ export default {
     },
     downloadUrl: function () {
       return this.issue.download_file.url;
+    },
+    metaImage: function () {
+      return this.issue.cover_image.SocialMedia;
+    },
+    metaDescription: function () {
+      if (this.issue.description) {
+        return this.PrismicProcessor.getRawText(this.issue.description);
+      }
+
+      const buildShortToc = () => {
+        const entries = this.essays.map((essay) => {
+          let entry = "'" + this.getEssayTitle(essay) + "'";
+
+          const authors = essay.data.authors;
+          if (authors.length <= 2) {
+            entry += " by ";
+            entry += this.getListedAuthors(authors, ", ");
+          }
+
+          return entry;
+        });
+        console.log(entries);
+
+        return entries.join(" | ");
+      };
+      return "Contents: " + buildShortToc();
     }
   },
   methods: {
@@ -90,19 +116,24 @@ export default {
       return this.PrismicProcessor.getRawText(essay.data.subtitle);
     },
     // TODO: make DRY with TableOfContents
-    getListedAuthors(authors) {
+    getListedAuthors(authors, seperator = " | ") {
       let authorsListed = "";
       authors.forEach(({ author }, index) => {
         authorsListed += this.PrismicProcessor.getRawText(author);
         if (index !== authors.length - 1) {
-          authorsListed += " | ";
+          authorsListed += seperator;
         }
       });
       return authorsListed;
     },
+    getEssayAuthor(essay) {
+      return this.PrismicProcessor.getRawText(author);
+    },
     getMetadata() {
       return {
-        title: this.title
+        title: this.title,
+        description: this.metaDescription,
+        image: this.metaImage
       };
     }
   },

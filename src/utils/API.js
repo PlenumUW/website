@@ -64,7 +64,7 @@ class Api {
     if (includeEssays) {
       let essayRequests = [];
 
-      issues.forEach(issue => {
+      issues.forEach((issue) => {
         essayRequests.push(this.addEssaysToIssue(issue));
       });
 

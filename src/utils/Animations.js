@@ -448,6 +448,17 @@ const viewTransitions = {
           this.setActiveColorString(
             this.colors.serializeRgb(this.currentBackgroundColor)
           );
+
+          /**
+           * Setting transform to unset prevents the creation of a new stacking order
+           * on the paper. Doing this ensures that headings stay above the header gradients.
+           * */
+
+          const papers = el.getElementsByClassName("paper");
+          for (let paper of papers) {
+            paper.style.transform = "unset";
+          }
+
           this.startEnter = undefined;
           done();
           resolve();

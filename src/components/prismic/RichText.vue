@@ -73,7 +73,7 @@ const Elements = {
   },
   h1: {
     type: "heading1",
-    open: (classes = "", { anchors = false, anchorId, sticky = false }) => {
+    open: (classes = "", { anchors = false, anchorId }) => {
       let openingEls = "";
 
       if (anchors) {
@@ -82,34 +82,84 @@ const Elements = {
         openingEls += `<a href="#${anchorId}">`; // TODO: add accessibility to a tags in richtext
       }
 
-      return openingEls + `<h1 ${htmlClassSyntax(classes)}>`;
+      return openingEls + `<h1 ${htmlClassSyntax(classes + " h1")}>`;
     },
     close: ({ anchors = false }) => "</h1>" + (anchors ? "</a>" : "")
   },
   h2: {
     type: "heading2",
-    open: classes => `<h2 ${htmlClassSyntax(classes + " h2")}>`,
-    close: () => "</h2>"
+    open: (classes = "", { anchors = false, anchorId }) => {
+      let openingEls = "";
+
+      if (anchors) {
+        if (!anchorId) throw new Error("No anchor name provided.");
+
+        openingEls += `<a href="#${anchorId}">`; // TODO: add accessibility to a tags in richtext
+      }
+
+      return openingEls + `<h2 ${htmlClassSyntax(classes + " h2")}>`;
+    },
+    close: ({ anchors = false }) => "</h2>" + (anchors ? "</a>" : "")
   },
   h3: {
     type: "heading3",
-    open: classes => `<h3 ${htmlClassSyntax(classes + " h3")}>`,
-    close: () => "</h3>"
+    open: (classes = "", { anchors = false, anchorId }) => {
+      let openingEls = "";
+
+      if (anchors) {
+        if (!anchorId) throw new Error("No anchor name provided.");
+
+        openingEls += `<a href="#${anchorId}">`; // TODO: add accessibility to a tags in richtext
+      }
+
+      return openingEls + `<h3 ${htmlClassSyntax(classes + " h3")}>`;
+    },
+    close: ({ anchors = false }) => "</h3>" + (anchors ? "</a>" : "")
   },
   h4: {
     type: "heading4",
-    open: classes => `<h4 ${htmlClassSyntax(classes + " h4")}>`,
-    close: () => "</h4>"
+    open: (classes = "", { anchors = false, anchorId }) => {
+      let openingEls = "";
+
+      if (anchors) {
+        if (!anchorId) throw new Error("No anchor name provided.");
+
+        openingEls += `<a href="#${anchorId}">`; // TODO: add accessibility to a tags in richtext
+      }
+
+      return openingEls + `<h4 ${htmlClassSyntax(classes + " h4")}>`;
+    },
+    close: ({ anchors = false }) => "</h4>" + (anchors ? "</a>" : "")
   },
   h5: {
     type: "heading5",
-    open: classes => `<h5 ${htmlClassSyntax(classes + " h5")}>`,
-    close: () => "</h5>"
+    open: (classes = "", { anchors = false, anchorId }) => {
+      let openingEls = "";
+
+      if (anchors) {
+        if (!anchorId) throw new Error("No anchor name provided.");
+
+        openingEls += `<a href="#${anchorId}">`; // TODO: add accessibility to a tags in richtext
+      }
+
+      return openingEls + `<h5 ${htmlClassSyntax(classes + " h5")}>`;
+    },
+    close: ({ anchors = false }) => "</h5>" + (anchors ? "</a>" : "")
   },
   h6: {
     type: "heading6",
-    open: classes => `<h6 ${htmlClassSyntax(classes + " h6")}>`,
-    close: () => "</h6>"
+    open: (classes = "", { anchors = false, anchorId }) => {
+      let openingEls = "";
+
+      if (anchors) {
+        if (!anchorId) throw new Error("No anchor name provided.");
+
+        openingEls += `<a href="#${anchorId}">`; // TODO: add accessibility to a tags in richtext
+      }
+
+      return openingEls + `<h6 ${htmlClassSyntax(classes + " h6")}>`;
+    },
+    close: ({ anchors = false }) => "</h6>" + (anchors ? "</a>" : "")
   }
 };
 
@@ -123,8 +173,8 @@ export default {
       /**
        * Validates that the given objects are valid Prismic objects.
        */
-      validator: function(val) {
-        return val.every(p => {
+      validator: function (val) {
+        return val.every((p) => {
           const hasProps =
             p.hasOwnProperty("type") &&
             ((p.hasOwnProperty("spans") && p.hasOwnProperty("text")) ||
@@ -149,43 +199,43 @@ export default {
     classes: {
       required: false,
       type: String,
-      default: function() {
+      default: function () {
         return "";
       }
     },
     anchors: {
       required: false,
       type: Boolean,
-      default: function() {
+      default: function () {
         return false;
       }
     },
     stickyHeading: {
       required: false,
       type: Boolean,
-      default: function() {
+      default: function () {
         return false;
       }
     }
   },
-  data: function() {
+  data: function () {
     return {
       olListOpen: false,
       ulListOpen: false
     };
   },
   computed: {
-    html: function() {
+    html: function () {
       return this.buildHtml();
     },
     // Whether there is a wrapping element tag that is currently open
-    wrappingHtmlElementOpen: function() {
+    wrappingHtmlElementOpen: function () {
       return this.olListOpen || this.ulListOpen;
     },
-    sticky: function() {
+    sticky: function () {
       return this.stickyHeading && this.parentType === Elements.h1.type;
     },
-    parentType: function() {
+    parentType: function () {
       return this.body[0].type;
     }
   },
@@ -236,16 +286,15 @@ export default {
       let options = {
         sticky: this.stickyHeading,
         anchors: this.anchors,
-        anchorId:
-          data.type === Elements.h1.type
-            ? encodeURI(data.text.replace(/ /g, "_"))
-            : undefined
+        anchorId: data.type.includes("heading")
+          ? encodeURI(data.text.replace(/ /g, "-").toLowerCase())
+          : undefined
       };
 
       html += this.processOpeningWrappers(type);
       html += open(this.wrappingHtmlElementOpen ? "" : this.classes, options);
 
-      spans.forEach(span => {
+      spans.forEach((span) => {
         const { type, data, start, end } = span;
         const { open, close } = this.findElement(type);
         let options = {};

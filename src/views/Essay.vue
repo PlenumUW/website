@@ -25,7 +25,7 @@
 
     <section v-for="(slices, index) in sections" :key="`${index}`" class="c-essay__section">
       <paper class="c-essay__section__paper" :color="color">
-        <rich-text v-for="({ primary, slice_type }, sliceIndex) in slices" :key="`section-${index}_slice-${sliceIndex}`" :body="primary[slice_type]" anchors stickyHeading></rich-text>
+        <rich-text v-for="({ primary, slice_type }, sliceIndex) in slices" :key="`section-${index}_slice-${sliceIndex}`" class="c-essay__section__paper__rich-text" :body="primary[slice_type]" anchors stickyHeading></rich-text>
       </paper>
     </section>
   </article>
@@ -80,8 +80,6 @@ export default {
       return this.essay.body;
     },
     sections: function () {
-      // if (this.loading) return [[{}]];
-
       let sections = [];
 
       let section = [];
@@ -113,6 +111,7 @@ export default {
         image: this.metaImage
       };
     },
+    // TODO: move scroll to logic to seperate script tag that runs on static html
     scrollToElWithHash(hash) {
       const scrollEl = document.documentElement;
       const anchorEl = document.querySelectorAll(`a[href='${hash}']`)[0];
@@ -223,7 +222,15 @@ $title-left-margin: 1.5em;
   a {
     text-decoration: none;
 
-    h1 {
+    &:hover {
+      text-decoration: underline;
+    }
+
+    h1,
+    h2 {
+      padding-left: $title-left-margin;
+      text-indent: calc(-1 * #{$title-left-margin});
+
       &:before {
         content: "\00A7";
         position: absolute;
@@ -231,18 +238,36 @@ $title-left-margin: 1.5em;
 
         font-family: $font-serif;
 
+        opacity: 0;
+
+        font-size: 1.9rem;
+        line-height: 1.15em; // Center align with title
+      }
+
+      &:hover {
+        &:before {
+          opacity: 1;
+          text-decoration: none;
+        }
+      }
+    }
+
+    h1 {
+      &:before {
         opacity: 0.4;
         line-height: 1.15em; // Center align with title
       }
 
       &:hover {
-        text-decoration: underline;
-        cursor: pointer;
-
         &:before {
           opacity: 1;
-          text-decoration: none;
         }
+      }
+    }
+
+    h2 {
+      &:before {
+        line-height: 1.3em; // Center align with title
       }
     }
   }
@@ -251,9 +276,6 @@ $title-left-margin: 1.5em;
     width: 90%;
     margin-bottom: 1.5em;
     line-height: 1.2em;
-
-    padding-left: $title-left-margin;
-    text-indent: calc(-1 * #{$title-left-margin});
 
     font-family: $font-titling--subtitle;
     font-size: 1.6em;
@@ -268,11 +290,33 @@ $title-left-margin: 1.5em;
     width: 90%;
     margin-top: 3em;
     margin-left: $title-left-margin;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.8em;
 
     font-family: $font-titling--subtitle;
     font-variant: small-caps;
     font-size: 1.45em;
+
+    $h2-border: 1px solid black;
+    border-top: $h2-border;
+    border-bottom: $h2-border;
+  }
+
+  h3 {
+    font-size: 1.6em;
+    font-family: $font-titling--subtitle;
+    font-variant: all-small-caps;
+
+    width: fit-content;
+    margin: auto;
+    margin-bottom: 0.8em;
+    margin-top: 2em;
+    max-width: 70%;
+    text-align: center;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    text-indent: 0;
+    padding-left: 0;
+    line-height: 1.1em;
   }
 
   p {

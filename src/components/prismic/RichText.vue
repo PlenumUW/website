@@ -1,5 +1,5 @@
 <template>
-  <div class="c-rich-text" v-html="html"></div>
+  <div class="c-rich-text" :class="{'sticky': sticky}" v-html="html"></div>
 </template>
 
 <script>
@@ -10,8 +10,7 @@ function htmlClassSyntax(classes) {
 const Elements = {
   pre: {
     type: "preformatted",
-    open: ({ text } = {}, classes = "") => {
-      console.log(text, classes);
+    open: (classes = "", { text }) => {
       const firstClosingCaretIndex = text.indexOf(">");
 
       let html =
@@ -19,63 +18,73 @@ const Elements = {
         " " +
         htmlClassSyntax(classes) +
         text.substring(firstClosingCaretIndex);
-      console.log(html);
       return html;
     },
     close: () => ""
   },
   p: {
     type: "paragraph",
-    open: (data = {}, classes = "") => `<p ${htmlClassSyntax(classes)}>`,
+    open: (classes = "", options = {}) => `<p ${htmlClassSyntax(classes)}>`,
     close: () => "</p>"
   },
   // TODO: generate ImageSimple component
   img: {
     type: "image",
-    open: (data = {}, classes = "", alt = "", src = "") =>
+    open: (classes = "", options = {}, alt = "", src = "") =>
       `<img src="${src}" ${htmlClassSyntax(classes)} alt=${alt}>`,
     close: () => "</img>"
   },
   a: {
     type: "hyperlink",
-    open: ({ url, target } = {}, classes = "") =>
+    open: (classes = "", { url, target }) =>
       `<a ${htmlClassSyntax(classes)} href="${url}" target="${target}">`,
     close: () => "</a>"
   },
   strong: {
     type: "strong",
-    open: (data = {}, classes = "") => `<strong ${htmlClassSyntax(classes)}>`,
+    open: (classes = "", options = {}) =>
+      `<strong ${htmlClassSyntax(classes)}>`,
     close: () => "</strong>"
   },
   em: {
     type: "em",
-    open: (data = {}, classes = "") => `<em ${htmlClassSyntax(classes)}>`,
+    open: (classes = "", options = {}) => `<em ${htmlClassSyntax(classes)}>`,
     close: () => "</em>"
   },
   ulli: {
     type: "list-item",
-    open: (data = {}, classes = "") => `<li ${htmlClassSyntax(classes)}>`,
+    open: (classes = "", options = {}) => `<li ${htmlClassSyntax(classes)}>`,
     close: () => "</li>"
   },
   olli: {
     type: "o-list-item",
-    open: (data = {}, classes = "") => `<li ${htmlClassSyntax(classes)}>`,
+    open: (classes = "", options = {}) => `<li ${htmlClassSyntax(classes)}>`,
     close: () => "</li>"
   },
   ul: {
     type: "u-list",
-    open: (data = {}, classes = "") => `<ul ${htmlClassSyntax(classes)}>`,
+    open: (classes = "", options = {}) => `<ul ${htmlClassSyntax(classes)}>`,
     close: () => "</ul>"
   },
   ol: {
     type: "o-list",
-    open: (data = {}, classes = "") => `<ol ${htmlClassSyntax(classes)}>`,
+    open: (classes = "", options = {}) => `<ol ${htmlClassSyntax(classes)}>`,
     close: () => "</ol>"
   },
   h1: {
     type: "heading1",
-    open: (data = {}, classes = "") => `<h1 ${htmlClassSyntax(classes)}>`,
-    close: () => "</h1>"
+    open: (classes = "", { anchors = false, anchorId, sticky = false }) => {
+      let openingEls = "";
+
+      if (anchors) {
+        if (!anchorId) throw new Error("No anchor name provided.");
+
+        openingEls += `<a href="#${anchorId}">`; // TODO: add accessibility to a tags in richtext
+      }
+
+      return openingEls + `<h1 ${htmlClassSyntax(classes)}>`;
+    },
+    close: ({ anchors = false }) => "</h1>" + (anchors ? "</a>" : "")
   },
   h2: {
     type: "heading2",
@@ -114,8 +123,8 @@ export default {
       /**
        * Validates that the given objects are valid Prismic objects.
        */
-      validator: function (val) {
-        return val.every((p) => {
+      validator: function(val) {
+        return val.every(p => {
           const hasProps =
             p.hasOwnProperty("type") &&
             ((p.hasOwnProperty("spans") && p.hasOwnProperty("text")) ||
@@ -140,38 +149,44 @@ export default {
     classes: {
       required: false,
       type: String,
-      default: function () {
+      default: function() {
         return "";
       }
     },
     anchors: {
       required: false,
       type: Boolean,
-      default: function () {
+      default: function() {
         return false;
       }
     },
     stickyHeading: {
       required: false,
       type: Boolean,
-      default: function () {
+      default: function() {
         return false;
       }
     }
   },
-  data: function () {
+  data: function() {
     return {
       olListOpen: false,
       ulListOpen: false
     };
   },
   computed: {
-    html: function () {
+    html: function() {
       return this.buildHtml();
     },
     // Whether there is a wrapping element tag that is currently open
-    wrappingHtmlElementOpen: function () {
+    wrappingHtmlElementOpen: function() {
       return this.olListOpen || this.ulListOpen;
+    },
+    sticky: function() {
+      return this.stickyHeading && this.parentType === Elements.h1.type;
+    },
+    parentType: function() {
+      return this.body[0].type;
     }
   },
   methods: {
@@ -202,7 +217,7 @@ export default {
           break;
 
         case Elements.pre.type:
-          html += Elements.pre.open(data, this.classes);
+          html += Elements.pre.open(this.classes, data);
           break;
 
         default:
@@ -218,25 +233,34 @@ export default {
       let currentIndex = 0;
 
       const { open, close } = this.findElement(type);
+      let options = {
+        sticky: this.stickyHeading,
+        anchors: this.anchors,
+        anchorId:
+          data.type === Elements.h1.type
+            ? encodeURI(data.text.replace(/ /g, "_"))
+            : undefined
+      };
 
       html += this.processOpeningWrappers(type);
-      html += open({}, this.wrappingHtmlElementOpen ? "" : this.classes);
+      html += open(this.wrappingHtmlElementOpen ? "" : this.classes, options);
 
-      spans.forEach((span) => {
+      spans.forEach(span => {
         const { type, data, start, end } = span;
         const { open, close } = this.findElement(type);
+        let options = {};
 
         html += text.slice(currentIndex, start);
         currentIndex = start;
-        html += open(data);
+        html += open(data, options);
         html += text.slice(currentIndex, end);
         currentIndex = end;
-        html += close();
+        html += close({ anchors: this.anchors });
       });
 
       html += text.slice(currentIndex, text.length);
 
-      html += close();
+      html += close({ anchors: this.anchors });
       html += this.processClosingWrappers(type, index);
 
       return html;
@@ -244,8 +268,14 @@ export default {
     serializeImage(data) {
       const { type, alt, dimensions, copyright, url } = data;
       const { open, close } = Elements.img;
+      let options = {};
 
-      return open({}, this.classes, alt, url) + close();
+      return (
+        open(this.classes, options, alt, url) +
+        close({
+          anchors: this.anchors
+        })
+      );
     },
     processOpeningWrappers(type) {
       let el;
@@ -260,7 +290,8 @@ export default {
         return "";
       }
 
-      const wrappers = el.open({}, this.classes);
+      let options = {};
+      const wrappers = el.open(this.classes, options);
 
       return wrappers;
     },
@@ -283,7 +314,7 @@ export default {
         return "";
       }
 
-      const wrappers = el.close();
+      const wrappers = el.close({ anchors: this.anchors });
 
       return wrappers;
     }
@@ -293,8 +324,6 @@ export default {
 <style lang="scss" scoped>
 .sticky {
   position: sticky;
-  top: 0.5em; // TODO: move specifics to parent component that requested sticky headers
-  z-index: 3; // TODO: move specifics to parent component that requested sticky headers
 }
 </style>
 

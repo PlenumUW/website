@@ -31,6 +31,8 @@
   </article>
 </template>
 <script>
+import Velocity from "velocity-animate";
+
 import BaseView from "./BaseView";
 import HeaderGradient from "@/components/HeaderGradient";
 import RichText from "@/components/prismic/RichText.vue";
@@ -97,6 +99,9 @@ export default {
       }
 
       return sections;
+    },
+    currentHash: function () {
+      return this.$route.hash;
     }
   },
   methods: {
@@ -107,6 +112,14 @@ export default {
         authors: this.authors,
         image: this.metaImage
       };
+    },
+    scrollToElWithHash(hash) {
+      const scrollEl = document.documentElement;
+      const anchorEl = document.querySelectorAll(`a[href='${hash}']`)[0];
+
+      const anchorPos = anchorEl.getBoundingClientRect().top - 100; // arbitrary 100 to displace scroll to location
+
+      scrollEl.scrollTop = anchorPos;
     }
   },
   meta() {
@@ -115,6 +128,12 @@ export default {
       this.scriptMetadata,
       "article"
     );
+  },
+  mounted: function () {
+    const hash = this.currentHash;
+    if (hash !== "") {
+      this.scrollToElWithHash(hash);
+    }
   }
 };
 </script>
@@ -202,6 +221,8 @@ $title-left-margin: 1.5em;
   }
 
   a {
+    text-decoration: none;
+
     h1 {
       &:before {
         content: "\00A7";
@@ -236,6 +257,11 @@ $title-left-margin: 1.5em;
 
     font-family: $font-titling--subtitle;
     font-size: 1.6em;
+  }
+
+  .sticky {
+    top: 0.5em;
+    z-index: 3;
   }
 
   h2 {

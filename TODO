@@ -87,6 +87,9 @@ Performance:
     Animation lags if loading from API
         - Paper transition into viewport jitters
 
+Accessibility:
+    ☐ Header gradients are wrongly using the header tag @created(19-09-26 19:28)
+
 Bugs:
     ☐ Class '.app--no-scroll', activated when menu is open in mobile, removes the scrollbar, which shifts the background text while the menu opens @created(19-09-14 21:18)
     ☐ Main content area should be visible if menu is forced open via mobile and then expanded to tablet/desktop @created(19-09-14 21:19)

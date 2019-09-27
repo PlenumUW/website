@@ -143,6 +143,20 @@ export default {
       default: function () {
         return "";
       }
+    },
+    anchors: {
+      required: false,
+      type: Boolean,
+      default: function () {
+        return false;
+      }
+    },
+    stickyHeading: {
+      required: false,
+      type: Boolean,
+      default: function () {
+        return false;
+      }
     }
   },
   data: function () {
@@ -168,7 +182,9 @@ export default {
       );
     },
     findElement(type) {
-      const elKey = Object.keys(Elements).find(key => Elements[key].type === type);
+      const elKey = Object.keys(Elements).find(
+        key => Elements[key].type === type
+      );
 
       if (elKey === undefined) {
         throw new Error("Prismic element type, '" + type + "', unhandled.");
@@ -274,3 +290,11 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.sticky {
+  position: sticky;
+  top: 0.5em; // TODO: move specifics to parent component that requested sticky headers
+  z-index: 3; // TODO: move specifics to parent component that requested sticky headers
+}
+</style>
+

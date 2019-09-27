@@ -1,10 +1,10 @@
 <template>
   <article>
-    <div class="c-essay__header">
-      <header class="o-header c-essay__header__gradient-wrapper">
-        <header-gradient class="o-header__gradient" :color="color"></header-gradient>
-      </header>
+    <div class="o-header c-essay__header__gradient-wrapper">
+      <header-gradient class="o-header__gradient" :color="color"></header-gradient>
+    </div>
 
+    <header class="c-essay__header">
       <h1 class="c-essay__title-wrapper o-header-title">
         <div class="c-essay__title">{{ title }}</div>
         <div class="c-essay__subtitle">{{ subtitle }}</div>
@@ -15,20 +15,30 @@
           {{ author }}
         </div>
       </div>
+    </header>
+
+    <div class="c-essay__context">
+      <paper :color="color">
+        {{ abstract }}
+      </paper>
     </div>
-    <paper :color="color">
-      {{ abstract }}
-    </paper>
+
+    <section v-for="(slices, index) in sections" :key="`${index}`" class="c-essay__section">
+      <paper class="c-essay__section__paper" :color="color">
+        <rich-text v-for="({ primary, slice_type }, sliceIndex) in slices" :key="`section-${index}_slice-${sliceIndex}`" :body="primary[slice_type]" anchors stickyHeading></rich-text>
+      </paper>
+    </section>
   </article>
 </template>
 <script>
 import BaseView from "./BaseView";
 import HeaderGradient from "@/components/HeaderGradient";
+import RichText from "@/components/prismic/RichText.vue";
 
 export default {
   name: "Essay",
   extends: BaseView,
-  components: { HeaderGradient },
+  components: { HeaderGradient, RichText },
   computed: {
     combinedTitle: function () {
       if (!this.title || !this.subtitle) return "";
@@ -63,6 +73,30 @@ export default {
     },
     abstract: function () {
       return this.PrismicProcessor.getRawText(this.essay.abstract);
+    },
+    body: function () {
+      return this.essay.body;
+    },
+    sections: function () {
+      // if (this.loading) return [[{}]];
+
+      let sections = [];
+
+      let section = [];
+      this.body.forEach(({ primary, slice_type }) => {
+        if (slice_type === "section_title" && section.length > 0) {
+          sections.push(section);
+          section = [];
+        }
+
+        section.push({ primary, slice_type });
+      });
+
+      if (section.length > 0) {
+        sections.push(section);
+      }
+
+      return sections;
     }
   },
   methods: {
@@ -84,7 +118,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 @mixin align-right() {
   margin-left: auto;
   text-align: right;
@@ -124,7 +158,6 @@ export default {
   }
   &__subtitle {
     width: 70%;
-    margin-top: 0.4em;
 
     font-family: $font-titling--subtitle;
     font-size: 0.4em;
@@ -152,6 +185,72 @@ export default {
     @include for-size(big-desktop-up) {
       @include font-size(2.5em);
     }
+  }
+}
+
+$title-left-margin: 1.5em;
+.c-essay__section {
+  margin-bottom: 150px;
+
+  font-size: 1.15em;
+
+  font-family: $font-serif;
+
+  &__paper {
+    max-width: 1000px;
+    padding: 100px;
+  }
+
+  a {
+    h1 {
+      &:before {
+        content: "\00A7";
+        position: absolute;
+        transform: translateX(0.5em);
+
+        font-family: $font-serif;
+
+        opacity: 0.4;
+        line-height: 1.15em; // Center align with title
+      }
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+
+        &:before {
+          opacity: 1;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  h1 {
+    width: 90%;
+    margin-bottom: 1.5em;
+    line-height: 1.2em;
+
+    padding-left: $title-left-margin;
+    text-indent: calc(-1 * #{$title-left-margin});
+
+    font-family: $font-titling--subtitle;
+    font-size: 1.6em;
+  }
+
+  h2 {
+    width: 90%;
+    margin-top: 3em;
+    margin-left: $title-left-margin;
+    margin-bottom: 0.5em;
+
+    font-family: $font-titling--subtitle;
+    font-variant: small-caps;
+    font-size: 1.45em;
+  }
+
+  p {
+    margin-bottom: 1.5em;
   }
 }
 </style>

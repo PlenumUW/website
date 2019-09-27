@@ -28,6 +28,15 @@
         <rich-text v-for="({ primary, slice_type }, sliceIndex) in slices" :key="`section-${index}_slice-${sliceIndex}`" class="c-essay__section__paper__rich-text" :body="primary[slice_type]" anchors stickyHeading></rich-text>
       </paper>
     </section>
+
+    <section v-if="bibliography" class="c-essay__section c-essay__section--bibliography">
+      <paper class="c-essay__section__paper" :color="color">
+        <a class="sticky" href="#bibliography">
+          <h1>Bibliography</h1>
+        </a>
+        <rich-text class="c-essay__section__paper__rich-text" :body="bibliography"></rich-text>
+      </paper>
+    </section>
   </article>
 </template>
 <script>
@@ -79,6 +88,12 @@ export default {
     body: function () {
       return this.essay.body;
     },
+    bibliography: function () {
+      const bibliography = this.essay.bibliography;
+      if (_.isEmpty(bibliography)) return undefined;
+
+      return bibliography;
+    },
     sections: function () {
       let sections = [];
 
@@ -93,6 +108,7 @@ export default {
       });
 
       if (section.length > 0) {
+        // Fence post
         sections.push(section);
       }
 
@@ -116,7 +132,7 @@ export default {
       const scrollEl = document.documentElement;
       const anchorEl = document.querySelectorAll(`a[href='${hash}']`)[0];
 
-      const anchorPos = anchorEl.getBoundingClientRect().top - 100; // arbitrary 100 to displace scroll to location
+      const anchorPos = anchorEl.getBoundingClientRect().top - 250; // TODO: calculate distance to show top of paper with shadow
 
       scrollEl.scrollTop = anchorPos;
     }
@@ -214,11 +230,6 @@ $title-left-margin: 1.5em;
 
   font-family: $font-serif;
 
-  &__paper {
-    max-width: 1000px;
-    padding: 100px;
-  }
-
   a {
     text-decoration: none;
 
@@ -282,6 +293,7 @@ $title-left-margin: 1.5em;
   }
 
   .sticky {
+    display: block;
     top: 0.5em;
     z-index: 3;
   }
@@ -320,7 +332,42 @@ $title-left-margin: 1.5em;
   }
 
   p {
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
+    text-indent: 3rem; // TODO: align with h1 text-indents
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  $paper-padding: 100px;
+  $paper-padding--top: calc(#{$paper-padding} - 1em);
+  $bibliography-padding: 60px;
+
+  &__paper {
+    max-width: 1000px;
+    padding: $paper-padding--top $paper-padding;
+  }
+
+  &--bibliography {
+    .paper {
+      padding: $bibliography-padding;
+      padding-top: $paper-padding--top;
+    }
+
+    h1 {
+      margin-left: calc(#{$paper-padding} - #{$bibliography-padding});
+    }
+
+    p {
+      padding-left: 2em; // TODO: create hanging indent mixin
+      text-indent: -2em;
+      margin-bottom: 0.8em;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
   }
 }
 </style>

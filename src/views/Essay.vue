@@ -18,11 +18,12 @@
     </header>
 
     <div class="c-essay__context">
-      <paper :color="color">
-        {{ abstract }}
+      <paper class="c-essay__context__abstract" :color="color">
+        <div class="c-essay__context__abstract__title">Abstract</div>
+        <p class="c-essay__context__abstract__body">{{ abstract }}</p>
       </paper>
+      <hr />
     </div>
-
     <section v-for="(slices, index) in sections" :key="`${index}`" class="c-essay__section">
       <paper class="c-essay__section__paper" :color="color">
         <rich-text v-for="({ primary, slice_type }, sliceIndex) in slices" :key="`section-${index}_slice-${sliceIndex}`" class="c-essay__section__paper__rich-text" :body="primary[slice_type]" anchors stickyHeading></rich-text>
@@ -205,6 +206,7 @@ export default {
       margin-bottom: 0;
     }
   }
+
   &__title-wrapper {
     width: 100%;
     top: 0; // Override sticky header
@@ -217,6 +219,7 @@ export default {
       padding-left: 1em;
     }
   }
+
   &__title {
     font-size: 0.8em; // Adjust from header em size
   }
@@ -229,6 +232,7 @@ export default {
 
     @include align-right();
   }
+
   &__authors {
     width: 50%;
 
@@ -250,15 +254,62 @@ export default {
       @include font-size(2.5em);
     }
   }
+
+  &__context {
+    max-width: 1000px;
+    margin-bottom: 100px;
+    font-family: $font-serif;
+
+    font-size: 1em;
+    line-height: 1.4em;
+    text-align: justify;
+
+    @include for-size(tablet-landscape-up) {
+      font-size: 1.15em;
+    }
+
+    hr {
+      border: 3px solid black;
+    }
+
+    &__abstract {
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 100px;
+      padding: 15px;
+
+      @include for-size(tablet-portrait-up) {
+        padding: 3em;
+      }
+
+      @include for-size(desktop-up) {
+        max-width: 80%;
+
+        padding: 80px;
+        padding-top: 40px;
+      }
+
+      &__title {
+        font-size: 2em;
+        margin-bottom: 1em;
+      }
+      &__body {
+      }
+    }
+  }
 }
 
 $title-left-margin: 1.5em;
 .c-essay__section {
   margin-bottom: 150px;
 
-  font-size: 1.15em;
+  font-size: 1em;
 
   font-family: $font-serif;
+
+  @include for-size(tablet-landscape-up) {
+    font-size: 1.15em;
+  }
 
   a {
     text-decoration: none;
@@ -314,12 +365,16 @@ $title-left-margin: 1.5em;
   }
 
   h1 {
-    width: 90%;
+    width: 100%;
     margin-bottom: 1.5em;
     line-height: 1.2em;
 
     font-family: $font-titling--subtitle;
     font-size: 1.6em;
+
+    @include for-size(tablet-landscape-up) {
+      width: 90%;
+    }
   }
 
   .sticky {
@@ -361,7 +416,8 @@ $title-left-margin: 1.5em;
     line-height: 1.1em;
   }
 
-  p {
+  p,
+  &__paper__rich-text {
     margin-bottom: 1em;
     text-indent: 3rem; // TODO: align with h1 text-indents
 
@@ -376,7 +432,17 @@ $title-left-margin: 1.5em;
 
   &__paper {
     max-width: 1000px;
-    padding: $paper-padding--top $paper-padding;
+    padding: 3em;
+
+    padding: 15px;
+
+    @include for-size(tablet-portrait-up) {
+      padding: 3em;
+    }
+
+    @include for-size(tablet-landscape-up) {
+      padding: $paper-padding--top $paper-padding;
+    }
   }
 
   &--bibliography {

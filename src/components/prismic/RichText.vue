@@ -173,8 +173,8 @@ export default {
       /**
        * Validates that the given objects are valid Prismic objects.
        */
-      validator: function (val) {
-        return val.every((p) => {
+      validator: function(val) {
+        return val.every(p => {
           const hasProps =
             p.hasOwnProperty("type") &&
             ((p.hasOwnProperty("spans") && p.hasOwnProperty("text")) ||
@@ -199,43 +199,43 @@ export default {
     classes: {
       required: false,
       type: String,
-      default: function () {
+      default: function() {
         return "";
       }
     },
     anchors: {
       required: false,
       type: Boolean,
-      default: function () {
+      default: function() {
         return false;
       }
     },
     stickyHeading: {
       required: false,
       type: Boolean,
-      default: function () {
+      default: function() {
         return false;
       }
     }
   },
-  data: function () {
+  data: function() {
     return {
       olListOpen: false,
       ulListOpen: false
     };
   },
   computed: {
-    html: function () {
+    html: function() {
       return this.buildHtml();
     },
     // Whether there is a wrapping element tag that is currently open
-    wrappingHtmlElementOpen: function () {
+    wrappingHtmlElementOpen: function() {
       return this.olListOpen || this.ulListOpen;
     },
-    sticky: function () {
+    sticky: function() {
       return this.stickyHeading && this.parentType === Elements.h1.type;
     },
-    parentType: function () {
+    parentType: function() {
       return this.body[0].type;
     }
   },
@@ -294,7 +294,7 @@ export default {
       html += this.processOpeningWrappers(type);
       html += open(this.wrappingHtmlElementOpen ? "" : this.classes, options);
 
-      spans.forEach((span) => {
+      spans.forEach(span => {
         const { type, data, start, end } = span;
         const { open, close } = this.findElement(type);
         let options = {};

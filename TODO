@@ -74,6 +74,11 @@ Efficiency:
         ☐ Get an A! @created(19-09-14 09:00)
     ☐ Chrome Dev Tools Audit @created(19-09-14 15:56)
 
+Essay:
+    ☐ Add event listeners to all heading links @created(19-09-27 20:09)
+        ☐ When click , always scroll to element or element's container @created(19-09-27 20:12)
+    ☐ Set top property of sticky headings based on rendered height and height of header gradient in order to center title @created(19-09-28 11:12)
+
 Icons:
     ☐ Create equal height, equal angle, and equal long bar positioned icons similar to logo @created(19-09-15 12:04)
         ☐ Download @created(19-09-15 12:04)

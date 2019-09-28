@@ -50,6 +50,11 @@ export default {
   name: "Essay",
   extends: BaseView,
   components: { HeaderGradient, RichText },
+  watch: {
+    currentHash: function (newVal, oldVal) {
+      this.scrollToElWithHash(newVal);
+    }
+  },
   computed: {
     combinedTitle: function () {
       if (!this.title || !this.subtitle) return "";
@@ -98,6 +103,7 @@ export default {
       let sections = [];
 
       let section = [];
+      // Build sections determined by section title slices as the initial slice
       this.body.forEach(({ primary, slice_type }) => {
         if (slice_type === "section_title" && section.length > 0) {
           sections.push(section);
@@ -107,8 +113,8 @@ export default {
         section.push({ primary, slice_type });
       });
 
+      // Fence post: Add the last built section
       if (section.length > 0) {
-        // Fence post
         sections.push(section);
       }
 
@@ -132,9 +138,33 @@ export default {
       const scrollEl = document.documentElement;
       const anchorEl = document.querySelectorAll(`a[href='${hash}']`)[0];
 
-      const anchorPos = anchorEl.getBoundingClientRect().top - 250; // TODO: calculate distance to show top of paper with shadow
+      const scrollElPos = scrollEl.scrollTop;
+      let anchorPos = anchorEl.getBoundingClientRect().top - 250; // TODO: calculate distance to show top of paper with shadow
 
-      scrollEl.scrollTop = anchorPos;
+      // if anchorpos is negative or less than 10 (10 = top postion -> TODO: put in scss globals, export to here)
+      if (anchorPos < 10 && anchorEl.children[0].tagName === "H1") {
+        // Checking tag name prevents scrolling to top of paper if h2 is clicked, e.g.
+        const getParentPaper = (el) => {
+          let parent = el.parentElement;
+          while (!parent.classList.contains("paper") && !_.isNull(parent)) {
+            parent = parent.parentElement;
+          }
+
+          if (_.isNull(parent)) return undefined;
+
+          return parent;
+        };
+
+        const anchorContainerEl = getParentPaper(anchorEl);
+        anchorPos = anchorContainerEl.getBoundingClientRect().top - 100; // TODO: paper's padding top difference between earlier 250
+      }
+
+      const offset = scrollElPos + anchorPos;
+      scrollEl.scrollTo({
+        left: 0,
+        top: Math.floor(offset),
+        behavior: "smooth"
+      });
     }
   },
   meta() {

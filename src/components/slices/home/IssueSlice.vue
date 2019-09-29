@@ -1,7 +1,7 @@
 <template>
   <home-slice class="c-issue-slice" :hideBackground="true" :color="bgColor">
     <template #title>
-      <router-link v-if="!loading" :to="issueSlug">{{ title | prismicRawText }}</router-link>
+      <router-link v-if="!loading" :to="issueSlug" :style="{'text-shadow': `${bgColor} 0px 0px 10px`}">{{ title | prismicRawText }}</router-link>
     </template>
 
     <template #content>

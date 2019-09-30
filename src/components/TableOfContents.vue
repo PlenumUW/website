@@ -59,13 +59,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$toc_padding: 20px;
-
 .toc {
   position: relative;
   width: 100%;
   height: fit-content;
-  padding: 10px;
 
   font-family: $font-serif;
   font-weight: 200;
@@ -75,7 +72,6 @@ $toc_padding: 20px;
   @include font-size(1.8em);
 
   @include for-size(tablet-portrait-up) {
-    padding: $toc_padding;
     @include font-size(3em);
   }
   @include for-size(desktop-up) {

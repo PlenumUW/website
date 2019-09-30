@@ -19,7 +19,7 @@
 
       <ol class="toc">
         <li v-for="essay in essays" :key="`essay-${essay.id}`" class="entry">
-          <paper class="entry__paper" :color="color">
+          <paper class="entry__paper" :color="color" :type="'toc-entry'">
             <router-link :to="`/issue/${issueSlug}/${essay.uid}`" class="entry__header">
               <div class="entry__header__title">{{getEssayTitle(essay)}}
                 <div class="entry__header__title__subtitle">{{essay.data.subtitle | prismicRawText}}</div>

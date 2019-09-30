@@ -4,33 +4,62 @@
 
 .paper {
   --paper__padding--default: 15px;
+  --paper__padding--essay: 15px;
+  --paper__padding--toc: 10px;
+  --paper__padding--toc-entry: 0px;
 
   padding: calc(var(--paper__padding--default) - 1em)
     var(--paper__padding--default);
+
+  &--essay {
+    padding: calc(var(--paper__padding--essay) * 2) var(--paper__padding--essay);
+  }
+  &--toc {
+    padding: var(--paper__padding--toc);
+  }
+  &--toc-entry {
+    padding: var(--paper__padding--toc-entry);
+  }
 }
 
 @mixin paper--phone-only() {
   .paper {
   }
 }
+
 @mixin paper--tablet-portrait-up() {
   .paper {
     --paper__padding--default: 48px;
+    --paper__padding--essay: 48px;
+    --paper__padding--toc: 15px;
+    --paper__padding--toc-entry: 0px;
+
+    &--essay {
+      padding: calc(var(--paper__padding--essay) - 1em)
+        var(--paper__padding--essay);
+    }
   }
 }
+
 @mixin paper--tablet-landscape-down() {
   .paper {
   }
 }
+
 @mixin paper--tablet-landscape-up() {
   .paper {
     --paper__padding--default: 100px;
+    --paper__padding--essay: 100px;
+    --paper__padding--toc: 20px;
+    --paper__padding--toc-entry: 0px;
   }
 }
+
 @mixin paper--desktop-up() {
   .paper {
   }
 }
+
 @mixin paper--big-desktop-up() {
   .paper {
   }

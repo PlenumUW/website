@@ -80,6 +80,7 @@ $lefter-width: $g-lefter-width;
 
   position: relative;
   align-items: center;
+  padding: 0; // Override default paper padding
   padding-bottom: 20px;
 
   font-family: $font-titling--subtitle;

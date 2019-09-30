@@ -15,9 +15,10 @@
     <div class="site-footer__links">
       <a v-if="terms" :href="terms">Terms of Use</a>
       <a v-if="privacy" :href="privacy">Privacy</a>
-      <a :href="uwLogoLink">
+      <a v-if="uwLogoLink" :href="uwLogoLink">
         <uw-logo class="uw-logo"></uw-logo>
       </a>
+      <uw-logo v-else class="uw-logo"></uw-logo>
     </div>
   </paper>
 </template>
@@ -57,9 +58,7 @@ export default {
 
     this.terms = rawData["terms_of_use"].url;
 
-    this.uwLogoLink = rawData["uw_logo_link"].url || ""; // Ensures that uw logo always exists, even if not a link // TODO: remove hover effect if not a link
-
-    this.facebook = rawData.facebook.url;
+    this.uwLogoLink = this.facebook = rawData.facebook.url;
 
     this.instagram = rawData.instagram.url;
 
@@ -174,12 +173,19 @@ $lefter-width: $g-lefter-width;
     @include for-size(tablet-landscape-up) {
       margin-right: 40px;
     }
+
     a {
       margin-right: 20px;
 
       &:focus {
         text-decoration: none;
         @include focus();
+      }
+
+      &:hover {
+        .uw-logo {
+          fill: rgb(145, 123, 76); // UW Metallic Gold
+        }
       }
     }
 
@@ -189,10 +195,6 @@ $lefter-width: $g-lefter-width;
 
     .uw-logo {
       height: 35px;
-
-      &:hover {
-        fill: rgb(145, 123, 76); // UW Metallic Gold
-      }
     }
   }
 

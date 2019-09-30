@@ -1,0 +1,37 @@
+/**
+    Piece of paper.
+**/
+
+.paper {
+  --paper__padding--default: 15px;
+
+  padding: calc(var(--paper__padding--default) - 1em)
+    var(--paper__padding--default);
+}
+
+@mixin paper--phone-only() {
+  .paper {
+  }
+}
+@mixin paper--tablet-portrait-up() {
+  .paper {
+    --paper__padding--default: 48px;
+  }
+}
+@mixin paper--tablet-landscape-down() {
+  .paper {
+  }
+}
+@mixin paper--tablet-landscape-up() {
+  .paper {
+    --paper__padding--default: 100px;
+  }
+}
+@mixin paper--desktop-up() {
+  .paper {
+  }
+}
+@mixin paper--big-desktop-up() {
+  .paper {
+  }
+}

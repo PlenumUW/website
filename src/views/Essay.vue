@@ -276,11 +276,6 @@ export default {
       margin-left: auto;
       margin-right: auto;
       margin-bottom: 100px;
-      padding: 15px;
-
-      @include for-size(tablet-portrait-up) {
-        padding: 3em;
-      }
 
       @include for-size(desktop-up) {
         max-width: 80%;

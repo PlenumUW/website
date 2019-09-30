@@ -3,41 +3,11 @@
 
 // CSS RESET LOCATED IN INDEX.HTML
 
-/*
-    Import font files
-*/
-$bluu-next-path: "~assets/fonts/BluuNext";
-// TODO: Add bluu next copyright notice/license to copyright view/page, retrieve via download : https://velvetyne.fr/fonts/bluu/download/
-@font-face {
-  font-family: "Bluu";
-  src: url($bluu-next-path+"/bluunext-bold-webfont.woff2") format("woff2"),
-    url($bluu-next-path+"/bluunext-bold-webfont.woff") format("woff"),
-    url($bluu-next-path+"/bluunext-bold.ttf") format("truetype"),
-    url($bluu-next-path+"/bluunext-bold-webfont.svg#bluu_nextbold")
-      format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
+@import "app_fontfaces";
+@import "shadows.scss";
 
-@font-face {
-  font-family: "Bluu";
-  src: url($bluu-next-path+"/bluunext-bolditalic-webfont.woff2") format("woff2"),
-    url($bluu-next-path+"/bluunext-bolditalic-webfont.woff") format("woff"),
-    url($bluu-next-path+"/bluunext-bolditalic.ttf") format("truetype"),
-    url($bluu-next-path+"/bluunext-bolditalic-webfont.svg#bluu_nextbold_italic")
-      format("svg");
-  font-weight: normal;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "Bluu Titling";
-  src: url($bluu-next-path+"/BluuNext-Titling.ttf") format("truetype"),
-    url($bluu-next-path+"/bluunext-titling.woff2") format("woff2"),
-    url($bluu-next-path+"/bluunext-titling.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
+// Objects
+@import "paper";
 
 @import "_settings";
 @import "_mixins";
@@ -61,27 +31,98 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
     }
   }
 }
-$selectionColors: #fbb4ae, #b3cde3, #ccebc5, #decbe4, #fed9a6, #ffffcc;
-@for $i from 1 through length($selectionColors) {
-  $color: nth($selectionColors, $i);
+@mixin perceptuallyUniformSelections() {
+  $selectionColors: #fbb4ae, #b3cde3, #ccebc5, #decbe4, #fed9a6, #ffffcc;
+  @for $i from 1 through length($selectionColors) {
+    $color: nth($selectionColors, $i);
 
-  @include selection($i, $color);
+    @include selection($i, $color);
+  }
 }
 /**
   End alternate selection colors across a small spectrum of perceptually uniform colors
 **/
 
-* {
-  color: $text-color;
+// Responsive CSS variables
+@mixin variables() {
+  --g-header-height: 46px;
+
+  @include for-size(phone-only) {
+  }
+  @include for-size(tablet-portrait-up) {
+    --g-header-height: 62px;
+  }
+  @include for-size(tablet-landscape-down) {
+  }
+  @include for-size(tablet-landscape-up) {
+  }
+  @include for-size(desktop-up) {
+    --g-header-height: 72px;
+  }
+  @include for-size(big-desktop-up) {
+  }
+  @include for-size(tablet-portrait-up) {
+    --g-header-height: 62px;
+  }
+}
+
+/* Generate a single media query for a collection of classes
+ https://medium.com/front-end-developers/the-solution-to-media-queries-in-sass-5493ebe16844
+ Classes:
+  - Paper
+ */
+@mixin responsive() {
+  @include for-size(phone-only) {
+    @include paper--phone-only();
+  }
+  @include for-size(tablet-portrait-up) {
+    @include paper--tablet-portrait-up();
+  }
+  @include for-size(tablet-landscape-down) {
+    @include paper--tablet-landscape-down();
+  }
+  @include for-size(tablet-landscape-up) {
+    @include paper--tablet-landscape-up();
+  }
+  @include for-size(desktop-up) {
+    @include paper--desktop-up();
+  }
+  @include for-size(big-desktop-up) {
+    @include paper--big-desktop-up();
+  }
+}
+
+// Root defaults
+// * Relies on responsive variables
+@mixin rootDefaults() {
   -webkit-font-smoothing: subpixel-antialiased;
 
   overflow-wrap: break-word; // Required to prevent strange overflow on root el in mobile
+
+  /*
+  * only suppress the focus ring once what-input has successfully started
+  */
+  /* suppress focus ring on form controls for mouse users */
+  &[data-whatintent="mouse"] *:focus,
+  &[data-whatintent="touch"] *:focus {
+    outline: none !important;
+  }
+
+  a {
+    &:focus {
+      @include focus();
+    }
+  }
+
+  @include perceptuallyUniformSelections();
 }
 
-a {
-  &:focus {
-    @include focus();
-  }
+// Global CSS Variables
+:root {
+  @include variables();
+  @include rootDefaults();
+
+  @include responsive();
 }
 
 /*
@@ -94,8 +135,6 @@ a {
 
   position: sticky;
   z-index: 2; //TODO: use scss function
-
-  // opacity: 0;
 
   @include header-offset();
 
@@ -161,17 +200,3 @@ $paper-padding: 1.2em;
 */
 
 @include headings();
-
-/*
- * only suppress the focus ring once what-input has successfully started
- */
-
-/* suppress focus ring on form controls for mouse users */
-[data-whatintent="mouse"] *:focus,
-[data-whatintent="touch"] *:focus {
-  outline: none !important;
-}
-
-/*
-    Global Transitions
-*/

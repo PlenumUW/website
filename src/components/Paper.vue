@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="c-paper paper"
-    :class="shadowClass"
-    :style="{ 'background-color': paperColor }"
-  >
+  <div class="c-paper paper" :class="shadowClass" :style="{ 'background-color': paperColor }">
     <slot></slot>
   </div>
 </template>
@@ -17,21 +13,21 @@ export default {
     color: {
       type: String,
       required: false,
-      default: function () {
+      default: function() {
         return undefined;
       }
     },
     presetColor: {
       type: String,
       required: false,
-      default: function () {
+      default: function() {
         return "yellow";
       }
     },
     shadow: {
       type: Number,
       required: false,
-      validator: function (val) {
+      validator: function(val) {
         const shadowLevels = 24;
         const testVal = val / shadowLevels;
         const isInRange = testVal >= 0 && testVal <= shadowLevels;
@@ -39,24 +35,24 @@ export default {
 
         return isInRange && isInteger;
       },
-      default: function () {
+      default: function() {
         return 12;
       }
     }
   },
   computed: {
-    paperColor: function () {
+    paperColor: function() {
       return this.complementaryColor || "transparent";
     },
-    shadowClass: function () {
+    shadowClass: function() {
       return ["shadow-" + this.shadow];
     },
-    complementaryColor: function () {
+    complementaryColor: function() {
       return this.color
         ? colors.getPaperColor(colors.getOppositeHueByRgbString(this.color))
         : undefined;
     },
-    presetRgbString: function () {
+    presetRgbString: function() {
       let color;
 
       switch (this.presetColor) {
@@ -74,22 +70,22 @@ export default {
 </script>
 
 <style lang="scss">
-@for $i from 0 through 24 {
-  $hoverLevel: $i - 6;
-  @if $hoverLevel < 0 {
-    $hoverLevel: 2;
-  }
-  @if $hoverLevel > $i {
-    $hoverLevel: 0;
-  }
+// @for $i from 0 through 24 {
+//   $hoverLevel: $i - 6;
+//   @if $hoverLevel < 0 {
+//     $hoverLevel: 2;
+//   }
+//   @if $hoverLevel > $i {
+//     $hoverLevel: 0;
+//   }
 
-  .shadow-#{$i} {
-    @include mdElevation($i);
-    @include mdElevationTransition(4);
+//   .shadow-#{$i} {
+//     @include mdElevation($i);
+//     @include mdElevationTransition(4);
 
-    &:hover {
-      @include mdElevation($hoverLevel);
-    }
-  }
-}
+//     &:hover {
+//       @include mdElevation($hoverLevel);
+//     }
+//   }
+// }
 </style>

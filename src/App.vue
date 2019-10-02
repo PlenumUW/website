@@ -1,5 +1,5 @@
 <template>
-  <div id="app" ref="app" class="app" :class="{ 'app--no-scroll': hideMainContent }">
+  <div id="app" ref="app" class="app">
     <div class="app__horizontal-wrapper">
       <the-site-header :color="activeColorString" :hamburgerOpen.sync="menuOpen" @logoClick="handleLogoClick"></the-site-header>
 
@@ -44,7 +44,7 @@ import SiteFooter from "@/components/singletons/TheSiteFooter";
 
 export default {
   components: { TheSiteHeader, TheMainMenu, SiteFooter },
-  data: function() {
+  data: function () {
     return {
       metadata: undefined,
       prevBackgroundColor: colors.getRgbValuesFromString(
@@ -61,12 +61,13 @@ export default {
     };
   },
   computed: {
+
     /**
      * The background color of the application.
      */
     // TODO: Put currentBackgroundColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
-    currentBackgroundColor: function() {
+    currentBackgroundColor: function () {
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -81,33 +82,33 @@ export default {
 
       return colorValues;
     },
-    viewKey: function() {
+    viewKey: function () {
       return this.$route.name;
     },
-    hideMainContent: function() {
+    hideMainContent: function () {
       return this.menuOpen;
     },
-    initialLoad: function() {
+    initialLoad: function () {
       return this.$store.state.initialLoad;
     },
-    pageLoading: function() {
+    pageLoading: function () {
       return this.$store.state.isLoading;
     },
-    error: function() {
+    error: function () {
       return this.pageLoadingError || this.generalError;
     },
-    pageLoadingError: function() {
+    pageLoadingError: function () {
       return this.$store.state.pageLoadingError;
     },
-    generalError: function() {
+    generalError: function () {
       return this.$store.state.generalError;
     }
   },
   watch: {
-    currentBackgroundColor: function(newVal, oldVal) {
+    currentBackgroundColor: function (newVal, oldVal) {
       this.prevBackgroundColor = oldVal;
     },
-    pageLoading: function(newVal, oldVal) {
+    pageLoading: function (newVal, oldVal) {
       if (newVal) {
         this.loadingTransitionActive = true;
         this.startLoadingAnimation().then(() => {
@@ -226,10 +227,6 @@ html {
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  &--no-scroll {
-    overflow: hidden;
-  }
 
   &__horizontal-wrapper {
     display: flex;

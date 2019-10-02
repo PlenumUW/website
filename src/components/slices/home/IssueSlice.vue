@@ -5,7 +5,7 @@
     </template>
 
     <template #content>
-      <img class="c-issue-slice__cover-image shadow-8" :src="imgSrc" :shadow="6" />
+      <img class="c-issue-slice__cover-image shadow-8 t-slide" :src="imgSrc" :shadow="6" />
 
       <paper v-if="!loading" class="c-issue-slice__toc" :color="bgColor" :shadow="12" :type="'toc'">
         <table-of-contents :contents="essays" :contentPath="essayPath" :downloadUrl="issueDownloadLink"></table-of-contents>

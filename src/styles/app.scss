@@ -109,6 +109,8 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
   }
 
   a {
+    color: black;
+
     &:focus {
       @include focus();
     }
@@ -150,6 +152,7 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
   }
 
   &__gradient {
+    overflow-x: hidden;
   }
 }
 

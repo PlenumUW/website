@@ -50,17 +50,27 @@ export default {
       default: function () {
         return "default";
       }
+    },
+    noSlide: {
+      required: false,
+      type: Boolean,
+      default: function () {
+        return false;
+      }
     }
   },
   computed: {
     dynamicClasses: function () {
-      return [this.shadowClass, this.paperTypeClass];
+      return [this.shadowClass, this.paperTypeClass, this.slideClass];
     },
     paperColor: function () {
       return this.complementaryColor || "transparent";
     },
     paperTypeClass: function () {
       return "paper--" + this.type;
+    },
+    slideClass: function () {
+      return this.noSlide ? "" : "t-slide";
     },
     shadowClass: function () {
       return "shadow-" + this.shadow;

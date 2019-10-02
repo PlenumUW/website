@@ -1,5 +1,5 @@
 <template>
-  <paper class="site-footer" :color="color" :shadow="6">
+  <paper class="site-footer" :color="color" :shadow="8" noSlide>
     <div class="site-footer__info-container">
       <div class="site-footer__header">
         <logo class="logo"></logo>

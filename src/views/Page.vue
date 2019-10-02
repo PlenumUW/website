@@ -135,22 +135,12 @@ export default {
       max-width: 1100px;
       margin-right: auto;
 
-      $paper-padding: 1.2em;
-      padding: $paper-padding;
-
-      @include for-size(tablet-portrait-up) {
-        width: calc(100% - 100px);
-        padding: 2em;
-      }
-
       @include for-size(tablet-landscape-up) {
         width: calc(100% - 200px);
         min-width: calc(
           #{$g-viewport-tablet} - #{$g-lefter-width} - (17px * 2)
         ); // 17px width of scrollbar
         margin-bottom: 75px;
-
-        padding: 70px 80px;
 
         &:last-of-type {
           margin-bottom: 0;

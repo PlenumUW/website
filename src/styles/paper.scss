@@ -8,7 +8,7 @@
   --paper__padding--toc: 10px;
   --paper__padding--toc-entry: 0px;
 
-  padding: calc(var(--paper__padding--default) - 1em)
+  padding: calc(var(--paper__padding--default)) // - 1em
     var(--paper__padding--default);
 
   &--essay {

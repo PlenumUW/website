@@ -3,11 +3,11 @@
 
 // CSS RESET LOCATED IN INDEX.HTML
 
-@import "app_fontfaces";
-@import "shadows.scss";
+@import "_fonts";
+@import "_shadows";
 
 // Objects
-@import "paper";
+@import "_paper";
 
 @import "_settings";
 @import "_mixins";

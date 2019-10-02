@@ -18,7 +18,7 @@
     </header>
 
     <div class="c-essay__context">
-      <paper class="c-essay__context__abstract" :color="color">
+      <paper v-if="abstract" class="c-essay__context__abstract" :color="color">
         <div class="c-essay__context__abstract__title">Abstract</div>
         <p class="c-essay__context__abstract__body">{{ abstract }}</p>
       </paper>
@@ -52,55 +52,55 @@ export default {
   extends: BaseView,
   components: { HeaderGradient, RichText },
   watch: {
-    currentHash: function (newVal, oldVal) {
+    currentHash: function(newVal, oldVal) {
       this.scrollToElWithHash(newVal);
     }
   },
   computed: {
-    combinedTitle: function () {
+    combinedTitle: function() {
       if (!this.title || !this.subtitle) return "";
 
       let title = this.title;
       if (this.subtitle) title += ": " + this.subtitle;
       return title;
     },
-    title: function () {
+    title: function() {
       return this.PrismicProcessor.getRawText(this.essay.title);
     },
-    subtitle: function () {
+    subtitle: function() {
       return this.PrismicProcessor.getRawText(this.essay.subtitle);
     },
-    authors: function () {
+    authors: function() {
       return this.essay.authors.map(({ author }) =>
         this.PrismicProcessor.getRawText(author)
       );
     },
-    image: function () {
+    image: function() {
       const { SocialMedia, ...heroImage } = this.essay.hero_image;
       return heroImage;
     },
-    description: function () {
+    description: function() {
       return this.PrismicProcessor.getRawText(this.essay.description);
     },
-    metaImage: function () {
+    metaImage: function() {
       return this.essay.hero_image.SocialMedia;
     },
-    essay: function () {
+    essay: function() {
       return this.rawData;
     },
-    abstract: function () {
+    abstract: function() {
       return this.PrismicProcessor.getRawText(this.essay.abstract);
     },
-    body: function () {
+    body: function() {
       return this.essay.body;
     },
-    bibliography: function () {
+    bibliography: function() {
       const bibliography = this.essay.bibliography;
       if (_.isEmpty(bibliography)) return undefined;
 
       return bibliography;
     },
-    sections: function () {
+    sections: function() {
       let sections = [];
 
       let section = [];
@@ -121,7 +121,7 @@ export default {
 
       return sections;
     },
-    currentHash: function () {
+    currentHash: function() {
       return this.$route.hash;
     }
   },
@@ -145,7 +145,7 @@ export default {
       // if anchorpos is negative or less than 10 (10 = top postion -> TODO: put in scss globals, export to here)
       if (anchorPos < 10 && anchorEl.children[0].tagName === "H1") {
         // Checking tag name prevents scrolling to top of paper if h2 is clicked, e.g.
-        const getParentPaper = (el) => {
+        const getParentPaper = el => {
           let parent = el.parentElement;
           while (!parent.classList.contains("paper") && !_.isNull(parent)) {
             parent = parent.parentElement;
@@ -175,7 +175,7 @@ export default {
       "article"
     );
   },
-  mounted: function () {
+  mounted: function() {
     const hash = this.currentHash;
     if (hash !== "") {
       this.scrollToElWithHash(hash);

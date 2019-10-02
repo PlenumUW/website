@@ -287,7 +287,12 @@ export default {
         sticky: this.stickyHeading,
         anchors: this.anchors,
         anchorId: data.type.includes("heading")
-          ? encodeURI(data.text.replace(/ /g, "-").toLowerCase())
+          ? encodeURI(
+              data.text
+                .replace(/ /g, "-")
+                .replace(/^[^a-z]+|[^\w:.-]+/gi, "")
+                .toLowerCase()
+            )
           : undefined
       };
 

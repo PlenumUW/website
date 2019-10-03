@@ -7,21 +7,23 @@
 @import "_fonts";
 
 $modularscale: (
-  base: 14px,
-  ratio: 1.2,
+  base: 15px,
+  ratio: 1,
   $g-viewport-phone: (
-    base: 14px
+    base: 15px,
+    ratio: 1.09
   ),
   $g-viewport-tablet: (
-    base: 16px
+    base: 17px,
+    ratio: 1.15
   ),
   $g-viewport-desktop: (
-    base: 16px,
-    ratio: 1.4
+    base: 17px,
+    ratio: 1.18
   ),
   $g-viewport-desktop--big: (
-    base: 16px,
-    ratio: 1.5
+    base: 17px,
+    ratio: 1.21
   )
 );
 
@@ -44,18 +46,18 @@ $modularscale: (
     }
 
     h1 {
-      @include ms-respond(font-size, 4);
+      @include ms-respond(font-size, 5);
     }
 
     h2 {
-      @include ms-respond(font-size, 3);
+      @include ms-respond(font-size, 4);
     }
 
     h3,
     h4,
     h5,
     h6 {
-      @include ms-respond(font-size, 2);
+      @include ms-respond(font-size, 3);
     }
 
     p {
@@ -109,37 +111,31 @@ $modularscale: (
     /*------------------------
     --Header
     ------------------------*/
-    [class$="__header"] {
+    [class*="__header"] {
       font-family: $font-titling--subtitle;
 
-      [class$="__title"] {
+      [class*="__title"] {
         font-family: $font-titling;
-        @include ms-respond(font-size, 5);
+        @include ms-respond(font-size, 9);
       }
-      [class$="__subtitle"] {
+      [class*="__subtitle"] {
         line-height: 1.3em;
         text-align: right;
 
-        @include ms-respond(font-size, 3);
+        @include ms-respond(font-size, 6);
       }
-      [class$="__authors"] {
+      [class*="__authors"] {
         line-height: 1em;
         text-align: right;
 
-        @include ms-respond(font-size, 2);
+        @include ms-respond(font-size, 4);
       }
     }
 
-    .c-essay__context__abstract {
-      // border: 10px solid;
-    }
-
     // TODO: selectors broken
-    [class$="__abstract"] {
-      border: 10px solid;
-      [class$="__title"] {
-        background: purple;
-        @include ms-respond(font-size, 2);
+    [class*="__abstract"] {
+      [class*="__title"] {
+        @include ms-respond(font-size, 5);
       }
     }
   }

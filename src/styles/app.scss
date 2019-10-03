@@ -3,15 +3,14 @@
 
 // CSS RESET LOCATED IN INDEX.HTML
 
-@import "_fonts";
+@import "globals";
+@import "_mixins";
+
+@import "_typography";
 @import "_shadows";
 
 // Objects
 @import "_paper";
-
-@import "_settings";
-@import "_mixins";
-@import "globals";
 
 // Z-index positions of major elements, from high to low
 // Necessary for z-index mixin
@@ -125,6 +124,7 @@ $z-indexes: ("the-header", "the-footer", "the-main-menu", "the-main");
   @include rootDefaults();
 
   @include responsive();
+  @include typography();
 }
 
 /*
@@ -201,5 +201,3 @@ $paper-padding: 1.2em;
 /*
   GRADIENT HEADER END
 */
-
-@include headings();

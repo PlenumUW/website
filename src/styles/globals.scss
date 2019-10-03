@@ -108,39 +108,39 @@ $g-focus-outline: 3px solid black;
 /*
   Headings
 */
-@mixin heading($scale) {
-  @if $scale == 1 {
-    @include font-size(6rem);
-  } @else if $scale == 2 {
-    @include font-size(5rem);
-  } @else if $scale == 3 {
-    @include font-size(4rem);
-  } @else if $scale == 4 {
-    @include font-size(3rem);
-  } @else if $scale == 5 {
-    @include font-size(2rem);
-  } @else if $scale == 6 {
-    @include font-size(1rem);
-  }
-}
+// @mixin heading($scale) {
+//   @if $scale == 1 {
+//     @include font-size(6rem);
+//   } @else if $scale == 2 {
+//     @include font-size(5rem);
+//   } @else if $scale == 3 {
+//     @include font-size(4rem);
+//   } @else if $scale == 4 {
+//     @include font-size(3rem);
+//   } @else if $scale == 5 {
+//     @include font-size(2rem);
+//   } @else if $scale == 6 {
+//     @include font-size(1rem);
+//   }
+// }
 
-@mixin headings($font-family: $font-titling) {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: $font-family;
-  }
+// @mixin headings($font-family: $font-titling) {
+//   h1,
+//   h2,
+//   h3,
+//   h4,
+//   h5,
+//   h6 {
+//     font-family: $font-family;
+//   }
 
-  @for $i from 1 through 6 {
-    $header: h#{$i};
-    #{$header} {
-      @include heading($i);
-    }
-  }
-}
+//   @for $i from 1 through 6 {
+//     $header: h#{$i};
+//     #{$header} {
+//       @include heading($i);
+//     }
+//   }
+// }
 
 @mixin responsiveTitling() {
   line-height: 1em;

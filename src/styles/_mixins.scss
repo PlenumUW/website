@@ -2,6 +2,23 @@
 Mixins
 */
 
+/*----------------------------------
+--Selectors
+------------------------------------*/
+@mixin headings() {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @content;
+  }
+}
+
+/*--------------------
+--------------------*/
+
 // Returns a z-index value of the requested name found in the z-index list
 @function z($name) {
   @if index($z-indexes, $name) {

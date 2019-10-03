@@ -10,7 +10,7 @@
       </h1>
 
       <div class="c-coming-soon__section__content">
-        <paper class="c-page__section__paper" :color="color">
+        <paper class="c-coming-soon__section__paper" :color="color">
           <p>
             {{message}}
           </p>
@@ -32,14 +32,14 @@ export default {
   extends: BaseView,
   components: { HeaderGradient },
   computed: {
-    message: function() {
+    message: function () {
       return `${this.title} Coming Soon...`;
     },
-    title: function() {
+    title: function () {
       return _.capitalize(this.$route.name);
     }
   },
-  created: function() {
+  created: function () {
     this.metadata = {
       title: this.title
     };

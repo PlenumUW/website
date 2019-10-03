@@ -36,6 +36,11 @@ Components:
              ☐ I like the idea of generating vue components that match prismic types :) @created(19-09-14 22:33)
 
 Styling:
+<<<<<<< HEAD
+=======
+    SiteHeader:
+        ☐ CLEAN UP CSS, SO CONFUSING @created(19-10-03 14:09)
+>>>>>>> dev/core
     Handheld header:
         ✔ Logo is at mobile size (smaller than hamburger) in tablet view @created(19-09-25 23:27) @done(19-09-25 23:27)
     Background Colors:

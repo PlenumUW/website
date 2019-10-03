@@ -47,7 +47,8 @@ $padding: 10px;
 }
 
 .the-logo {
-  width: 100%;
+  // width: 100%;
+  height: 100%;
 
   @include for-size(tablet-landscape-up) {
     height: 100%;
@@ -57,7 +58,7 @@ $padding: 10px;
     display: block;
     width: fit-content;
     height: 100%;
-    margin: unset; // Keeps logo in corner for hand-held layouts
+    // margin: unset; // Keeps logo in corner for hand-held layouts
 
     position: relative;
 
@@ -75,6 +76,7 @@ $padding: 10px;
     }
 
     &__icon {
+      width: 100%;
       height: 100%;
 
       padding: $padding;

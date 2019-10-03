@@ -2,7 +2,9 @@
   <paper class="site-footer" :color="color" :shadow="8" noSlide>
     <div class="site-footer__info-container">
       <div class="site-footer__header">
-        <logo class="logo"></logo>
+        <div class="logo">
+          <logo></logo>
+        </div>
         <div class="title">Plenum</div>
         <div class="subtitle">Undergraduate Journal of Geography</div>
       </div>
@@ -114,7 +116,7 @@ $lefter-width: $g-lefter-width;
     margin-bottom: 30px;
 
     grid-template-rows: repeat(2, min-content);
-    grid-template-columns: min-content 1fr;
+    grid-template-columns: 2.5em 1fr;
     grid-auto-columns: auto minmax(0, 1fr);
     grid-auto-rows: auto min-content;
 
@@ -199,9 +201,8 @@ $lefter-width: $g-lefter-width;
   }
 
   .logo {
-    height: 100%;
-
     padding: 5px;
+    padding-top: 21%;
 
     align-self: center;
   }

@@ -1,10 +1,12 @@
 <template>
-  <div class="site-header" :style="{
+  <div class="c-site-header" :style="{
       color: color,
       'background-color': color
     }">
-    <the-logo class="logo" @activate="handleLogoClick"></the-logo>
-    <div class="buttons">
+    <div class="c-site-header__logo c-site-header__icon">
+      <the-logo @activate="handleLogoClick"></the-logo>
+    </div>
+    <div class="c-site-header__buttons c-site-header__icon">
       <the-hamburger class="hamburger" :open="hamburgerOpen" @open="handleHamburgerOpen" @close="handleHamburgerClose"></the-hamburger>
     </div>
   </div>
@@ -51,7 +53,7 @@ export default {
 $header-shadow-y: $g-header-shadow-y;
 $header-shadow-spread: $g-header-shadow-spread;
 
-.site-header {
+.c-site-header {
   position: sticky;
   top: 0;
   width: 100%;
@@ -90,14 +92,21 @@ $header-shadow-spread: $g-header-shadow-spread;
     @include header-height(desktop);
   }
 
-  .logo {
-    position: relative;
+  &__icon {
+    @include header-height($property: width);
+    @include header-height($property: height);
+  }
+
+  &__logo {
     top: 0;
+    height: 100%;
 
-    z-index: 999;
+    position: relative;
 
-    flex-grow: 0;
-    flex-shrink: 0;
+    // z-index: 999;
+
+    // flex-grow: 0;
+    // flex-shrink: 0;
 
     @include for-size(tablet-landscape-up) {
       width: fit-content;
@@ -107,12 +116,10 @@ $header-shadow-spread: $g-header-shadow-spread;
     }
   }
 
-  .buttons {
+  &__buttons {
     .hamburger {
-      z-index: 999;
-
-      flex-grow: 0;
-      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
 
       pointer-events: all;
     }

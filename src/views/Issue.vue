@@ -301,7 +301,7 @@ export default {
       }
 
       &__author {
-        white-space: nowrap;
+        // white-space: nowrap; // Improves breaking around dividers between authors. Breaks in safari
       }
     }
   }

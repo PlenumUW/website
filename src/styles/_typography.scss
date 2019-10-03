@@ -162,6 +162,44 @@ $modularscale: (
 }
 
 /*----------------------------------------------   
+--Issue Theme
+----------------------------------------------*/
+@mixin issue() {
+  .issue {
+    @include paper();
+
+    .entry {
+      line-height: 1.2em;
+
+      @include ms-respond(font-size, 3);
+
+      [class*="__header"] {
+        [class*="__title"] {
+          font-weight: 300;
+          [class*="__subtitle"] {
+            font-weight: 200;
+            font-style: italic;
+          }
+        }
+
+        [class*="__authors"] {
+          font-weight: 300;
+          font-style: italic;
+        }
+      }
+
+      [class*="__summary"] {
+        font-weight: 300;
+        [class*="__contents"] {
+          line-height: 1.5em;
+          @include ms-respond(font-size, 1);
+        }
+      }
+    }
+  }
+}
+
+/*----------------------------------------------   
 --All typography themes
 ----------------------------------------------*/
 @mixin typography() {
@@ -169,6 +207,7 @@ $modularscale: (
 
   @include page();
   @include essay();
+  @include issue();
 }
 
 /*----------------------------------------------

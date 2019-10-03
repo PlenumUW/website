@@ -32,7 +32,10 @@ export default {
     },
     bgColor: {
       type: String,
-      required: true
+      required: true,
+      default: function () {
+        return "transparent";
+      }
     }
   },
   computed: {

@@ -29,14 +29,23 @@ $modularscale: (
 
 /*----------------------------------------------   
 --Basic Tags
------------------------------------------------  */
+----------------------------------------------*/
 @mixin paragraph() {
   @include ms-respond(font-size, 1);
 }
 
 /*----------------------------------------------   
+--Grand heading
+--@description: Massive title
+----------------------------------------------*/
+@mixin grandHeading() {
+  font-family: $font-titling;
+  @include ms-respond(font-size, 11);
+}
+
+/*----------------------------------------------   
 --Paper Theme
------------------------------------------------  */
+----------------------------------------------*/
 @mixin paper() {
   .paper {
     font-family: $font-serif;
@@ -74,9 +83,9 @@ $modularscale: (
     @include paper();
 
     /*------------------------
-    --Essay-specific Paper Overrides
+    --Essay Sections
     ------------------------*/
-    .paper {
+    [class*="__section"] {
       div > a {
         // only anchor's that are a direct descendent of div, instead of a paragraph
         // potentially buggy
@@ -109,7 +118,7 @@ $modularscale: (
     }
 
     /*------------------------
-    --Header
+    --Essay Header
     ------------------------*/
     [class*="__header"] {
       font-family: $font-titling--subtitle;
@@ -132,7 +141,9 @@ $modularscale: (
       }
     }
 
-    // TODO: selectors broken
+    /*------------------------
+    --Essay Abstract
+    ------------------------*/
     [class*="__abstract"] {
       [class*="__title"] {
         @include ms-respond(font-size, 5);
@@ -143,13 +154,16 @@ $modularscale: (
 
 /*----------------------------------------------   
 --Page Theme
------------------------------------------------  */
+----------------------------------------------*/
 @mixin page() {
   .page {
     @include paper();
   }
 }
 
+/*----------------------------------------------   
+--All typography themes
+----------------------------------------------*/
 @mixin typography() {
   @include headings();
 

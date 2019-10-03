@@ -31,7 +31,7 @@
     </section>
 
     <section v-if="bibliography" class="c-essay__section c-essay__section--bibliography">
-      <paper class="c-essay__section__paper" :color="color">
+      <paper class="c-essay__section__paper" :color="color" :type="'essay'">
         <a class="sticky" href="#bibliography">
           <h1>Bibliography</h1>
         </a>
@@ -340,22 +340,12 @@ $title-left-margin: 1.5em;
 
   $paper-padding: 100px;
   $paper-padding--top: calc(#{$paper-padding} - 1em);
-  $bibliography-padding: 60px;
 
   &__paper {
     max-width: 1000px;
   }
 
   &--bibliography {
-    .paper {
-      padding: $bibliography-padding;
-      padding-top: $paper-padding--top;
-    }
-
-    h1 {
-      margin-left: calc(#{$paper-padding} - #{$bibliography-padding});
-    }
-
     p {
       padding-left: 2em; // TODO: create hanging indent mixin
       text-indent: -2em;

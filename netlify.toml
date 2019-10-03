@@ -39,6 +39,10 @@
   command = "npm run preview"
   publish = "dist"
 
+[context."staging"]
+  command = "npm run staging"
+  publish = "dist"
+
 [[redirects]]
   from = "http://editor.plenum.space"
   to = "https://plenum-website.prismic.io"

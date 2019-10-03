@@ -56,38 +56,38 @@ export default {
   extends: BaseView,
   components: { HeaderGradient },
   computed: {
-    issueSlug: function () {
+    issueSlug: function() {
       return this.rawData.uid;
     },
-    issue: function () {
+    issue: function() {
       return this.rawData.data;
     },
-    title: function () {
+    title: function() {
       if (!this.issue) return "";
 
       return this.PrismicProcessor.getRawText(this.issue.title);
     },
-    image: function () {
+    image: function() {
       if (!this.issue) return "";
 
       return this.issue.cover_image;
     },
-    essays: function () {
+    essays: function() {
       return this.issue.essays;
     },
-    downloadUrl: function () {
+    downloadUrl: function() {
       return this.issue.download_file.url;
     },
-    metaImage: function () {
+    metaImage: function() {
       return this.issue.cover_image.SocialMedia;
     },
-    metaDescription: function () {
+    metaDescription: function() {
       if (this.issue.description) {
         return this.PrismicProcessor.getRawText(this.issue.description);
       }
 
       const buildShortToc = () => {
-        const entries = this.essays.map((essay) => {
+        const entries = this.essays.map(essay => {
           let entry = "'" + this.getEssayTitle(essay) + "'";
 
           const authors = essay.data.authors;

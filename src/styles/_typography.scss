@@ -10,16 +10,18 @@ $modularscale: (
   base: 14px,
   ratio: 1.2,
   $g-viewport-phone: (
-    base: 14px // ratio: 1.2
+    base: 14px
   ),
   $g-viewport-tablet: (
-    base: 16px // ratio: 1.25
+    base: 16px
   ),
   $g-viewport-desktop: (
-    base: 18px // ratio: 1.3
+    base: 16px,
+    ratio: 1.4
   ),
   $g-viewport-desktop--big: (
-    base: 20px // ratio: 1.35
+    base: 16px,
+    ratio: 1.5
   )
 );
 
@@ -69,6 +71,9 @@ $modularscale: (
   .essay {
     @include paper();
 
+    /*------------------------
+    --Essay-specific Paper Overrides
+    ------------------------*/
     .paper {
       div > a {
         // only anchor's that are a direct descendent of div, instead of a paragraph
@@ -98,6 +103,43 @@ $modularscale: (
         text-align: center;
         font-variant: all-small-caps;
         @include ms-respond(font-size, 3);
+      }
+    }
+
+    /*------------------------
+    --Header
+    ------------------------*/
+    [class$="__header"] {
+      font-family: $font-titling--subtitle;
+
+      [class$="__title"] {
+        font-family: $font-titling;
+        @include ms-respond(font-size, 5);
+      }
+      [class$="__subtitle"] {
+        line-height: 1.3em;
+        text-align: right;
+
+        @include ms-respond(font-size, 3);
+      }
+      [class$="__authors"] {
+        line-height: 1em;
+        text-align: right;
+
+        @include ms-respond(font-size, 2);
+      }
+    }
+
+    .c-essay__context__abstract {
+      // border: 10px solid;
+    }
+
+    // TODO: selectors broken
+    [class$="__abstract"] {
+      border: 10px solid;
+      [class$="__title"] {
+        background: purple;
+        @include ms-respond(font-size, 2);
       }
     }
   }

@@ -184,10 +184,6 @@ export default {
 };
 </script>
 <style lang="scss">
-@mixin align-right() {
-  margin-left: auto;
-  text-align: right;
-}
 .c-essay {
   &__header {
     max-width: 2000px;
@@ -219,40 +215,15 @@ export default {
       padding-left: 1em;
     }
   }
-
-  &__title {
-    font-size: 0.8em; // Adjust from header em size
-  }
   &__subtitle {
     width: 70%;
-
-    font-family: $font-titling--subtitle;
-    font-size: 0.4em;
-    line-height: 1.3em;
-
-    @include align-right();
+    margin-left: auto;
   }
 
   &__authors {
     width: 50%;
-
-    font-family: $font-titling--subtitle;
-    line-height: 1em;
     min-height: 1em;
-    @include align-right();
-
-    // Steps used in mixin responsiveTitling
-    @include font-size(1em);
-    @include for-size(tablet-portrait-up) {
-      @include font-size(1.5em);
-    }
-    @include for-size(desktop-up) {
-      @include font-size(2em);
-    }
-
-    @include for-size(big-desktop-up) {
-      @include font-size(2.5em);
-    }
+    margin-left: auto;
   }
 
   &__context {
@@ -279,10 +250,7 @@ export default {
       }
 
       &__title {
-        font-size: 2em;
         margin-bottom: 1em;
-      }
-      &__body {
       }
     }
   }

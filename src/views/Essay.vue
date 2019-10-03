@@ -1,11 +1,11 @@
 <template>
-  <article>
+  <article class="essay">
     <div class="o-header c-essay__header__gradient-wrapper">
       <header-gradient class="o-header__gradient" :color="color"></header-gradient>
     </div>
 
     <header class="c-essay__header">
-      <h1 class="c-essay__title-wrapper o-header-title">
+      <h1 class="c-essay__title-wrapper">
         <div class="c-essay__title">{{ title }}</div>
         <div class="c-essay__subtitle">{{ subtitle }}</div>
       </h1>
@@ -18,20 +18,20 @@
     </header>
 
     <div class="c-essay__context">
-      <paper class="c-essay__context__abstract" :color="color">
+      <paper v-if="abstract" class="c-essay__context__abstract" :color="color">
         <div class="c-essay__context__abstract__title">Abstract</div>
         <p class="c-essay__context__abstract__body">{{ abstract }}</p>
       </paper>
       <hr />
     </div>
     <section v-for="(slices, index) in sections" :key="`${index}`" class="c-essay__section">
-      <paper class="c-essay__section__paper" :color="color">
+      <paper class="c-essay__section__paper" :color="color" :type="'essay'">
         <rich-text v-for="({ primary, slice_type }, sliceIndex) in slices" :key="`section-${index}_slice-${sliceIndex}`" class="c-essay__section__paper__rich-text" :body="primary[slice_type]" anchors stickyHeading></rich-text>
       </paper>
     </section>
 
     <section v-if="bibliography" class="c-essay__section c-essay__section--bibliography">
-      <paper class="c-essay__section__paper" :color="color">
+      <paper class="c-essay__section__paper" :color="color" :type="'essay'">
         <a class="sticky" href="#bibliography">
           <h1>Bibliography</h1>
         </a>
@@ -52,55 +52,55 @@ export default {
   extends: BaseView,
   components: { HeaderGradient, RichText },
   watch: {
-    currentHash: function (newVal, oldVal) {
+    currentHash: function(newVal, oldVal) {
       this.scrollToElWithHash(newVal);
     }
   },
   computed: {
-    combinedTitle: function () {
+    combinedTitle: function() {
       if (!this.title || !this.subtitle) return "";
 
       let title = this.title;
       if (this.subtitle) title += ": " + this.subtitle;
       return title;
     },
-    title: function () {
+    title: function() {
       return this.PrismicProcessor.getRawText(this.essay.title);
     },
-    subtitle: function () {
+    subtitle: function() {
       return this.PrismicProcessor.getRawText(this.essay.subtitle);
     },
-    authors: function () {
+    authors: function() {
       return this.essay.authors.map(({ author }) =>
         this.PrismicProcessor.getRawText(author)
       );
     },
-    image: function () {
+    image: function() {
       const { SocialMedia, ...heroImage } = this.essay.hero_image;
       return heroImage;
     },
-    description: function () {
+    description: function() {
       return this.PrismicProcessor.getRawText(this.essay.description);
     },
-    metaImage: function () {
+    metaImage: function() {
       return this.essay.hero_image.SocialMedia;
     },
-    essay: function () {
+    essay: function() {
       return this.rawData;
     },
-    abstract: function () {
+    abstract: function() {
       return this.PrismicProcessor.getRawText(this.essay.abstract);
     },
-    body: function () {
+    body: function() {
       return this.essay.body;
     },
-    bibliography: function () {
+    bibliography: function() {
       const bibliography = this.essay.bibliography;
       if (_.isEmpty(bibliography)) return undefined;
 
       return bibliography;
     },
-    sections: function () {
+    sections: function() {
       let sections = [];
 
       let section = [];
@@ -121,7 +121,7 @@ export default {
 
       return sections;
     },
-    currentHash: function () {
+    currentHash: function() {
       return this.$route.hash;
     }
   },
@@ -145,7 +145,7 @@ export default {
       // if anchorpos is negative or less than 10 (10 = top postion -> TODO: put in scss globals, export to here)
       if (anchorPos < 10 && anchorEl.children[0].tagName === "H1") {
         // Checking tag name prevents scrolling to top of paper if h2 is clicked, e.g.
-        const getParentPaper = (el) => {
+        const getParentPaper = el => {
           let parent = el.parentElement;
           while (!parent.classList.contains("paper") && !_.isNull(parent)) {
             parent = parent.parentElement;
@@ -175,7 +175,7 @@ export default {
       "article"
     );
   },
-  mounted: function () {
+  mounted: function() {
     const hash = this.currentHash;
     if (hash !== "") {
       this.scrollToElWithHash(hash);
@@ -184,10 +184,6 @@ export default {
 };
 </script>
 <style lang="scss">
-@mixin align-right() {
-  margin-left: auto;
-  text-align: right;
-}
 .c-essay {
   &__header {
     max-width: 2000px;
@@ -219,40 +215,15 @@ export default {
       padding-left: 1em;
     }
   }
-
-  &__title {
-    font-size: 0.8em; // Adjust from header em size
-  }
   &__subtitle {
     width: 70%;
-
-    font-family: $font-titling--subtitle;
-    font-size: 0.4em;
-    line-height: 1.3em;
-
-    @include align-right();
+    margin-left: auto;
   }
 
   &__authors {
     width: 50%;
-
-    font-family: $font-titling--subtitle;
-    line-height: 1em;
     min-height: 1em;
-    @include align-right();
-
-    // Steps used in mixin responsiveTitling
-    @include font-size(1em);
-    @include for-size(tablet-portrait-up) {
-      @include font-size(1.5em);
-    }
-    @include for-size(desktop-up) {
-      @include font-size(2em);
-    }
-
-    @include for-size(big-desktop-up) {
-      @include font-size(2.5em);
-    }
+    margin-left: auto;
   }
 
   &__context {
@@ -260,13 +231,7 @@ export default {
     margin-bottom: 100px;
     font-family: $font-serif;
 
-    font-size: 1em;
-    line-height: 1.4em;
     text-align: justify;
-
-    @include for-size(tablet-landscape-up) {
-      font-size: 1.15em;
-    }
 
     hr {
       border: 3px solid black;
@@ -276,11 +241,6 @@ export default {
       margin-left: auto;
       margin-right: auto;
       margin-bottom: 100px;
-      padding: 15px;
-
-      @include for-size(tablet-portrait-up) {
-        padding: 3em;
-      }
 
       @include for-size(desktop-up) {
         max-width: 80%;
@@ -290,10 +250,7 @@ export default {
       }
 
       &__title {
-        font-size: 2em;
         margin-bottom: 1em;
-      }
-      &__body {
       }
     }
   }
@@ -303,43 +260,24 @@ $title-left-margin: 1.5em;
 .c-essay__section {
   margin-bottom: 150px;
 
-  font-size: 1em;
-
-  font-family: $font-serif;
-
-  @include for-size(tablet-landscape-up) {
-    font-size: 1.15em;
-  }
-
   a {
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-
-    h1,
-    h2 {
-      padding-left: $title-left-margin;
-      text-indent: calc(-1 * #{$title-left-margin});
+    @include headings() {
+      position: relative; // Enables absolute positioning of prepended icons
 
       &:before {
-        content: "\00A7";
+        content: "\00A7"; // Section symbol
         position: absolute;
-        transform: translateX(0.5em);
-
-        font-family: $font-serif;
+        left: -1em;
+        transform: translateY(-3%);
 
         opacity: 0;
 
-        font-size: 1.9rem;
-        line-height: 1.15em; // Center align with title
+        font-family: $font-serif;
       }
 
       &:hover {
         &:before {
           opacity: 1;
-          text-decoration: none;
         }
       }
     }
@@ -347,19 +285,6 @@ $title-left-margin: 1.5em;
     h1 {
       &:before {
         opacity: 0.4;
-        line-height: 1.15em; // Center align with title
-      }
-
-      &:hover {
-        &:before {
-          opacity: 1;
-        }
-      }
-    }
-
-    h2 {
-      &:before {
-        line-height: 1.3em; // Center align with title
       }
     }
   }
@@ -367,20 +292,10 @@ $title-left-margin: 1.5em;
   h1 {
     width: 100%;
     margin-bottom: 1.5em;
-    line-height: 1.2em;
-
-    font-family: $font-titling--subtitle;
-    font-size: 1.6em;
 
     @include for-size(tablet-landscape-up) {
       width: 90%;
     }
-  }
-
-  .sticky {
-    display: block;
-    top: 0.5em;
-    z-index: 3;
   }
 
   h2 {
@@ -389,31 +304,22 @@ $title-left-margin: 1.5em;
     margin-left: $title-left-margin;
     margin-bottom: 0.8em;
 
-    font-family: $font-titling--subtitle;
-    font-variant: small-caps;
-    font-size: 1.45em;
-
     $h2-border: 1px solid black;
     border-top: $h2-border;
     border-bottom: $h2-border;
   }
 
   h3 {
-    font-size: 1.6em;
-    font-family: $font-titling--subtitle;
-    font-variant: all-small-caps;
-
     width: fit-content;
+    max-width: 70%;
     margin: auto;
     margin-bottom: 0.8em;
     margin-top: 2em;
-    max-width: 70%;
-    text-align: center;
+
+    padding-left: 0;
+
     border-top: 1px solid black;
     border-bottom: 1px solid black;
-    text-indent: 0;
-    padding-left: 0;
-    line-height: 1.1em;
   }
 
   p,
@@ -426,35 +332,20 @@ $title-left-margin: 1.5em;
     }
   }
 
+  .sticky {
+    display: block;
+    top: 0.5em;
+    z-index: 3;
+  }
+
   $paper-padding: 100px;
   $paper-padding--top: calc(#{$paper-padding} - 1em);
-  $bibliography-padding: 60px;
 
   &__paper {
     max-width: 1000px;
-    padding: 3em;
-
-    padding: 15px;
-
-    @include for-size(tablet-portrait-up) {
-      padding: 3em;
-    }
-
-    @include for-size(tablet-landscape-up) {
-      padding: $paper-padding--top $paper-padding;
-    }
   }
 
   &--bibliography {
-    .paper {
-      padding: $bibliography-padding;
-      padding-top: $paper-padding--top;
-    }
-
-    h1 {
-      margin-left: calc(#{$paper-padding} - #{$bibliography-padding});
-    }
-
     p {
       padding-left: 2em; // TODO: create hanging indent mixin
       text-indent: -2em;

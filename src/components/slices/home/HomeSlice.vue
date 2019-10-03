@@ -8,16 +8,10 @@
       <paper v-if="!hideBackground" :color="color" :shadow="12">
         <slot name="content"></slot>
       </paper>
-      <slot v-else  name="content"></slot>
+      <slot v-else name="content"></slot>
     </div>
 
-    <home-slice-header
-      class="c-home-slice__bottom-padding"
-      :color="color"
-      :aria-hidden="true"
-      role="presentation"
-      >_</home-slice-header
-    >
+    <home-slice-header class="c-home-slice__bottom-padding" :color="color" :aria-hidden="true" role="presentation">_</home-slice-header>
   </section>
 </template>
 <script>
@@ -44,12 +38,11 @@ export default {
 <style lang="scss" scoped>
 .c-home-slice {
   font-family: $font-sans;
-  @include headings($font-sans);
+  // @include headings($font-sans);
 
   &__header {
     z-index: 1;
   }
-
 
   &__content {
     max-width: 2000px;
@@ -68,7 +61,6 @@ export default {
       max-width: 1400px;
     }
   }
-
 
   &__bottom-padding {
     opacity: 0;

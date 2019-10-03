@@ -1,21 +1,13 @@
 <template>
-  <header
-    class="site-header"
-    :style="{
+  <div class="site-header" :style="{
       color: color,
       'background-color': color
-    }"
-  >
+    }">
     <the-logo class="logo" @activate="handleLogoClick"></the-logo>
     <div class="buttons">
-      <the-hamburger
-        class="hamburger"
-        :open="hamburgerOpen"
-        @open="handleHamburgerOpen"
-        @close="handleHamburgerClose"
-      ></the-hamburger>
+      <the-hamburger class="hamburger" :open="hamburgerOpen" @open="handleHamburgerOpen" @close="handleHamburgerClose"></the-hamburger>
     </div>
-  </header>
+  </div>
 </template>
 
 <script>

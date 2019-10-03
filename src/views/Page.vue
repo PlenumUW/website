@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loading" class="c-page">
+  <div v-if="!loading" class="page c-page">
     <section v-for="([titleSlice, ...slices], index) in sections" :key="`${index}`" class="c-page__section">
       <header class="c-page__section__header o-header">
         <header-gradient class="c-page__section__gradient o-header__gradient" :color="color"></header-gradient>
@@ -115,8 +115,6 @@ export default {
 
   position: relative;
 
-  font-family: $font-serif;
-
   &__section {
     width: 100%;
 
@@ -135,22 +133,12 @@ export default {
       max-width: 1100px;
       margin-right: auto;
 
-      $paper-padding: 1.2em;
-      padding: $paper-padding;
-
-      @include for-size(tablet-portrait-up) {
-        width: calc(100% - 100px);
-        padding: 2em;
-      }
-
       @include for-size(tablet-landscape-up) {
         width: calc(100% - 200px);
         min-width: calc(
           #{$g-viewport-tablet} - #{$g-lefter-width} - (17px * 2)
         ); // 17px width of scrollbar
         margin-bottom: 75px;
-
-        padding: 70px 80px;
 
         &:last-of-type {
           margin-bottom: 0;
@@ -167,12 +155,6 @@ export default {
       padding-bottom: 60px; // Helps hide the box-shadow when the paper scrolls under the gradient header // TODO: figure out how to bind this with paper box-shadows
       z-index: 1; //TODO: use scss function
 
-      @include font-size(1.1em);
-
-      @include for-size(tablet-portrait-up) {
-        @include font-size(1.4em);
-      }
-
       section {
         margin-bottom: 60px;
 
@@ -183,8 +165,6 @@ export default {
 
       h2 {
         margin-bottom: 20px;
-
-        @include font-size(1.5em);
       }
 
       p {

@@ -373,7 +373,7 @@ const viewTransitions = {
   /**
    * New view's transition.
    * First: simultaneously tweens elements affected by route color and
-   * slides the first paper of views into the viewport.
+   * slides the first slidables of views into the viewport.
    * Second: Fades in the view titles.
    * @param {Element} el Transitioning element.
    * @param {Function} done Callback to declare that a transition has finished.
@@ -381,12 +381,12 @@ const viewTransitions = {
   enter: function (el, done) {
     if (DEBUG) console.log("enter");
 
-    const papers = el.getElementsByClassName("paper");
-    let slidePapersIntoViewport = () => new Promise(resolve => resolve());
-    if (!this.initialLoad && !_.isEmpty(papers)) {
-      slidePapersIntoViewport = Animations.slideIntoViewport(papers, {
+    const slidabless = el.getElementsByClassName("t-slide");
+    let slideSlidablessIntoViewport = () => new Promise(resolve => resolve());
+    if (!this.initialLoad && !_.isEmpty(slidabless)) {
+      slideSlidablessIntoViewport = Animations.slideIntoViewport(slidabless, {
         xDistance:
-          papers[0].offsetWidth + parseInt(this.css.lefterWidthValue) + 200 // 200 accomodates for rotation into the viewport
+          slidabless[0].offsetWidth + parseInt(this.css.lefterWidthValue) + 200 // 200 accomodates for rotation into the viewport
       });
     }
 
@@ -418,7 +418,7 @@ const viewTransitions = {
       nextRgb: this.currentBackgroundColor
     });
 
-    const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
+    const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in slidables
     let fadeInTitles = () => new Promise(resolve => resolve());
     if (!this.initialLoad && !_.isEmpty(titles)) {
       fadeInTitles = Animations.fadeIn(titles);
@@ -431,7 +431,7 @@ const viewTransitions = {
           tweenAppBg(),
           tweenHeaderGradients(),
           tweenSiteHeaders(),
-          slidePapersIntoViewport()
+          slideSlidablessIntoViewport()
         ]).then(() => {
           fadeInTitles().then(() => resolve());
         });
@@ -451,12 +451,12 @@ const viewTransitions = {
 
           /**
            * Setting transform to unset prevents the creation of a new stacking order
-           * on the paper. Doing this ensures that headings stay above the header gradients.
+           * on the slidables. Doing this ensures that headings stay above the header gradients.
            * */
 
-          const papers = el.getElementsByClassName("paper");
-          for (let paper of papers) {
-            paper.style.transform = "unset";
+          const slidabless = el.getElementsByClassName("t-slide");
+          for (let slidables of slidabless) {
+            slidables.style.transform = "unset";
           }
 
           this.startEnter = undefined;
@@ -532,28 +532,31 @@ const viewTransitions = {
 
   /**
    * View transitions out.
-   * Simultaneously fades out view titles and slides papers out of the viewport.
+   * Simultaneously fades out view titles and slides slidabless out of the viewport.
    * @param {Element} el Transitioning element.
    * @param {Function} done Callback to declare that a transition has finished.
    */
   leave: function (el, done) {
     if (DEBUG) console.log("leaving");
 
-    const papers = el.getElementsByClassName("paper");
-    let transformPapers = () => new Promise(resolve => resolve());
-    if (!_.isEmpty(papers)) {
-      transformPapers = Animations.slideOutOfViewport(papers, {
+    const slidabless = el.getElementsByClassName("t-slide");
+    let transformSlidabless = () => new Promise(resolve => resolve());
+    if (!_.isEmpty(slidabless)) {
+      transformSlidabless = Animations.slideOutOfViewport(slidabless, {
         xDistance: "120vw" // extra 20vw to accomodate for rotation displacement
       });
     }
 
-    const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in paper
+    const titles = el.getElementsByTagName("h1"); // TODO: exclude 'h1's in slidables
     let fadeTitles = () => new Promise(resolve => resolve());
     if (!_.isEmpty(titles)) {
       fadeTitles = Animations.fadeOut(titles);
     }
 
-    const animations = () => Promise.all([transformPapers(), fadeTitles()]);
+    const animations = () => Promise.all([
+transformSlidabless(), 
+fadeTitles()
+]);
 
     animations().then(() => {
       done();

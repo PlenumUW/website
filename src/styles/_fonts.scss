@@ -1,0 +1,36 @@
+// TODO: Add bluu next copyright notice/license to copyright view/page, retrieve via download : https://velvetyne.fr/fonts/bluu/download/
+$bluu-next-path: "~assets/fonts/BluuNext";
+
+// Bluu Next, normal
+@font-face {
+  font-family: "Bluu";
+  src: url($bluu-next-path+"/bluunext-bold-webfont.woff2") format("woff2"),
+    url($bluu-next-path+"/bluunext-bold-webfont.woff") format("woff"),
+    url($bluu-next-path+"/bluunext-bold.ttf") format("truetype"),
+    url($bluu-next-path+"/bluunext-bold-webfont.svg#bluu_nextbold")
+      format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Blue Next, italic
+@font-face {
+  font-family: "Bluu";
+  src: url($bluu-next-path+"/bluunext-bolditalic-webfont.woff2") format("woff2"),
+    url($bluu-next-path+"/bluunext-bolditalic-webfont.woff") format("woff"),
+    url($bluu-next-path+"/bluunext-bolditalic.ttf") format("truetype"),
+    url($bluu-next-path+"/bluunext-bolditalic-webfont.svg#bluu_nextbold_italic")
+      format("svg");
+  font-weight: normal;
+  font-style: italic;
+}
+
+// Blue Next Titling, normal
+@font-face {
+  font-family: "Bluu Titling";
+  src: url($bluu-next-path+"/BluuNext-Titling.ttf") format("truetype"),
+    url($bluu-next-path+"/bluunext-titling.woff2") format("woff2"),
+    url($bluu-next-path+"/bluunext-titling.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}

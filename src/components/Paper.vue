@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="c-paper paper"
-    :class="shadowClass"
-    :style="{ 'background-color': paperColor }"
-  >
+  <div class="c-paper paper" :class="dynamicClasses" :style="{ 'background-color': paperColor }">
     <slot></slot>
   </div>
 </template>
@@ -42,14 +38,42 @@ export default {
       default: function () {
         return 12;
       }
+    },
+    type: {
+      type: String,
+      required: false,
+      validator: function (val) {
+        return ["toc", "toc-entry", "essay", "default"].some(
+          type => val === type
+        );
+      },
+      default: function () {
+        return "default";
+      }
+    },
+    noSlide: {
+      required: false,
+      type: Boolean,
+      default: function () {
+        return false;
+      }
     }
   },
   computed: {
+    dynamicClasses: function () {
+      return [this.shadowClass, this.paperTypeClass, this.slideClass];
+    },
     paperColor: function () {
       return this.complementaryColor || "transparent";
     },
+    paperTypeClass: function () {
+      return "paper--" + this.type;
+    },
+    slideClass: function () {
+      return this.noSlide ? "" : "t-slide";
+    },
     shadowClass: function () {
-      return ["shadow-" + this.shadow];
+      return "shadow-" + this.shadow;
     },
     complementaryColor: function () {
       return this.color
@@ -72,24 +96,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-@for $i from 0 through 24 {
-  $hoverLevel: $i - 6;
-  @if $hoverLevel < 0 {
-    $hoverLevel: 2;
-  }
-  @if $hoverLevel > $i {
-    $hoverLevel: 0;
-  }
-
-  .shadow-#{$i} {
-    @include mdElevation($i);
-    @include mdElevationTransition(4);
-
-    &:hover {
-      @include mdElevation($hoverLevel);
-    }
-  }
-}
-</style>

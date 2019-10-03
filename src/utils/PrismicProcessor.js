@@ -5,7 +5,11 @@ class PrismicProcessor {
    * Returns the raw text from a Prismic data object.
    * @param {Array} prismicArr Array that contains a Prismic data object.
    */
-  static getPrismicRawText(prismicArr) {
+  static getRawText(prismicArr) {
+    if (typeof prismicArr !== "object" || prismicArr.length === 0) {
+      return undefined;
+    }
+
     return prismicArr[0].text;
   }
 }

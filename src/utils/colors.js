@@ -34,6 +34,10 @@ const schemes = {
     paper: {
       lightness: 99,
       chroma: 2
+    },
+    loading: {
+      lightness: 63,
+      chroma: 36
     }
   }
 };
@@ -48,6 +52,23 @@ class ColorFactory {
     this._bg = schemes.bg;
     this._menu = schemes.menu;
     this._paper = schemes.paper;
+    this._loading = schemes.loading;
+  }
+
+  get bgScheme() {
+    return this._bg;
+  }
+
+  get menuScheme() {
+    return this._menu;
+  }
+
+  get paperScheme() {
+    return this._paper;
+  }
+
+  get loadingScheme() {
+    return this._loading;
   }
 
   get colorSpace() {
@@ -70,17 +91,46 @@ class ColorFactory {
     return this.hueMax - this.hueMin;
   }
 
-  getBackgroundColor(h) {
-    return this._getRgbColorFromScheme(h, this._bg);
+  get _saturationChannel() {
+    const saturationChannels = ["saturation", "chroma"];
+    const saturationChannel = saturationChannels.find(satChannel =>
+      this._colorSpace.channel.some(channel => satChannel === channel)
+    );
+    if (!saturationChannel) throw new Error("No valid saturation channel...");
+
+    return saturationChannel;
   }
 
-  getMenuItemColor(h) {
-    let color = this._getRgbColorFromScheme(h, this._menu);
-    return color;
+  _desaturateScheme(scheme) {
+    scheme[this._saturationChannel] = 0;
   }
 
-  getPaperColor(h) {
-    return this._getRgbColorFromScheme(h, this._paper);
+  getLoadingColor(h, desaturate = false) {
+    let scheme = _.clone(this.loadingScheme);
+    if (desaturate) this._desaturateScheme(scheme);
+
+    return this._getRgbColorFromScheme(h, scheme);
+  }
+
+  getBackgroundColor(h, desaturate = false) {
+    let scheme = _.clone(this.bgScheme);
+    if (desaturate) this._desaturateScheme(scheme);
+
+    return this._getRgbColorFromScheme(h, scheme);
+  }
+
+  getMenuItemColor(h, desaturate = false) {
+    let scheme = _.clone(this.menuScheme);
+    if (desaturate) this._desaturateScheme(scheme); // TODO: If desaturate, Hue is irrelevant, make this apparent in logic
+
+    return this._getRgbColorFromScheme(h, scheme);
+  }
+
+  getPaperColor(h, desaturate = false) {
+    let scheme = _.clone(this.paperScheme);
+    if (desaturate) this._desaturateScheme(scheme);
+
+    return this._getRgbColorFromScheme(h, scheme);
   }
 
   getOppositeHueByRgbString(rgbString) {
@@ -115,7 +165,7 @@ class ColorFactory {
    * @param {Number} num The number of hues to return.
    */
   getEquidistantHues(num) {
-    const colorSpace = this.colorSpace;
+    const colorSpace = _.clone(this.colorSpace);
     const whiteHueBuffer = 20; // For color spaces that produce white along the hues
     const min = colorSpace.min[this.hueChannelIndex];
     const max = colorSpace.max[this.hueChannelIndex];

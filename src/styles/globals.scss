@@ -9,15 +9,15 @@
 // Responsive Font System
 @import "~rfs/scss";
 // Material Elevation Shadows
-@import "md-elevation-shadows";
+@import "_md-elevation-shadows";
 
 /*
 Settings for Typesettings
 */
-$font-sans: 'Montserrat', sans-serif;
-$font-serif: 'Spectral', serif;
-$font-titling: 'Bluu Titling', serif;
-$font-titling--subtitle: 'Bluu', serif;
+$font-sans: "Montserrat", sans-serif;
+$font-serif: "Spectral", serif;
+$font-titling: "Bluu Titling", serif;
+$font-titling--subtitle: "Bluu", serif;
 $font-mono: monospace;
 $text-color: black;
 $base-vertical-unit: 6px;
@@ -34,26 +34,28 @@ $load-typesetted: true; // True is the default value
 /*
     Layout
 */
-$g-lefter-width: 124px;
+$g-home-right-padding: 130px;
+$g-lefter-width-value: 100;
+$g-lefter-width: #{$g-lefter-width-value}px;
 $g-header-height: 46px;
 $g-header-height--tablet: 62px;
-$g-header-height--desktop: 82px; // 62px + header button padding * 2
+$g-header-height--desktop: 72px; // 62px + header button padding * 2
 $g-header-shadow-y: -2px;
 $g-header-shadow-spread: 9px;
 $g-header-shadow-height: $g-header-shadow-y + $g-header-shadow-spread;
 @mixin header-height($media: hand-held, $property: height) {
-    @if $media == hand-held {
-        #{$property}: $g-header-height;
-    } @else if $media == tablet {
-      #{$property}: $g-header-height--tablet;
-    } @else if $media == desktop {
-        #{$property}: $g-header-height--desktop;
-    }
+  @if $media == hand-held {
+    #{$property}: $g-header-height;
+  } @else if $media == tablet {
+    #{$property}: $g-header-height--tablet;
+  } @else if $media == desktop {
+    #{$property}: $g-header-height--desktop;
+  }
 }
 
 @mixin header-offset($property: top) {
   #{$property}: $g-header-height + $g-header-shadow-height;
-  
+
   @include for-size(tablet-portrait-up) {
     #{$property}: $g-header-height--tablet + $g-header-shadow-height;
   }
@@ -63,13 +65,13 @@ $g-header-shadow-height: $g-header-shadow-y + $g-header-shadow-spread;
   }
 }
 
-    /*
+/*
         Responsive Layout
     */
-    $g-viewport-phone: 600px;
-    $g-viewport-tablet: 900px;
-    $g-viewport-desktop: 1200px;
-    $g-viewport-desktop--big: 1800px;
+$g-viewport-phone: 600px;
+$g-viewport-tablet: 900px;
+$g-viewport-desktop: 1200px;
+$g-viewport-desktop--big: 1800px;
 
 /*
     Transitions
@@ -80,68 +82,21 @@ $g-transition-router-duration: 500; // in ms
     Color
 */
 
-
-    /*
+/*
         High Contrast
     */
 
-
-    /*
+/*
         Color Schemes
         TODO: implement for 'prefer-color-schemes' media query of OS preference
                 prolly just invert the colors...
     */
-
 
 /*
     Focus
 */
 $g-focus-outline: 3px solid black;
 
-/* 
-    Project Specific Mixins
-*/
-
-
-/*
-    Cursor
-*/
-
-/*
-  Headings
-*/
-@mixin heading($scale) {
-  @if $scale == 1 {
-    @include font-size(6rem);
-  } @else if $scale == 2 {
-    @include font-size(5rem);
-  } @else if $scale == 3 {
-    @include font-size(4rem);
-  } @else if $scale == 4 {
-    @include font-size(3rem);
-  } @else if $scale == 5 {
-    @include font-size(2rem);
-  } @else if $scale == 6 {
-    @include font-size(1rem);
-  }
-}
-
-@mixin headings($font-family: $font-titling) {
-  h1, h2, h3, h4, h5, h6 {
-    font-family: $font-family;
-  }
-
-  @for $i from 1 through 6 {
-    $header: h#{$i};
-    #{$header} {
-      @include heading($i);
-    }
-  }
-}
-
-/*
-  Focus
-*/
 @mixin focus($offset: 10px) {
   outline: $g-focus-outline;
   outline-offset: $offset;

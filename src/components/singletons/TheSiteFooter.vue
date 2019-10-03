@@ -1,5 +1,5 @@
 <template>
-  <paper class="site-footer" :color="color" :shadow="6">
+  <paper class="site-footer" :color="color" :shadow="8" noSlide>
     <div class="site-footer__info-container">
       <div class="site-footer__header">
         <logo class="logo"></logo>
@@ -15,9 +15,10 @@
     <div class="site-footer__links">
       <a v-if="terms" :href="terms">Terms of Use</a>
       <a v-if="privacy" :href="privacy">Privacy</a>
-      <a :href="uwLogoLink">
+      <a v-if="uwLogoLink" :href="uwLogoLink">
         <uw-logo class="uw-logo"></uw-logo>
       </a>
+      <uw-logo v-else class="uw-logo"></uw-logo>
     </div>
   </paper>
 </template>
@@ -37,7 +38,7 @@ export default {
       required: true
     }
   },
-  data: function() {
+  data: function () {
     return {
       description: undefined,
       privacy: undefined,
@@ -48,18 +49,16 @@ export default {
       twitter: undefined
     };
   },
-  created: async function() {
+  created: async function () {
     const rawData = await this.$api.fetchSiteFooter();
 
-    this.description = PrismicProcessor.getPrismicRawText(rawData.description);
+    this.description = PrismicProcessor.getRawText(rawData.description);
 
     this.privacy = rawData["privacy_statement"].url;
 
     this.terms = rawData["terms_of_use"].url;
 
-    this.uwLogoLink = rawData["uw_logo_link"].url || ""; // Ensures that uw logo always exists, even if not a link // TODO: remove hover effect if not a link
-
-    this.facebook = rawData.facebook.url;
+    this.uwLogoLink = this.facebook = rawData.facebook.url;
 
     this.instagram = rawData.instagram.url;
 
@@ -76,23 +75,16 @@ $lefter-width: $g-lefter-width;
   flex-direction: column;
   width: 100%;
   height: fit-content;
-  margin-top: 60px;
+  margin-top: 50px;
 
   position: relative;
   align-items: center;
+  padding: 0; // Override default paper padding
   padding-bottom: 20px;
 
   font-family: $font-titling--subtitle;
 
-  @include for-size(tablet-landscape-up) {
-    left: -124px;
-    width: 100vw;
-    margin-top: 50px;
-    // margin-bottom: 20px;
-
-    position: absolute;
-    padding-left: 124px;
-  }
+  border-top: 1px solid rgb(122, 122, 122);
 
   &__info-container {
     display: block;
@@ -162,7 +154,6 @@ $lefter-width: $g-lefter-width;
 
     @include for-size(tablet-landscape-down) {
       width: 80%;
-      // min-width: 300px;
       margin-left: auto;
     }
 
@@ -182,12 +173,19 @@ $lefter-width: $g-lefter-width;
     @include for-size(tablet-landscape-up) {
       margin-right: 40px;
     }
+
     a {
       margin-right: 20px;
 
       &:focus {
         text-decoration: none;
         @include focus();
+      }
+
+      &:hover {
+        .uw-logo {
+          fill: rgb(145, 123, 76); // UW Metallic Gold
+        }
       }
     }
 
@@ -197,10 +195,6 @@ $lefter-width: $g-lefter-width;
 
     .uw-logo {
       height: 35px;
-
-      &:hover {
-        fill: rgb(145, 123, 76); // UW Metallic Gold
-      }
     }
   }
 

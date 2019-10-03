@@ -1,10 +1,7 @@
 <template>
   <div class="the-logo">
     <router-link to="/" class="the-logo__link" @click.native="handleClick">
-      <logo
-        class="the-logo__link__icon"
-        :style="{ width: width ? `${width}px` : null }"
-      ></logo>
+      <logo class="the-logo__link__icon" :style="{ width: width ? `${width}px` : null }"></logo>
     </router-link>
   </div>
 </template>
@@ -18,19 +15,19 @@ export default {
     width: {
       type: Number,
       required: false,
-      default: function() {
+      default: function () {
         return undefined;
       }
     }
   },
-  data: function() {
+  data: function () {
     return {
       focused: false,
       padding: 10
     };
   },
   computed: {
-    height: function() {
+    height: function () {
       return this.width;
     }
   },
@@ -51,16 +48,21 @@ $padding: 10px;
 
 .the-logo {
   width: 100%;
-  height: 100%;
+
+  @include for-size(tablet-landscape-up) {
+    height: 100%;
+  }
 
   &__link {
     display: block;
     width: fit-content;
     height: 100%;
+    margin: unset; // Keeps logo in corner for hand-held layouts
 
     position: relative;
 
     transform: rotate(0);
+    transform-origin: center;
 
     transition: transform 200ms ease-in;
 

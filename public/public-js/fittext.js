@@ -53,4 +53,4 @@ var fitText = function () {
   };
 };
 
-module.exports = { fitText };
+// module.exports = { fitText };

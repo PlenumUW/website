@@ -17,7 +17,7 @@ export default {
     open: {
       type: Boolean,
       required: true,
-      default: function() {
+      default: function () {
         return false;
       }
     }

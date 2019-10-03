@@ -1,41 +1,37 @@
 <template>
-  <div
-    id="app"
-    ref="app"
-    class="app"
-    :style="{ 'background-color': bgColor }"
-    :class="{ 'app--no-scroll': hideMainContent }"
-  >
-    <the-site-header
-      :color="bgColor"
-      :hamburgerOpen.sync="menuOpen"
-      @logoClick="handleLogoClick"
-    ></the-site-header>
+  <div id="app" ref="app" class="app">
+    <div class="app__horizontal-wrapper">
+      <the-site-header :color="activeColorString" :hamburgerOpen.sync="menuOpen" @logoClick="handleLogoClick"></the-site-header>
 
-    <div class="main-content-container">
-      <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
+      <div class="main-content-container">
+        <the-main-menu class="main-menu" :open.sync="menuOpen"></the-main-menu>
 
-      <main class="main" :class="{ 'main--hidden': hideMainContent }">
-        <transition name="view" @leave="backgroundTransitionLeave">
-          <router-view
-            :key="viewKey"
-            class="router-view"
-            :color="bgColor"
-          ></router-view>
-        </transition>
-      </main>
-      <site-footer
-        :color="bgColor"
-        :class="{ 'site-footer--hidden': hideMainContent }"
-      ></site-footer>
+        <main class="main" :class="{ 'main--hidden': hideMainContent }">
+          <transition :css="false" @before-appear="viewBeforeAppear" @appear="viewAppear" @after-appear="viewAfterAppear" @appear-cancelled="viewCancelledAppear" @before-enter="viewBeforeEnter" @enter="viewEnter" @after-enter="viewAfterEnter" @enter-cancelled="viewCancelledEnter" @before-leave="viewBeforeLeave" @leave="viewLeave" @after-leave="viewAfterLeave" @leave-cancelled="viewCancelledLeave">
+            <router-view :key="viewKey" :id="viewKey" class="router-view" :color="activeColorString" :loadedCallback="startEnter"></router-view>
+          </transition>
+        </main>
+      </div>
     </div>
+
+    <div class="loading" :class="{'loading--error': error}"></div>
+    <div v-if="error" class="error" :style="{'background-color': activeColorString}" @click="handleErrorClick">
+      <div v-if="pageLoadingError">Your internet is bein' silly.<br />Try refreshing the site.</div>
+      <div v-if="generalError">Something's gone wrong!<br />Try refreshing the site.</div>
+    </div>
+
+    <site-footer :color="activeColorString" :class="{ 'site-footer--hidden': hideMainContent }"></site-footer>
   </div>
 </template>
 
 <script>
-import sweep from "@/utils/sweep";
+import Velocity from "velocity-animate";
 import colors from "@/utils/colors";
-import { fitText } from "@/utils/fittext.js";
+import {
+  viewTransitions,
+  loadingTransitions,
+  Animations
+} from "@/utils/Animations";
 
 // eslint-disable-next-line no-unused-vars
 import whatInput from "what-input";
@@ -48,20 +44,30 @@ import SiteFooter from "@/components/singletons/TheSiteFooter";
 
 export default {
   components: { TheSiteHeader, TheMainMenu, SiteFooter },
-  data: function() {
+  data: function () {
     return {
       metadata: undefined,
-      prevBgColor: undefined,
-      menuOpen: false // TODO: Find better name, or clarify difference between expanded and open
+      prevBackgroundColor: colors.getRgbValuesFromString(
+        colors.getBackgroundColor(0, true)
+      ), // Hue is arbitrary if desaturated
+      activeColorString: "rgb(255, 255, 255)",
+      menuOpen: false, // TODO: Find better name, or clarify difference between expanded and open
+      startEnter: undefined,
+      viewTransitions,
+      loadingTransitions,
+      loadingTransitionActive: false,
+      colors,
+      css
     };
   },
   computed: {
+
     /**
      * The background color of the application.
      */
-    // TODO: Put bgColor in global store
+    // TODO: Put currentBackgroundColor in global store
     // TODO: replace background gradient with box-shadow, this will help make icon height relative to header height ore intuitive
-    bgColor: function() {
+    currentBackgroundColor: function () {
       const hue =
         this.$route.meta.hue || this.$route.matched[0]
           ? this.$route.matched[0].meta.hue
@@ -69,27 +75,112 @@ export default {
 
       const color =
         hue !== undefined
-          ? colors.getBackgroundColor(hue)
-          : "rgb(255, 255, 255)";
+          ? this.colors.getBackgroundColor(hue)
+          : this.colors.getBackgroundColor(0, true); // Hue is arbitrary if desaturated
 
-      return color;
+      const colorValues = this.colors.getRgbValuesFromString(color);
+
+      return colorValues;
     },
-    viewKey: function() {
+    viewKey: function () {
       return this.$route.name;
     },
-    hideMainContent: function() {
+    hideMainContent: function () {
       return this.menuOpen;
+    },
+    initialLoad: function () {
+      return this.$store.state.initialLoad;
+    },
+    pageLoading: function () {
+      return this.$store.state.isLoading;
+    },
+    error: function () {
+      return this.pageLoadingError || this.generalError;
+    },
+    pageLoadingError: function () {
+      return this.$store.state.pageLoadingError;
+    },
+    generalError: function () {
+      return this.$store.state.generalError;
     }
   },
   watch: {
-    bgColor: function(newVal, oldVal) {
-      this.prevBgColor = oldVal;
+    currentBackgroundColor: function (newVal, oldVal) {
+      this.prevBackgroundColor = oldVal;
+    },
+    pageLoading: function (newVal, oldVal) {
+      if (newVal) {
+        this.loadingTransitionActive = true;
+        this.startLoadingAnimation().then(() => {
+          console.log("looping loading animation");
+          this.loadingAnimationLoop().then(() => console.log("loop done"));
+        });
+      } else {
+        this.exitLoadingAnimation();
+        this.loadingTransitionActive = false;
+      }
     }
   },
   methods: {
+    handleErrorClick() {
+      this.$store.dispatch("resetErrors");
+    },
+    startLoadingAnimation() {
+      const el = document.getElementsByClassName("loading")[0];
+
+      const prevRgb = "transparent";
+      const nextRgb = this.colors.getRgbValuesFromString(
+        this.colors.getLoadingColor(0)
+      );
+      const cssProps = ["outlineColor"];
+
+      return Animations.tweenColor(el, {
+        prevRgb,
+        nextRgb,
+        cssProps,
+        duration: 200
+      })();
+    },
+    loadingAnimationLoop() {
+      const el = document.getElementsByClassName("loading")[0];
+
+      const prevRgb = this.colors.getRgbValuesFromString(
+        this.colors.getLoadingColor(0)
+      );
+      const nextRgb = this.colors.getRgbValuesFromString(
+        this.colors.getLoadingColor(180)
+      );
+      const cssProps = ["outlineColor"];
+
+      return Animations.tweenColor(el, {
+        prevRgb,
+        nextRgb,
+        cssProps,
+        loop: true,
+        duration: 1000
+      })();
+    },
+    exitLoadingAnimation() {
+      if (!this.loadingTransitionActive) return;
+
+      const el = document.getElementsByClassName("loading")[0];
+
+      const prevRgb = "current";
+      const nextRgb = "transparent";
+      const cssProps = ["outlineColor"];
+
+      Velocity(el, "stop");
+      Animations.tweenColor(el, {
+        prevRgb,
+        nextRgb,
+        cssProps,
+        duration: 200
+      })();
+    },
     handleLogoClick() {
       this.setMenuOpen(false);
     },
+
     /**
      * @param {Boolean} val New value for menuOpen.
      */
@@ -97,51 +188,21 @@ export default {
       if (typeof val !== "boolean") throw new Error("Incorrect value type.");
       this.menuOpen = val;
     },
-    /**
-     * Tweens the application's background color through perceptually uniform color space.
-     * @param {Element} el Transitioning element.
-     * @param {Function} done Callback to declare that a transition has finished.
-     * @param {String} duration Transition duration in milliseconds
-     */
-    backgroundTransitionLeave(
-      el,
-      done,
-      duration = parseInt(css.routerTransitionDuration)
-    ) {
-      const defaultColor = "rgb(255, 255, 255)";
-
-      const prevColor = this.prevBgColor || defaultColor;
-      const nextColor = this.bgColor || defaultColor;
-
-      // TODO: determine direction of sweep w/
-      // direction = [absolute value of (fromHue - toHue)] > 180 ? counter-clockwise(-1) : clockwise(1)
-      // This will prevent strange flashes during transitions
-      sweep(this.$refs.app, "backgroundColor", prevColor, nextColor, {
-        duration,
-        // TODO: fork sweep.js to build an lchab sweep, hsluv & hsl flash bright yellow b/w orange and green
-        space: "RGB",
-        callback: () => done()
-      });
-    }
-  },
-  created: async function() {
-    fitText();
-
-    // TODO: Add storage of history scroll positions https://github.com/vuejs/vue-router/issues/1187
-    this.$router.beforeEach((to, from, next) => {
-      const resetScrollPosition = el => {
-        if (el) el.scrollTop = 0;
-      };
-
-      resetScrollPosition(this.$refs.app);
-      next();
-    });
-  },
-  mounted: function() {
-    if (this.$route.name === "home") {
-      // Transition is naturally called if first visit is on non-home route
-      this.backgroundTransitionLeave({}, () => {}, 300);
-    }
+    setActiveColorString(colorString) {
+      this.activeColorString = colorString;
+    },
+    viewBeforeAppear: viewTransitions.beforeAppear,
+    viewAppear: viewTransitions.appear,
+    viewAfterAppear: viewTransitions.afterAppear,
+    viewCancelledAppear: viewTransitions.cancelledAppear,
+    viewBeforeEnter: viewTransitions.beforeEnter,
+    viewEnter: viewTransitions.enter,
+    viewAfterEnter: viewTransitions.afterEnter,
+    viewCancelledEnter: viewTransitions.cancelledEnter,
+    viewBeforeLeave: viewTransitions.beforeLeave,
+    viewLeave: viewTransitions.leave,
+    viewAfterLeave: viewTransitions.afterLeave,
+    viewCancelledLeave: viewTransitions.cancelledLeave
   }
 };
 </script>
@@ -150,30 +211,55 @@ export default {
 @import "~backpack.css";
 @import "./styles/app.scss";
 
+html {
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; // Required for momentum scrolling in iOS
+}
+
 .app {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
+  height: 100%;
 
   display: flex;
   flex-direction: column;
 
-  overflow-x: hidden;
-  // overflow-y: auto;
-  overflow-y: scroll; // Scroll required for momentum scrolling in iOS
-  -webkit-overflow-scrolling: touch; // Required for momentum scrolling in iOS
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  &__horizontal-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    @include for-size(tablet-landscape-up) {
+      flex-direction: row;
+    }
+  }
+}
+
+.loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+
+  z-index: 999;
+
+  pointer-events: none;
+
+  --outline-width: 5px;
+
+  outline-style: solid;
+  outline-color: transparent;
+  outline-width: var(--outline-width);
+  outline-offset: calc(-1 * var(--outline-width));
+
   @include for-size(tablet-landscape-up) {
-    flex-direction: row;
+    --outline-width: 10px;
   }
 
-  &--no-scroll {
-    overflow: hidden;
+  &--error {
+    outline-color: red !important;
   }
 }
 
@@ -184,6 +270,31 @@ export default {
     pointer-events: none;
 
     transition: opacity 200ms ease-out;
+  }
+}
+
+.error {
+  --outline-width: 5px;
+
+  position: fixed;
+  max-width: 60%;
+  top: 0;
+  outline: var(--outline-width) solid red;
+  width: fit-content;
+  transform: translateX(-50%);
+  left: 50%;
+
+  padding: 20px;
+  z-index: 999;
+
+  font-family: $font-sans;
+  font-size: 1.5em;
+
+  cursor: pointer;
+
+  @include for-size(tablet-landscape-up) {
+    --outline-width: 10px;
+    font-size: 4em;
   }
 }
 
@@ -206,7 +317,7 @@ export default {
     @include for-size(tablet-landscape-up) {
       width: unset;
       height: unset;
-      top: 265px;
+      top: 260px;
     }
   }
 
@@ -231,11 +342,9 @@ export default {
   @include hidden();
 }
 
-.view-leave,
-.view-leave-active,
-.view-leave-to {
-  position: absolute;
-  left: 0;
+.router-view {
   top: 0;
+  left: 0;
+  width: 100%;
 }
 </style>

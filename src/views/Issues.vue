@@ -1,34 +1,37 @@
 <template>
   <div>
-    <paper
-      v-for="(issue, index) in issues"
-      :key="`issue-${index}`"
-      :color="color"
-    >
-      {{ issue.data.title[0].text }}
-    </paper>
+    <issue-slice v-for="(issue, index) in issues" :key="`issue-${index}`" :bgColor="color" :issue="issue"></issue-slice>
   </div>
 </template>
 <script>
-import View from "./View";
+import BaseView from "./BaseView";
+import IssueSlice from "@/components/slices/home/IssueSlice";
 
 export default {
-  name: "issues",
-  extends: View,
-  data: function() {
-    return {
-      issues: []
-    };
+  name: "Issues",
+  extends: BaseView,
+  components: { IssueSlice },
+  computed: {
+    issues: function () {
+      return this.rawData;
+    }
   },
-  created: async function() {
-    this.metadata = {
-      title: "Issue Catalogue"
-    };
-
-    this.issues = await this.$api.getIssues();
+  methods: {
+    getIssueTitle(issue) {
+      return this.PrismicProcessor.getRawText(issue.data.title);
+    },
+    getMetadata() {
+      return {
+        title: "Issue Catalogue"
+      };
+    }
   },
   meta() {
-    return this.MetadataManager.metaDefault(this.metadata, "website");
+    return this.MetadataManager.metaDefault(
+      this.metadata,
+      this.scriptMetadata,
+      "website"
+    );
   }
 };
 </script>

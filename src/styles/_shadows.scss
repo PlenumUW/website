@@ -1,0 +1,21 @@
+// Shadow Classes
+// Generate standardized classes for shadows that 'lower' on hover.
+// .shadow-#
+@for $i from 0 through 24 {
+  $hoverLevel: $i - 6;
+  @if $hoverLevel < 0 {
+    $hoverLevel: 2;
+  }
+  @if $hoverLevel > $i {
+    $hoverLevel: 0;
+  }
+
+  .shadow-#{$i} {
+    @include mdElevation($i);
+    @include mdElevationTransition(4);
+
+    &:hover {
+      @include mdElevation($hoverLevel);
+    }
+  }
+}

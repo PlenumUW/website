@@ -1,21 +1,13 @@
 <template>
-  <header
-    class="site-header"
-    :style="{
+  <div class="site-header" :style="{
       color: color,
       'background-color': color
-    }"
-  >
+    }">
     <the-logo class="logo" @activate="handleLogoClick"></the-logo>
     <div class="buttons">
-      <the-hamburger
-        class="hamburger"
-        :open="hamburgerOpen"
-        @open="handleHamburgerOpen"
-        @close="handleHamburgerClose"
-      ></the-hamburger>
+      <the-hamburger class="hamburger" :open="hamburgerOpen" @open="handleHamburgerOpen" @close="handleHamburgerClose"></the-hamburger>
     </div>
-  </header>
+  </div>
 </template>
 
 <script>
@@ -35,7 +27,7 @@ export default {
       required: true
     }
   },
-  data: function() {
+  data: function () {
     return {};
   },
   methods: {
@@ -110,7 +102,7 @@ $header-shadow-spread: $g-header-shadow-spread;
     @include for-size(tablet-landscape-up) {
       width: fit-content;
       left: 0;
-      top: $g-header-height--desktop / 2;
+      top: $g-header-height--desktop * 1.5; // 120px
       margin: auto;
     }
   }

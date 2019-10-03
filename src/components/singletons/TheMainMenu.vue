@@ -1,28 +1,12 @@
 <template>
   <nav class="c-the-main-nav">
-    <ul
-      class="c-main-menu"
-      :class="{
+    <ul class="c-main-menu" :class="{
         'c-main-menu--expanded': menuHovered || open
-      }"
-      @mouseenter="handleMainMenuHover"
-      @mouseleave="handleMainMenuHover"
-    >
-      <li
-        v-for="{ path, name, meta } in menuItems"
-        :key="`c-main-menu__item--${name}`"
-        class="c-main-menu__item"
-        :style="{ 'background-color': getMenuItemColor(meta.hue) }"
-      >
-        <router-link
-          :to="path"
-          class="c-main-menu__item-link"
-          @click.native="handleMenuItemClick"
-        >
+      }" @mouseenter="handleMainMenuHover" @mouseleave="handleMainMenuHover">
+      <li v-for="menuItem in menuItems" :key="`c-main-menu__item--${menuItem.name}`" class="c-main-menu__item" :class="{'c-main-menu__item--disabled': isRouteDisabled(menuItem.componentName)}" :style="{ 'background-color': getMenuItemColor(menuItem)}">
+        <router-link :to="menuItem.path" class="c-main-menu__item-link" @click.native="handleMenuItemClick">
           <div class="c-main-menu__item-content">
-            <div class="c-main-menu__item-content__name">
-              {{ name }}
-            </div>
+            <div class="c-main-menu__item-content__name">{{ menuItem.name }}</div>
           </div>
         </router-link>
       </li>
@@ -39,25 +23,32 @@ export default {
       required: true
     }
   },
-  data: function() {
+  data: function () {
     return {
       menuHovered: false
     };
   },
   computed: {
-    menuItems: function() {
+    menuItems: function () {
       return this.$router.options.routes.filter(route => route.meta.menuItem);
     }
   },
   methods: {
+    isRouteDisabled(viewName) {
+      return viewName === "ComingSoon" || viewName === "NotFound";
+    },
     handleMenuItemClick() {
       this.resetMenu();
     },
+    // TODO: move to CSS so static menu works
     handleMainMenuHover(e) {
       this.menuHovered = e.type === "mouseenter";
     },
-    getMenuItemColor(hue) {
-      return colors.getMenuItemColor(hue);
+    getMenuItemColor({ meta, componentName }) {
+      return colors.getMenuItemColor(
+        meta.hue,
+        this.isRouteDisabled(componentName)
+      );
     },
     resetMenu() {
       document.activeElement.blur(); // Link activation retains focus, which would keep menu open otherwise
@@ -150,12 +141,24 @@ $menu-width--mobile: calc(
     width: 100%;
     margin-bottom: 13px;
 
+    // @include mdElevation(2, $inset: true);
+    // @include mdElevationTransition(2);
+
+    &:hover {
+      // @include mdElevation(6, $inset: true);
+    }
+
     &:last-of-type {
       margin-bottom: 0;
     }
 
     @include for-size(tablet-landscape-up) {
       width: $menu-item-width--expanded;
+    }
+
+    &--disabled {
+      pointer-events: none;
+      text-decoration: line-through;
     }
 
     &-link {

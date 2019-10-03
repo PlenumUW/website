@@ -17,7 +17,7 @@
         <img class="c-issue__cover-image__image" :src="image.url" />
       </div>
 
-      <ol class="toc">
+      <ol class="c-issue__toc">
         <li v-for="essay in essays" :key="`essay-${essay.id}`" class="entry">
           <paper class="entry__paper" :color="color" :type="'toc-entry'">
             <router-link :to="`/issue/${issueSlug}/${essay.uid}`" class="entry__header">
@@ -56,38 +56,38 @@ export default {
   extends: BaseView,
   components: { HeaderGradient },
   computed: {
-    issueSlug: function() {
+    issueSlug: function () {
       return this.rawData.uid;
     },
-    issue: function() {
+    issue: function () {
       return this.rawData.data;
     },
-    title: function() {
+    title: function () {
       if (!this.issue) return "";
 
       return this.PrismicProcessor.getRawText(this.issue.title);
     },
-    image: function() {
+    image: function () {
       if (!this.issue) return "";
 
       return this.issue.cover_image;
     },
-    essays: function() {
+    essays: function () {
       return this.issue.essays;
     },
-    downloadUrl: function() {
+    downloadUrl: function () {
       return this.issue.download_file.url;
     },
-    metaImage: function() {
+    metaImage: function () {
       return this.issue.cover_image.SocialMedia;
     },
-    metaDescription: function() {
+    metaDescription: function () {
       if (this.issue.description) {
         return this.PrismicProcessor.getRawText(this.issue.description);
       }
 
       const buildShortToc = () => {
-        const entries = this.essays.map(essay => {
+        const entries = this.essays.map((essay) => {
           let entry = "'" + this.getEssayTitle(essay) + "'";
 
           const authors = essay.data.authors;
@@ -193,20 +193,20 @@ export default {
       }
     }
   }
-}
 
-.toc {
-  position: relative;
-  width: 100%; // TODO: match width of home papers
-  height: fit-content;
-  padding-right: 30px;
-  margin-bottom: 15vh; // Displaces content so sticky image unsticks before it hides behind the footer
+  &__toc {
+    position: relative;
+    width: 100%; // TODO: match width of home papers
+    height: fit-content;
+    padding-right: 30px;
+    margin-bottom: 15vh; // Displaces content so sticky image unsticks before it hides behind the footer
 
-  z-index: 1;
+    z-index: 1;
 
-  @include for-size(tablet-landscape-up) {
-    max-width: 1600px;
-    margin-right: 0;
+    @include for-size(tablet-landscape-up) {
+      max-width: 1600px;
+      margin-right: 0;
+    }
   }
 }
 

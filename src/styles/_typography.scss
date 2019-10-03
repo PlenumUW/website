@@ -201,6 +201,42 @@ $modularscale: (
 }
 
 /*----------------------------------------------   
+--Table of Contents Theme
+----------------------------------------------*/
+@mixin toc() {
+  .toc {
+    font-family: $font-serif;
+    font-weight: 200;
+    line-height: 1em;
+    letter-spacing: -0.05em;
+
+    @include ms-respond(font-size, 7);
+
+    @include element("title") {
+      font-weight: 200;
+    }
+
+    @include element("body") {
+      font-variant: discretionary-ligatures;
+
+      @include element("title") {
+        text-transform: capitalize;
+        font-weight: 200;
+      }
+      @include element("subtitle") {
+        font-weight: 200;
+        font-style: italic;
+      }
+      @include element("authors") {
+        font-weight: 300;
+        font-style: italic;
+        font-variant: unicase;
+      }
+    }
+  }
+}
+
+/*----------------------------------------------   
 --All typography themes
 ----------------------------------------------*/
 @mixin typography() {
@@ -209,6 +245,7 @@ $modularscale: (
   @include page();
   @include essay();
   @include issue();
+  @include toc();
 }
 
 /*----------------------------------------------

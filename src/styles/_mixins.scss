@@ -1,6 +1,7 @@
-/*
-Mixins
-*/
+/*----------------------------------
+--Mixins
+--@description: Useful mixins
+----------------------------------*/
 
 /*----------------------------------
 --Selectors
@@ -12,6 +13,18 @@ Mixins
   h4,
   h5,
   h6 {
+    @content;
+  }
+}
+
+/**
+* Creates a BEM element CSS selector based on the given name.
+* Matches classes at the end or in the middle of the class name list.
+**/
+@mixin element($name) {
+  [class$="__#{$name}"], // No space to capture if the last class
+  [class*="__#{$name} "] {
+    // With space to capture if a middle class
     @content;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <article class="c-issue">
+  <article class="c-issue issue">
     <div class="">
       <header class="o-header">
         <header-gradient class="o-header__gradient" :color="color"></header-gradient>
@@ -17,7 +17,7 @@
         <img class="c-issue__cover-image__image" :src="image.url" />
       </div>
 
-      <ol class="toc">
+      <ol class="c-issue__toc">
         <li v-for="essay in essays" :key="`essay-${essay.id}`" class="entry">
           <paper class="entry__paper" :color="color" :type="'toc-entry'">
             <router-link :to="`/issue/${issueSlug}/${essay.uid}`" class="entry__header">
@@ -158,7 +158,6 @@ export default {
       float: left;
 
       font-size: 1.5em;
-      font-family: $font-serif;
       z-index: 9;
     }
   }
@@ -194,20 +193,20 @@ export default {
       }
     }
   }
-}
 
-.toc {
-  position: relative;
-  width: 100%; // TODO: match width of home papers
-  height: fit-content;
-  padding-right: 30px;
-  margin-bottom: 15vh; // Displaces content so sticky image unsticks before it hides behind the footer
+  &__toc {
+    position: relative;
+    width: 100%; // TODO: match width of home papers
+    height: fit-content;
+    padding-right: 30px;
+    margin-bottom: 15vh; // Displaces content so sticky image unsticks before it hides behind the footer
 
-  z-index: 1;
+    z-index: 1;
 
-  @include for-size(tablet-landscape-up) {
-    max-width: 1600px;
-    margin-right: 0;
+    @include for-size(tablet-landscape-up) {
+      max-width: 1600px;
+      margin-right: 0;
+    }
   }
 }
 
@@ -216,14 +215,7 @@ export default {
   max-width: 1000px;
   margin-bottom: 80px;
 
-  line-height: 1.2em;
-  font-size: 1.6em;
   font-family: $font-serif;
-
-  @include for-size(tablet-landscape-up) {
-    line-height: 1.2em;
-    font-size: 2em;
-  }
 
   &:last-of-type {
     margin-bottom: 0;
@@ -286,7 +278,6 @@ export default {
     }
 
     &__title {
-      font-weight: 300;
       margin-bottom: 26px;
 
       &__subtitle {
@@ -294,8 +285,6 @@ export default {
         margin-left: auto;
 
         text-align: right;
-        font-weight: 200;
-        font-style: italic;
 
         @include for-size(tablet-landscape-up) {
           width: 70%;
@@ -306,8 +295,6 @@ export default {
       max-width: 90%;
       margin-left: auto;
       text-align: right;
-      font-weight: 300;
-      font-style: italic;
 
       @include for-size(tablet-landscape-up) {
         max-width: 70%;
@@ -321,7 +308,6 @@ export default {
   &__summary {
     padding: $header-padding;
 
-    font-weight: 300;
     border-top: 1px solid rgb(66, 66, 66);
 
     &__abstract {
@@ -336,14 +322,10 @@ export default {
       &__contents {
         margin-top: 20px;
 
-        line-height: 1.65rem;
         font-size: 1.2rem;
 
         @include for-size(tablet-landscape-up) {
           margin: var(--contents-padding);
-
-          line-height: 1.7rem;
-          font-size: 1.3rem;
 
           text-align: justify;
         }

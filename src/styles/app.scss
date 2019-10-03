@@ -168,11 +168,11 @@ $paper-padding: 1.2em;
   padding-left: $paper-padding;
   z-index: 6; //TODO: use scss function // > 5, 5 is default z-index for stuck sticky els
 
-  white-space: nowrap;
+  white-space: nowrap; // TODO: needs to scale or wrap...
   text-align: left;
 
+  @include grandHeading();
   @include header-offset();
-  @include responsiveTitling();
 
   @include for-size(tablet-portrait-up) {
     margin-bottom: 65px;

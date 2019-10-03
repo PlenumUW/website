@@ -7,32 +7,45 @@
 @import "_fonts";
 
 $modularscale: (
-  base: 14px,
-  ratio: 1.2,
+  base: 15px,
+  ratio: 1,
   $g-viewport-phone: (
-    base: 14px // ratio: 1.2
+    base: 15px,
+    ratio: 1.09
   ),
   $g-viewport-tablet: (
-    base: 16px // ratio: 1.25
+    base: 17px,
+    ratio: 1.15
   ),
   $g-viewport-desktop: (
-    base: 18px // ratio: 1.3
+    base: 17px,
+    ratio: 1.18
   ),
   $g-viewport-desktop--big: (
-    base: 20px // ratio: 1.35
+    base: 17px,
+    ratio: 1.21
   )
 );
 
 /*----------------------------------------------   
 --Basic Tags
------------------------------------------------  */
+----------------------------------------------*/
 @mixin paragraph() {
   @include ms-respond(font-size, 1);
 }
 
 /*----------------------------------------------   
+--Grand heading
+--@description: Massive title
+----------------------------------------------*/
+@mixin grandHeading() {
+  font-family: $font-titling;
+  @include ms-respond(font-size, 11);
+}
+
+/*----------------------------------------------   
 --Paper Theme
------------------------------------------------  */
+----------------------------------------------*/
 @mixin paper() {
   .paper {
     font-family: $font-serif;
@@ -42,18 +55,18 @@ $modularscale: (
     }
 
     h1 {
-      @include ms-respond(font-size, 4);
+      @include ms-respond(font-size, 5);
     }
 
     h2 {
-      @include ms-respond(font-size, 3);
+      @include ms-respond(font-size, 4);
     }
 
     h3,
     h4,
     h5,
     h6 {
-      @include ms-respond(font-size, 2);
+      @include ms-respond(font-size, 3);
     }
 
     p {
@@ -69,7 +82,11 @@ $modularscale: (
   .essay {
     @include paper();
 
-    .paper {
+    /*------------------------
+    --Essay Sections
+    ------------------------*/
+
+    @include element("section") {
       div > a {
         // only anchor's that are a direct descendent of div, instead of a paragraph
         // potentially buggy
@@ -100,23 +117,135 @@ $modularscale: (
         @include ms-respond(font-size, 3);
       }
     }
+
+    /*------------------------
+    --Essay Header
+    ------------------------*/
+    @include element("header") {
+      font-family: $font-titling--subtitle;
+
+      @include element("title") {
+        font-family: $font-titling;
+        @include ms-respond(font-size, 9);
+      }
+      @include element("subtitle") {
+        line-height: 1.3em;
+        text-align: right;
+
+        @include ms-respond(font-size, 6);
+      }
+      @include element("authors") {
+        line-height: 1em;
+        text-align: right;
+
+        @include ms-respond(font-size, 4);
+      }
+    }
+
+    /*------------------------
+    --Essay Abstract
+    ------------------------*/
+    @include element("abstract") {
+      @include element("title") {
+        @include ms-respond(font-size, 5);
+      }
+    }
   }
 }
 
 /*----------------------------------------------   
 --Page Theme
------------------------------------------------  */
+----------------------------------------------*/
 @mixin page() {
   .page {
     @include paper();
   }
 }
 
+/*----------------------------------------------   
+--Issue Theme
+----------------------------------------------*/
+@mixin issue() {
+  .issue {
+    @include paper();
+
+    .entry {
+      line-height: 1.2em;
+
+      @include ms-respond(font-size, 3);
+
+      @include element("header") {
+        @include element("title") {
+          font-weight: 300;
+          @include element("subtitle") {
+            font-weight: 200;
+            font-style: italic;
+          }
+        }
+
+        @include element("authors") {
+          font-weight: 300;
+          font-style: italic;
+        }
+      }
+
+      @include element("summary") {
+        font-weight: 300;
+        @include element("contents") {
+          line-height: 1.5em;
+          @include ms-respond(font-size, 1);
+        }
+      }
+    }
+  }
+}
+
+/*----------------------------------------------   
+--Table of Contents Theme
+----------------------------------------------*/
+@mixin toc() {
+  .toc {
+    font-family: $font-serif;
+    font-weight: 200;
+    line-height: 1em;
+    letter-spacing: -0.05em;
+
+    @include ms-respond(font-size, 7);
+
+    @include element("title") {
+      font-weight: 200;
+    }
+
+    @include element("body") {
+      font-variant: discretionary-ligatures;
+
+      @include element("title") {
+        text-transform: capitalize;
+        font-weight: 200;
+      }
+      @include element("subtitle") {
+        font-weight: 200;
+        font-style: italic;
+      }
+      @include element("authors") {
+        font-weight: 300;
+        font-style: italic;
+        font-variant: unicase;
+      }
+    }
+  }
+}
+
+/*----------------------------------------------   
+--All typography themes
+----------------------------------------------*/
 @mixin typography() {
   @include headings();
 
   @include page();
   @include essay();
+  @include issue();
+  @include toc();
 }
 
 /*----------------------------------------------

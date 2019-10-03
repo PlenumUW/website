@@ -85,7 +85,8 @@ $modularscale: (
     /*------------------------
     --Essay Sections
     ------------------------*/
-    [class*="__section"] {
+
+    @include element("section") {
       div > a {
         // only anchor's that are a direct descendent of div, instead of a paragraph
         // potentially buggy
@@ -120,20 +121,20 @@ $modularscale: (
     /*------------------------
     --Essay Header
     ------------------------*/
-    [class*="__header"] {
+    @include element("header") {
       font-family: $font-titling--subtitle;
 
-      [class*="__title"] {
+      @include element("title") {
         font-family: $font-titling;
         @include ms-respond(font-size, 9);
       }
-      [class*="__subtitle"] {
+      @include element("subtitle") {
         line-height: 1.3em;
         text-align: right;
 
         @include ms-respond(font-size, 6);
       }
-      [class*="__authors"] {
+      @include element("authors") {
         line-height: 1em;
         text-align: right;
 
@@ -144,8 +145,8 @@ $modularscale: (
     /*------------------------
     --Essay Abstract
     ------------------------*/
-    [class*="__abstract"] {
-      [class*="__title"] {
+    @include element("abstract") {
+      @include element("title") {
         @include ms-respond(font-size, 5);
       }
     }
@@ -173,24 +174,24 @@ $modularscale: (
 
       @include ms-respond(font-size, 3);
 
-      [class*="__header"] {
-        [class*="__title"] {
+      @include element("header") {
+        @include element("title") {
           font-weight: 300;
-          [class*="__subtitle"] {
+          @include element("subtitle") {
             font-weight: 200;
             font-style: italic;
           }
         }
 
-        [class*="__authors"] {
+        @include element("authors") {
           font-weight: 300;
           font-style: italic;
         }
       }
 
-      [class*="__summary"] {
+      @include element("summary") {
         font-weight: 300;
-        [class*="__contents"] {
+        @include element("contents") {
           line-height: 1.5em;
           @include ms-respond(font-size, 1);
         }
